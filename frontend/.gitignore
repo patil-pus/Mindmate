@@ -1,0 +1,43 @@
+# Ignore node modules
+node_modules/
+
+# Ignore build output
+.next/
+out/
+
+# Ignore logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ignore environment variables
+.env
+.env.local
+.env.*.local
+
+# Ignore coverage reports (if using a tool like Jest for testing)
+coverage/
+
+# Ignore IDE files
+.vscode/
+../.idea/
+
+# Ignore macOS files
+.DS_Store
+
+# Ignore Yarn integrity file (optional, if using Yarn)
+.yarn-integrity
+
+# Ignore ESLint cache (optional)
+.eslintcache
+
+# Ignore temporary files and other generated artifacts
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Ignore Next.js specific files
+.next/cache/
+next-env.d.ts
