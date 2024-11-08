@@ -29,7 +29,10 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/page.js", "app/layout.js"  ],
+,
+    "app/page.js",
+    "frontend/app/layout.js"
+  ],
   "exclude": [
     "node_modules"
   ]
