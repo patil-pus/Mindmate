@@ -13,7 +13,7 @@ import { pulsingBackground } from '../components/animations.js';
 export default function HomePage() {
   const [openModal, setOpenModal] = useState(false);
 
-  const handleOpenModal = () => setOpenModal(true);
+  // const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
   return (

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
+import Link from 'next/link';
+import { Button, TextField, Grid, Box, Typography, Container } from '@mui/material';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import { pulsingBackground } from './animations.js'; // Adjust the path if needed
@@ -101,6 +102,7 @@ export default function SignIn() {
               borderRadius: 2,
             }}
           />
+          <Link href="/Dashboard" passHref>
           <Button
             type="submit"
             fullWidth
@@ -120,6 +122,8 @@ export default function SignIn() {
           >
             Sign In
           </Button>
+          </Link>
+
 
           <Grid container sx={{ mt: 1 }}>
             <Grid item xs>
