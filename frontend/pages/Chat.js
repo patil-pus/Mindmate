@@ -1,7 +1,7 @@
 // pages/Dashboard.js 
 "use server"
-import Dashboard from '../components/Dashboard'; 
+import Chat from '../components/Chat'; 
 
 export default function DashboardPage() { 
-  return <Dashboard />; 
+  return <Chat />; 
 }

@@ -94,11 +94,11 @@ export default function DockDemo() {
         <DockIcon>
           <Icons.forum className="size-6" />
         </DockIcon>
-        {/* <Link href="/Chat" > */}
           <DockIcon>
+        <Link href="Chat" >
             <Icons.chat className="size-6" />
+        </Link>
           </DockIcon>
-        {/* </Link> */}
         <DockIcon>
           <Icons.profile className="size-6" />
         </DockIcon>
