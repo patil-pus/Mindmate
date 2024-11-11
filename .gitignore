@@ -1,7 +1,19 @@
 # Compiled class file
 *.class
 
-# Log file
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDEs
+.idea/
+.vscode/
+*.iml
+
+# Node modules (if you have any global scripts or configurations at the root)
+node_modules/
+
+# Log files
 *.log
 
 # BlueJ files
