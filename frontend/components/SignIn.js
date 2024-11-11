@@ -8,15 +8,35 @@ import { pulsingBackground } from './animations.js'; // Adjust the path if neede
 const mindMateLogo = '/logo.png';
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+     const email = data.get('email');
+    const password = data.get('password');
+    try{
+      const response = await fetch('http://localhost:8080/api/clients/login',{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json',
+      },
+        body: JSON.stringify({username: email, password}),
+        credentials: 'include'                                                            //ensuring cookie to be sent with request
     });
-  };
-
+    
+    if(response.ok){
+      const resData = await response.json();
+      console.log("response",resData)
+      sessionStorage.setItem('clientId', resData.clientId);
+      console.log("client id", resData.clientId);
+      window.location.href = '/Dashboard';
+    }else{
+      console.log("Login failed")
+    }
+    }catch(error){
+      console.error('Error during login:', error);
+    }
+    };
+  
   return (
     <Container
       component="main"
@@ -102,7 +122,7 @@ export default function SignIn() {
               borderRadius: 2,
             }}
           />
-          <Link href="/Dashboard" passHref>
+         <Link href="/Dashboard" passHref> 
           <Button
             type="submit"
             fullWidth
@@ -122,17 +142,15 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-          </Link>
-
-
+           </Link> 
           <Grid container sx={{ mt: 1 }}>
             <Grid item xs>
-              <Link href="#" variant="body2" sx={{ color: '#1976d2' }}>
+              <Link href="#" variant="body2" className="custom-link">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/SignUp" variant="body2" sx={{ color: '#1976d2' }}>
+              <Link href="/SignUp" variant="body2" className="custom-link" >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

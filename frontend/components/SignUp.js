@@ -23,7 +23,7 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      username: data.get('username'),
+      username: data.get('Name'),
       age: data.get('age'),
       sex: data.get('sex'),
       email: data.get('email'),
@@ -114,7 +114,7 @@ export default function SignUp() {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField required fullWidth id="username" label="Username" name="username" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
+              <TextField required fullWidth id="name" label="Name" name="Name" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
             </Grid>
             <Grid item xs={6}>
               <TextField required fullWidth id="age" label="Age" name="age" type="number" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
@@ -131,9 +131,6 @@ export default function SignUp() {
 
             {userType === 'client' && (
               <>
-                <Grid item xs={12}>
-                  <TextField required fullWidth id="insurance" label="Insurance" name="insurance" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
-                </Grid>
                 <Grid item xs={12}>
                   <TextField required fullWidth id="profession" label="Profession" name="profession" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
                 </Grid>
