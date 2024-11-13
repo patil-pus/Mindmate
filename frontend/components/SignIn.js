@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, TextField, Grid, Box, Typography, Container } from '@mui/material';
+import { Button, TextField, Grid, Box, Typography, Container,Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import { pulsingBackground } from './animations.js'; // Adjust the path if needed
 
+
 const mindMateLogo = '/logo.png';
 
 export default function SignIn() {
+  const [loginFailed, setLoginFailed] = useState(false);
    const router = useRouter();
-   
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -36,11 +38,17 @@ export default function SignIn() {
    
     }else{
       console.log("Login failed")
+      setLoginFailed(true);
     }
     }catch(error){
       console.error('Error during login:', error);
+      setLoginFailed(true);
     }
     };
+
+     const handleClose = () => {
+    setLoginFailed(false); 
+  };
   
   return (
     <Container
@@ -161,6 +169,17 @@ export default function SignIn() {
             </Grid>
           </Grid>
         </Box>
+         <Dialog open={loginFailed} onClose={handleClose}>
+          <DialogTitle>Login Failed</DialogTitle>
+          <DialogContent>
+            <Typography>Incorrect email or password. Please try again.</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
       </motion.div>
     </Container>
   );
