@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, TextField, Grid, Box, Typography, Container,Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Button, TextField, Grid, Box, Typography, Container, Snackbar } from '@mui/material';
 import { motion } from 'framer-motion';
+import MuiAlert from '@mui/material/Alert';
 import Tilt from 'react-parallax-tilt';
 import { pulsingBackground } from './animations.js'; // Adjust the path if needed
 
-
 const mindMateLogo = '/logo.png';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function SignIn() {
+
+  const router = useRouter();
   const [loginFailed, setLoginFailed] = useState(false);
-   const router = useRouter();
+   
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,12 +48,15 @@ export default function SignIn() {
     }
     }catch(error){
       console.error('Error during login:', error);
-      setLoginFailed(true);
+      setLoginFailed(true)
     }
     };
 
-     const handleClose = () => {
-    setLoginFailed(false); 
+    const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setLoginFailed(false);
   };
   
   return (
@@ -65,6 +74,7 @@ export default function SignIn() {
         background: 'linear-gradient(120deg, #a8e6cf, #dcedc1, #ffd3b6)',
         backgroundSize: '400% 400%',
         animation: `${pulsingBackground} 15s ease infinite`, // Apply pulsing background
+         fontFamily: 'Inter, sans-serif',
       }}
     >
       <motion.div
@@ -169,17 +179,11 @@ export default function SignIn() {
             </Grid>
           </Grid>
         </Box>
-         <Dialog open={loginFailed} onClose={handleClose}>
-          <DialogTitle>Login Failed</DialogTitle>
-          <DialogContent>
-            <Typography>Incorrect email or password. Please try again.</Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              OK
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <Snackbar open={loginFailed} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%', fontFamily: 'Inter, sans-serif' }}>
+            Login failed. Please check your email and password and try again.
+          </Alert>
+        </Snackbar>
       </motion.div>
     </Container>
   );
