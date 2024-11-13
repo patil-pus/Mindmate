@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Button, TextField, Grid, Box, Typography, Container } from '@mui/material';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
@@ -8,6 +9,8 @@ import { pulsingBackground } from './animations.js'; // Adjust the path if neede
 const mindMateLogo = '/logo.png';
 
 export default function SignIn() {
+   const router = useRouter();
+   
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -28,7 +31,9 @@ export default function SignIn() {
       console.log("response",resData)
       sessionStorage.setItem('clientId', resData.clientId);
       console.log("client id", resData.clientId);
-      window.location.href = '/Dashboard';
+
+      router.push("/Dashboard");
+   
     }else{
       console.log("Login failed")
     }
@@ -122,7 +127,7 @@ export default function SignIn() {
               borderRadius: 2,
             }}
           />
-         <Link href="/Dashboard" passHref> 
+       
           <Button
             type="submit"
             fullWidth
@@ -142,7 +147,7 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-           </Link> 
+            
           <Grid container sx={{ mt: 1 }}>
             <Grid item xs>
               <Link href="#" variant="body2" className="custom-link">

@@ -12,7 +12,8 @@ const Dashboard = () => {
       const clientId = sessionStorage.getItem('clientId');
       console.log("client id",clientId);
        if (!clientId) {
-      //router.push('/SignIn'); 
+      //router.push('/SignIn');
+      console.log("invalid client id"); 
       return;
     }
 
