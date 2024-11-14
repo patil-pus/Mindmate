@@ -1,8 +1,9 @@
 // pages/_app.js
-import React from 'react';
+import React, { createContext } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import '../app/globals.css';
+import { UserProvider } from '../contexts/UserContext';
 
 const theme = createTheme({
   palette: {
@@ -52,11 +53,16 @@ const theme = createTheme({
   },
 });
 
+
+
 function MyApp({ Component, pageProps }) {
+ 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Component {...pageProps} />
+      <UserProvider>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </UserProvider>
     </ThemeProvider>
   );
 }

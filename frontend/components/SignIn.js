@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Paper, Box, Grid, Typography, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import UserContext from '../contexts/UserContext';
 
 function Copyright() {
   return (
@@ -24,7 +25,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function SignInSide() {
   const router = useRouter();
   const [loginFailed, setLoginFailed] = useState(false);
-
+  const { updateUser } = useContext(UserContext);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -44,6 +45,8 @@ export default function SignInSide() {
       if (response.ok) {
         const resData = await response.json();
         sessionStorage.setItem('clientId', resData.clientId);
+        
+        updateUser(resData.clientId);
         router.push("/Dashboard");
       } else {
         setLoginFailed(true);
