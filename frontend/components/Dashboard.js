@@ -7,6 +7,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { motion } from 'framer-motion';
 import CardMedia from '@mui/material/CardMedia';
 import ExpertSection from "./ExpertSection";
+import FeatureCard from "./FeatureCard";
+import DoctorCard from "./DoctorCard";
 
 const inhaleAnimation = keyframes`
     0%, 100% { transform: scale(1); opacity: 1; }
@@ -24,45 +26,6 @@ const ScrollContainer = styled(Box)({
     },
 });
 
-const FeatureCard = styled(Card)(({ theme }) => ({
-    minWidth: 500,
-    maxWidth: 300,
-    borderRadius: "15px",
-    backgroundColor: theme.palette.background.paper,
-    border: "1px solid #ccc",
-    color: theme.palette.text.primary,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: theme.spacing(2),
-    scrollSnapAlign: "center",
-}));
-
-const ImageCard = styled(Card)(({ theme }) => ({
-    minWidth: 500,
-    maxWidth: 300,
-    borderRadius: "15px",
-    backgroundColor: theme.palette.background.paper,
-    border: "1px solid #ccc",
-    color: theme.palette.text.primary,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: theme.spacing(2),
-    scrollSnapAlign: "center",
-}));
-
-const BackgroundImageLayer = styled(Box)({
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "#FFFFFF",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    zIndex: 0,
-});
 
 const ContentContainer = styled(Box)({
     position: "relative",
@@ -126,61 +89,6 @@ const MessageBox = styled(Box)({
     textAlign: "center",
     width: "100%",
     marginBottom: "20px",
-});
-
-const scrollAnimation = keyframes`
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-`;
-
-const DoctorCardContainer = styled(Box)({
-    display: "flex",
-    gap: "15px",
-    padding: "20px",
-    margin: "40px 0",
-    width: "100%",
-    overflow: "hidden",
-    animation: `${scrollAnimation} 60s linear infinite`,
-    '@media (max-width:600px)': {
-        animation: `${scrollAnimation} 3s linear infinite`, // Faster scrolling on smaller screens
-    },
-});
-
-const StyledCard = styled(Card)(({ theme }) => ({
-    minWidth: 200,
-    maxWidth: 250,
-    borderRadius: "15px",
-    color: "#fff",
-    textAlign: "center",
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    scrollSnapAlign: "center",
-    position: "relative",
-      overflow: "hidden",
-    '@media (max-width:600px)': {
-        minWidth: 150, // Adjust card size for smaller screens
-    },
-}));
-
-const ImageBackground = styled(Box)({
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    opacity: 1, // Adjust opacity as needed to see text clearly
-    zIndex: 1,
-});
-
-const TextContainer = styled(Box)({
-    position: "relative",
-    zIndex: 2, // Ensures text is above the image background
-    paddingTop: "160px", // Push text below the image
-    color: "#FFFFFF",
-    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.7)",
 });
 
 const Dashboard = () => {
@@ -294,78 +202,38 @@ const Dashboard = () => {
             <ContentContainer>
                 <HeaderText>Your Home for Health</HeaderText>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              
               <ScrollContainer>
-                  {/* Image Feature Card */}
-                 <ImageCard>
-                    <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>E</Avatar>
-                    <Typography variant="h6">Do-anywhere exercises</Typography>
-                    <CardContent>
-                        <Typography variant="body2">
-                            Reach your mental health goals with proven courses and expert-led guidance. Check out a preview here.
-                        </Typography>
-                    </CardContent>
-                        <CardMedia
-                            component="img"
-                            image="/exer.jpeg"
-                            alt="Exercise preview"
-                            sx={{ marginTop: "10px", height: "300px" }} // Adjust the height and spacing as needed
-                        />
-                    <Button variant="contained" sx={{ marginTop: "10px" }}>Learn More</Button>
-                </ImageCard>
-                {/* Chat Feature Card */}
-                <FeatureCard>
-                    <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>E</Avatar>
-                    <Typography variant="h6">Always-there Support</Typography>
-                    <CardContent>
-                        <Typography variant="body2">
-                            Unpack what’s on your mind with Ebb, our empathetic AI companion, and get personalized recommendations based on how you’re feeling.
-                        </Typography>
-                    </CardContent>
-                    <CardMedia
-                            component="img"
-                            image="/chat.jpg"
-                            alt="Exercise preview"
-                            sx={{ marginTop: "10px", height: "300px" }} // Adjust the height and spacing as needed
-                        />
-                    <Button variant="contained" sx={{ marginTop: "10px" }}>Chat with Ebb</Button>
-                </FeatureCard>
-
-                {/* Journal Entry Card */}
-                <FeatureCard>
-                    <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>J</Avatar>
-                    <Typography variant="h6">Journal Your Thoughts</Typography>
-                    <CardContent>
-                        <Typography variant="body2">
-                            Reflect on your day, your feelings, and keep a private journal that helps you understand yourself better.
-                        </Typography>
-                    </CardContent>
-                      <CardMedia
-                            component="img"
-                            image="/journal.jpg"
-                            alt="journal preview"
-                            sx={{ marginTop: "10px", height: "300px" }} // Adjust the height and spacing as needed
-                        />
-                    <Button variant="contained" sx={{ marginTop: "10px" }}>Start Writing</Button>
-                </FeatureCard>
-
-                {/* Meditation Practice Card */}
-                <FeatureCard>
-                    <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>M</Avatar>
-                    <Typography variant="h6">Meet your Therapist!</Typography>
-                    <CardContent>
-                        <Typography variant="body2">
-                           Find peace and clarity with personalized, in-person therapy — guided by experts, designed for you.
-                        </Typography>
-                    </CardContent>
-                      <CardMedia
-                            component="img"
-                            image="/inperson.webp"
-                            alt="journal preview"
-                            sx={{ marginTop: "10px", height: "300px" }} // Adjust the height and spacing as needed
-                        />
-                    <Button variant="contained" sx={{ marginTop: "10px" }}>Learn More</Button>
-                </FeatureCard>
+              <FeatureCard
+                  icon="E"
+                  title="Do-anywhere exercises"
+                  description="Reach your mental health goals with proven courses and expert-led guidance."
+                  image="/exer.jpeg"
+                  buttonText="Learn More"
+              />
+              <FeatureCard
+                icon="C"
+                title="Always-there Support"
+                description="Unpack what’s on your mind with Ebb, our empathetic AI companion, talk it out!"
+                image="/chat.jpg"
+                buttonText="Chat with Ebb"
+            />
+              <FeatureCard
+                  icon="J"
+                  title="Journal Your Thoughts"
+                  description="Reflect on your day, your feelings, and keep a private journal that helps you understand yourself better."
+                  image="/journal.jpg"
+                  buttonText="Start Writing"
+              />
+              <FeatureCard
+                  icon="M"
+                  title="Meet your Therapist!"
+                  description="Find peace and clarity with personalized, in-person therapy — guided by experts, designed for you."
+                  image="/inperson.webp"
+                  buttonText="Learn More"
+              />
             </ScrollContainer>
+            
             <MessageBox>
                 <Typography variant="h5" color="textPrimary" sx={{mt:2, textAlign: "center" }}>
                     Find the Support you need
@@ -396,27 +264,7 @@ const Dashboard = () => {
                 <div>
                         <ExpertSection />
                 </div>
-         {/* Scrolling Doctor Cards */}
-                <DoctorCardContainer>
-                    {[1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14].map((i, index) => (
-                       <StyledCard key={i}>
-                            {/* Background Image */}
-                            <ImageBackground
-                                component="img"
-                                src={`/doc.png`} 
-                                alt={`Therapist ${i}`}
-                            />
-
-                            
-                            {/* Text Content */}
-                            <TextContainer>
-                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Therapist Name {i}</Typography>
-                                <Typography variant="body2">Specialization</Typography>
-                                <Typography variant="body2">City, Country</Typography>
-                            </TextContainer>
-                        </StyledCard>
-                    ))}
-                </DoctorCardContainer>
+        <DoctorCard/>
             </ContentContainer>
 
             {/* Footer */}
