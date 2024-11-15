@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
+// uncomment next line to test //
+// import { useGlobal } from '../contexts/GlobalContext';
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Paper, Box, Grid, Typography, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -56,6 +58,40 @@ export default function SignInSide() {
       setLoginFailed(true);
     }
   };
+  // the code below uses global state//
+  // need to test with database//
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   const email = data.get('email');
+  //   const password = data.get('password');
+
+  //   try {
+  //     const response = await fetch('http://localhost:8080/api/clients/login', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ username: email, password }),
+  //       credentials: 'include',
+  //     });
+
+  //     if (response.ok) {
+  //       const resData = await response.json();
+  //       sessionStorage.setItem('clientId', resData.clientId);
+  //       setUser({ clientId: resData.clientId, username: email });
+  //       router.push("/Dashboard");
+  //     } else {
+  //       setError("Login failed. Please check your email and password.");
+  //       setLoginFailed(true);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during login:', error);
+  //     setError(error.message);
+  //     setLoginFailed(true);
+  //   }
+  // };
+
+// end of code snippet to be tested//
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
