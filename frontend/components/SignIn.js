@@ -26,6 +26,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function SignInSide() {
   const router = useRouter();
+  // const { setUser, setError } = useGlobal();
   const [loginFailed, setLoginFailed] = useState(false);
   const { updateUser } = useContext(UserContext);
   const handleSubmit = async (event) => {

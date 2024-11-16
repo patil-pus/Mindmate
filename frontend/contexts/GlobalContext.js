@@ -7,6 +7,7 @@ const initialState = {
   clientData: null,
   loading: false,
   error: null,
+  // add more states here
 };
 
 // Reducer function
@@ -14,6 +15,7 @@ const globalReducer = (state, action) => {
   switch (action.type) {
     case 'SET_USER':
       return { ...state, user: action.payload };
+      
     case 'SET_CLIENT_DATA':
       return { ...state, clientData: action.payload, loading: false, error: null };
     case 'SET_LOADING':
@@ -22,6 +24,7 @@ const globalReducer = (state, action) => {
       return { ...state, loading: false, error: action.payload };
     case 'LOGOUT':
       return { ...initialState };
+    // add additional reducers here
     default:
       return state;
   }
@@ -53,6 +56,8 @@ export const GlobalProvider = ({ children }) => {
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
   };
+
+  // add dispatch
 
   return (
     <GlobalContext.Provider value={{ state, setUser, setClientData, setLoading, setError, logout }}>
