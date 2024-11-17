@@ -1,5 +1,5 @@
 // contexts/GlobalContext.js
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext, useEffect, useReducer, useContext } from 'react';
 
 // Initial state
 const initialState = {
@@ -54,8 +54,39 @@ export const GlobalProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   };
 
+   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userId = sessionStorage.getItem('clientId');
+        if (!userId) {
+          console.error('No clientId found in sessionStorage');
+          return;
+        }
+
+        const res = await fetch(`http://localhost:8080/api/clients/${userId}/getJournal`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setUser(userId);
+          setClientData(data);
+        } else {
+          console.error('Failed to fetch data');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <GlobalContext.Provider value={{ state, setUser, setClientData, setLoading, setError, logout }}>
+    <GlobalContext.Provider value={{ ...state, setUser, setClientData, setLoading, setError, logout }}>
       {children}
     </GlobalContext.Provider>
   );

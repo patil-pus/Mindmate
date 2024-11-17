@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import UserContext from "../contexts/UserContext";
+// import UserContext from "../contexts/UserContext";
+import { useGlobal } from "../contexts/GlobalContext";
 import { AppBar, Toolbar, Box, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -9,6 +10,7 @@ import CardMedia from '@mui/material/CardMedia';
 import ExpertSection from "./ExpertSection";
 import FeatureCard from "./FeatureCard";
 import DoctorCard from "./DoctorCard";
+
 
 const inhaleAnimation = keyframes`
     0%, 100% { transform: scale(1); opacity: 1; }
@@ -93,46 +95,54 @@ const MessageBox = styled(Box)({
 
 const Dashboard = () => {
   const router = useRouter();
+  const { user, clientData, loading, error } = useGlobal();
+  // const { user } = useContext(UserContext);
   const [dashboard, setDashboard] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); 
+   const [isLoading, setIsLoading] = useState(true); 
   const [query, setQuery] = useState("");
   const [showNotification, setShowNotification] = useState(false);
 
-  useEffect(() => {
-
-      const clientId = sessionStorage.getItem('clientId');
-      console.log("client id",clientId);
-       if (!clientId) {
-      //router.push('/SignIn');
-      console.log("invalid client id"); 
-      return;
+    useEffect(() => {
+    if (!loading && !user) {
+      router.push("/SignIn");
     }
+  }, [loading, user, router]);
 
-    const fetchDashboard = async() => {
+  // useEffect(() => {
+
+    //   const clientId = sessionStorage.getItem('clientId');
+    //   console.log("client id",clientId);
+    //    if (!clientId) {
+    //   //router.push('/SignIn');
+    //   console.log("invalid client id"); 
+    //   return;
+    // }
+
+  //   const fetchDashboard = async() => {
     
-      try{
-      const res = await fetch(`http://localhost:8080/api/clients/${clientId}/getJournal`, {
-        method: 'GET',
-        credentials: 'include'
-      });
+  //     try{
+  //     const res = await fetch(`http://localhost:8080/api/clients/${user}/getJournal`, {
+  //       method: 'GET',
+  //       credentials: 'include'
+  //     });
 
-      if(res.ok){
-        const data = await res.json();
-        setDashboard(data);
-        console.log("dahsboard data - ",data);
-    }else{
-      console.error('Failed to fetch dashboard data');
-    }
-          //router.push('/SignIn');
-    }
-    catch(error){
-      console.error('Error fetching dashboard data:', error);
-    }
-  };
-  fetchDashboard();
-  },[router]);
-    const { user } = useContext(UserContext);
-    console.log("Current user in Dashboard component:", user); // Debug log
+  //     if(res.ok){
+  //       const data = await res.json();
+  //       setDashboard(data);
+  //       console.log("dahsboard data - ",data);
+  //   }else{
+  //     console.error('Failed to fetch dashboard data');
+  //   }
+  //         //router.push('/SignIn');
+  //   }
+  //   catch(error){
+  //     console.error('Error fetching dashboard data:', error);
+  //   }
+  // };
+  // fetchDashboard();
+  // },[router]);
+    // const { user } = useContext(UserContext);
+    // console.log("Current user in Dashboard component:", user); // Debug log
 
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 2000);
@@ -144,6 +154,8 @@ const Dashboard = () => {
         const hideNotification = setTimeout(() => setShowNotification(false), 5000);
         return () => clearTimeout(hideNotification);
     }, [isLoading]);
+
+    console.log("clinet data",clientData);
 
     if (isLoading) {
         return (
@@ -157,6 +169,7 @@ const Dashboard = () => {
 
     return (
         <Box sx={{ position: "relative", height: "100vh", overflow: "auto" , paddingBottom: "40px", backgroundColor: "#FFFFFF" }}>
+                     
         
             {/* Header */}
             <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
@@ -198,6 +211,8 @@ const Dashboard = () => {
                     <Typography variant="body2">You have a new message from your doctor.</Typography>
                 </NotificationContainer>
             )}
+
+       
             {/* Content */}
             <ContentContainer>
                 <HeaderText>Your Home for Health</HeaderText>
@@ -233,12 +248,82 @@ const Dashboard = () => {
                   buttonText="Learn More"
               />
             </ScrollContainer>
+
+ 
             
             <MessageBox>
                 <Typography variant="h5" color="textPrimary" sx={{mt:2, textAlign: "center" }}>
                     Find the Support you need
                 </Typography>
             </MessageBox>
+                         <Box sx={{ position: "relative", height: "100vh", overflow: "auto", paddingBottom: "40px", backgroundColor: "#FFFFFF" }}>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+
+                <div>
+                  <h1>Welcome, {user || "Guest"}!</h1>
+                  <p>Client Data:</p>
+
+                  {/* Render client data here */}
+                  {clientData && clientData.length > 0 ? (
+                    clientData.map((entry, index) => (
+                      <Box 
+                        key={index} 
+                        sx={{
+                          padding: "20px",
+                          borderRadius: "12px",
+                          backgroundColor: "#f0f4ff",
+                          border: "1px solid #e0e0e0",
+                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                          color: "black",
+                          margin: "20px 0",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          textAlign: "center",
+                          maxWidth: "400px",
+                          mx: "auto"
+                        }}
+                      >
+                <Typography variant="h5" sx={{ fontWeight: "bold", color: "#3f51b5", mb: 1 }}>
+                Welcome Back {entry.client.name}! Let's Reflect on Your Day...
+                </Typography>
+                <Typography variant="body2" sx={{ fontStyle: "italic", color: "#7b7b7b", mb: 2 }}>
+                  Last Entry: {new Date(entry.entryDate).toLocaleDateString()}
+                </Typography>
+
+                <Box 
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "green",
+                    borderRadius: "50%",
+                    width: "80px",
+                    height: "80px",
+                    mb: 2,
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)"
+                  }}
+                >
+                  <Typography variant="h4" sx={{ color: "red" }}>
+                    {entry.mood}
+                  </Typography>
+                </Box>
+
+                <Typography variant="body1" sx={{ color: "#555", mb: 1 }}>
+                  Age: <strong>{entry.client.age}</strong> | Sex: <strong>{entry.client.sex}</strong>
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#555", mb: 2 }}>
+                  <strong>Content:</strong> {entry.content}
+                </Typography>
+              </Box>
+                        ))
+                      ) : (
+                        <Typography variant="body1">No client data available.</Typography>
+                      )}
+                    </div>
+
+                    {/* Other UI elements... */}
+                  </Box>
 
             {/* Wrapper for Search Bar with Relative Positioning */}
             <Box sx={{ position: "relative", width: "100%", maxWidth: "600px", mt: 2 }}>
@@ -286,7 +371,7 @@ const Dashboard = () => {
             </Box>
         </Box>
     );
-};
+}
 
 export default Dashboard;
 

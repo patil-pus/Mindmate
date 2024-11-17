@@ -1,4 +1,4 @@
-
+//TRYING TO USE USER CONTEXT
 import React, { useContext } from 'react'
 import UserContext from '../contexts/UserContext'
 
