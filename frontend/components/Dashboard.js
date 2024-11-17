@@ -108,41 +108,6 @@ const Dashboard = () => {
     }
   }, [loading, user, router]);
 
-  // useEffect(() => {
-
-    //   const clientId = sessionStorage.getItem('clientId');
-    //   console.log("client id",clientId);
-    //    if (!clientId) {
-    //   //router.push('/SignIn');
-    //   console.log("invalid client id"); 
-    //   return;
-    // }
-
-  //   const fetchDashboard = async() => {
-    
-  //     try{
-  //     const res = await fetch(`http://localhost:8080/api/clients/${user}/getJournal`, {
-  //       method: 'GET',
-  //       credentials: 'include'
-  //     });
-
-  //     if(res.ok){
-  //       const data = await res.json();
-  //       setDashboard(data);
-  //       console.log("dahsboard data - ",data);
-  //   }else{
-  //     console.error('Failed to fetch dashboard data');
-  //   }
-  //         //router.push('/SignIn');
-  //   }
-  //   catch(error){
-  //     console.error('Error fetching dashboard data:', error);
-  //   }
-  // };
-  // fetchDashboard();
-  // },[router]);
-    // const { user } = useContext(UserContext);
-    // console.log("Current user in Dashboard component:", user); // Debug log
 
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 2000);
@@ -214,6 +179,129 @@ const Dashboard = () => {
 
        
             {/* Content */}
+            <Box  sx={{ 
+                        position: "absolute",  // Use absolute positioning
+                        right: "-5.2%",            // Position the box on the right side
+                        width: "800px",          // Set a width for the box
+                        height: "30vh",        // Set height
+                        top: "59%",             // Position the box at the center of the screen
+                        padding: "20px",       // Add inner padding for content
+                        backgroundColor: "#FFFFFF", // White background
+                        borderRadius: "20px",   // Rounded corners for better visuals
+                        zIndex:'3',
+                        margin:'10px'
+                    }}>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+
+                <div>
+                  <h1>Welcome, {user || "Guest"}!</h1>
+                  <p>Client Data:</p>
+
+                  {/* Render client data here */}
+                  {clientData && clientData.length > 0 ? (
+                    clientData.map((entry, index) => (
+                      <Box 
+                        key={index} 
+                        sx={{
+                          padding: "20px",
+                          borderRadius: "12px",
+                          backgroundColor: "#f0f4ff",
+                          border: "1px solid #e0e0e0",
+                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                          color: "black",
+                          margin: "20px 0",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          textAlign: "center",
+                          maxWidth: "400px",
+                          mx: "auto"
+                        }}
+                      >
+                <Typography variant="h5" sx={{ fontWeight: "bold", color: "#3f51b5", mb: 1 }}>
+                Welcome Back {entry.client.name}! 
+                <br></br>Let's Reflect on Your Day...
+                </Typography>
+                <Typography variant="body2" sx={{ fontStyle: "italic", color: "#7b7b7b", mb: 2 }}>
+                  Last Entry: {new Date(entry.entryDate).toLocaleDateString()}
+                </Typography>
+
+             <Box 
+                sx={{
+                    position: "relative", 
+                    width: "150px", 
+                    height: "150px", 
+                    borderRadius: "50%", 
+                    background: `conic-gradient(
+                    #4CAF50 0% 40%, 
+                    #FFC107 40% 70%, 
+                    #F44336 70% 90%, 
+                    #2196F3 90% 100%
+                    )`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)"
+                }}
+                >
+  {/* Inner Circle for total and label */}
+  <Box 
+    sx={{
+      position: "absolute",
+      width: "90px", 
+      height: "90px", 
+      borderRadius: "50%", 
+      backgroundColor: "#1E1E2F", 
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography 
+      variant="h6" 
+      sx={{ color: "white", fontWeight: "bold", fontSize: "16px" }}
+    >
+      Mood
+    </Typography>
+    <Typography 
+      variant="body2" 
+      sx={{ color: "white", fontSize: "12px" }}
+    >
+    </Typography>
+  </Box>
+
+</Box>
+    <Typography 
+    variant="body2" 
+    sx={{ 
+      color: "white", 
+      fontSize: "12px", 
+      mt: "auto", // Push it to the bottom using flexbox spacing
+      textAlign: "center" // Center-align the text
+    }}
+  >
+    <a 
+      href="/journal" 
+      style={{
+        color: "#1976D2", 
+        textDecoration: "none", 
+        fontWeight: "bold",
+        cursor: "pointer"
+      }}
+    >
+      View Journal
+    </a>
+  </Typography>
+  </Box>
+                        ))
+                      ) : (
+                        <Typography variant="body1">No client data available.</Typography>
+                      )}
+                    </div>
+
+                    {/* Other UI elements... */}
+                  </Box>
             <ContentContainer>
                 <HeaderText>Your Home for Health</HeaderText>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
@@ -247,83 +335,13 @@ const Dashboard = () => {
                   image="/inperson.webp"
                   buttonText="Learn More"
               />
-            </ScrollContainer>
-
- 
-            
+            </ScrollContainer>  
             <MessageBox>
                 <Typography variant="h5" color="textPrimary" sx={{mt:2, textAlign: "center" }}>
                     Find the Support you need
                 </Typography>
             </MessageBox>
-                         <Box sx={{ position: "relative", height: "100vh", overflow: "auto", paddingBottom: "40px", backgroundColor: "#FFFFFF" }}>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-
-                <div>
-                  <h1>Welcome, {user || "Guest"}!</h1>
-                  <p>Client Data:</p>
-
-                  {/* Render client data here */}
-                  {clientData && clientData.length > 0 ? (
-                    clientData.map((entry, index) => (
-                      <Box 
-                        key={index} 
-                        sx={{
-                          padding: "20px",
-                          borderRadius: "12px",
-                          backgroundColor: "#f0f4ff",
-                          border: "1px solid #e0e0e0",
-                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                          color: "black",
-                          margin: "20px 0",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          textAlign: "center",
-                          maxWidth: "400px",
-                          mx: "auto"
-                        }}
-                      >
-                <Typography variant="h5" sx={{ fontWeight: "bold", color: "#3f51b5", mb: 1 }}>
-                Welcome Back {entry.client.name}! Let's Reflect on Your Day...
-                </Typography>
-                <Typography variant="body2" sx={{ fontStyle: "italic", color: "#7b7b7b", mb: 2 }}>
-                  Last Entry: {new Date(entry.entryDate).toLocaleDateString()}
-                </Typography>
-
-                <Box 
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "green",
-                    borderRadius: "50%",
-                    width: "80px",
-                    height: "80px",
-                    mb: 2,
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)"
-                  }}
-                >
-                  <Typography variant="h4" sx={{ color: "red" }}>
-                    {entry.mood}
-                  </Typography>
-                </Box>
-
-                <Typography variant="body1" sx={{ color: "#555", mb: 1 }}>
-                  Age: <strong>{entry.client.age}</strong> | Sex: <strong>{entry.client.sex}</strong>
-                </Typography>
-                <Typography variant="body1" sx={{ color: "#555", mb: 2 }}>
-                  <strong>Content:</strong> {entry.content}
-                </Typography>
-              </Box>
-                        ))
-                      ) : (
-                        <Typography variant="body1">No client data available.</Typography>
-                      )}
-                    </div>
-
-                    {/* Other UI elements... */}
-                  </Box>
+                         
 
             {/* Wrapper for Search Bar with Relative Positioning */}
             <Box sx={{ position: "relative", width: "100%", maxWidth: "600px", mt: 2 }}>

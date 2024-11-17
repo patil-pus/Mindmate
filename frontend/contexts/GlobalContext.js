@@ -57,7 +57,6 @@ export const GlobalProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-<<<<<<< HEAD
    useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,9 +87,6 @@ export const GlobalProvider = ({ children }) => {
 
     fetchData();
   }, []);
-=======
-  // add dispatch
->>>>>>> a8bdb69f5b24f1496c5c98acaa0b193179494339
 
   return (
     <GlobalContext.Provider value={{ ...state, setUser, setClientData, setLoading, setError, logout }}>
