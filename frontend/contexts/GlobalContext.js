@@ -7,6 +7,7 @@ const initialState = {
   clientData: null,
   loading: false,
   error: null,
+  // add more states here
 };
 
 // Reducer function
@@ -14,6 +15,7 @@ const globalReducer = (state, action) => {
   switch (action.type) {
     case 'SET_USER':
       return { ...state, user: action.payload };
+      
     case 'SET_CLIENT_DATA':
       return { ...state, clientData: action.payload, loading: false, error: null };
     case 'SET_LOADING':
@@ -22,6 +24,7 @@ const globalReducer = (state, action) => {
       return { ...state, loading: false, error: action.payload };
     case 'LOGOUT':
       return { ...initialState };
+    // add additional reducers here
     default:
       return state;
   }
@@ -54,6 +57,7 @@ export const GlobalProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   };
 
+<<<<<<< HEAD
    useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,6 +88,9 @@ export const GlobalProvider = ({ children }) => {
 
     fetchData();
   }, []);
+=======
+  // add dispatch
+>>>>>>> a8bdb69f5b24f1496c5c98acaa0b193179494339
 
   return (
     <GlobalContext.Provider value={{ ...state, setUser, setClientData, setLoading, setError, logout }}>
