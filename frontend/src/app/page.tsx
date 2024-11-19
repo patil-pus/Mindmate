@@ -27,6 +27,15 @@ const MoodAvatar = styled(Avatar)(({ theme }) => ({
   marginRight: theme.spacing(2),
 }));
 
+const fetchJournalEntries = async () => {
+  // TODO: Replace with actual API call
+  const mockEntries: JournalEntry[] = [
+    { id: 1, date: '2024-11-18 14:30', mood: 'Happy', content: ' optimistic!' },
+    { id: 2, date: '2024-11-17 20:15', mood: 'Anxious', content: 'trying to stay calm.' },
+    { id: 3, date: '2024-11-16 09:45', mood: 'Calm', content: 'Morning meditation helped' },
+  ];
+  setJournalEntries(mockEntries);
+};
 export default function JournalPage() {
   const [mood, setMood] = useState<string>('');
   const [content, setContent] = useState<string>('');
