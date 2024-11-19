@@ -98,7 +98,7 @@ export default function JournalPage() {
           </form>
         </Paper>
 
-        ))}
+        ))
       </Container>
   );
 }
