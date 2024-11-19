@@ -98,7 +98,17 @@ export default function JournalPage() {
           </form>
         </Paper>
 
-        ))
+        <Typography variant="h4" gutterBottom sx={{ mt: 6, mb: 3, fontWeight: 'medium' }}>
+          Your Journal Entries
+        </Typography>
+        {journalEntries.map((entry) => (
+            <StyledCard key={entry.id}>
+                <Typography variant="body1">
+                  {entry.content}
+                </Typography>
+              
+            </StyledCard>
+        ))}
       </Container>
   );
 }
