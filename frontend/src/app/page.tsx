@@ -103,10 +103,22 @@ export default function JournalPage() {
         </Typography>
         {journalEntries.map((entry) => (
             <StyledCard key={entry.id}>
+              <CardContent>
+                <Box display="flex" alignItems="center" mb={2}>
+                  <MoodAvatar sx={{ bgcolor: getMoodColor(entry.mood) }}>
+                    {entry.mood[0]}
+                  </MoodAvatar>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {entry.mood}
+                  </Typography>
+                  <Typography variant="body2" sx={{ ml: 'auto', color: '#1976d2' }}>
+                    {entry.date}
+                  </Typography>
+                </Box>
                 <Typography variant="body1">
                   {entry.content}
                 </Typography>
-              
+              </CardContent>
             </StyledCard>
         ))}
       </Container>
