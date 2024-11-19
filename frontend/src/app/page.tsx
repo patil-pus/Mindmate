@@ -27,15 +27,6 @@ const MoodAvatar = styled(Avatar)(({ theme }) => ({
   marginRight: theme.spacing(2),
 }));
 
-const fetchJournalEntries = async () => {
-  // TODO: Replace with actual API call
-  const mockEntries: JournalEntry[] = [
-    { id: 1, date: '2024-11-18 14:30', mood: 'Happy', content: ' optimistic!' },
-    { id: 2, date: '2024-11-17 20:15', mood: 'Anxious', content: 'trying to stay calm.' },
-    { id: 3, date: '2024-11-16 09:45', mood: 'Calm', content: 'Morning meditation helped' },
-  ];
-  setJournalEntries(mockEntries);
-};
 export default function JournalPage() {
   const [mood, setMood] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -44,6 +35,42 @@ export default function JournalPage() {
   useEffect(() => {
     fetchJournalEntries();
   }, []);
+
+  const fetchJournalEntries = async () => {
+    // TODO: Replace with actual API call
+    const mockEntries: JournalEntry[] = [
+      { id: 1, date: '2024-11-18 14:30', mood: 'Happy', content: 'Had a great therapy session today. Feeling optimistic!' },
+      { id: 2, date: '2024-11-17 20:15', mood: 'Anxious', content: 'Worried about tomorrow\'s presentation, but trying to stay calm.' },
+      { id: 3, date: '2024-11-16 09:45', mood: 'Calm', content: 'Morning meditation really helped set a positive tone for the day.' },
+    ];
+    setJournalEntries(mockEntries);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // TODO: Replace with actual API call to save journal entry
+    console.log('Saving journal entry:', { mood, content });
+    // Reset form
+    setMood('');
+    setContent('');
+    // Refresh journal entries
+    await fetchJournalEntries();
+  };
+
+  const handleMoodChange = (event: SelectChangeEvent) => {
+    setMood(event.target.value as string);
+  };
+
+  const getMoodColor = (mood: string) => {
+    const moodColors: { [key: string]: string } = {
+      Happy: '#4CAF50',
+      Sad: '#2196F3',
+      Anxious: '#FFC107',
+      Calm: '#9C27B0',
+      Angry: '#F44336',
+    };
+    return moodColors[mood] || '#757575';
+  };
 
   return (
       <Container maxWidth="md" sx={{ pt: 4, pb: 8 }}>
