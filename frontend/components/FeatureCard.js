@@ -22,7 +22,10 @@ const FeatureCard = ({ icon, title, description, image, buttonText }) => (
         <CardContent>
             <Typography variant="body2">{description}</Typography>
         </CardContent>
-        <CardMedia component="img" image={image} alt={title} sx={{ marginTop: "10px", height: "300px" }} />
+        <CardMedia component="img" image={image} alt={title} sx={{ marginTop: "10px",
+    height: "300px",
+    width: "100%",
+    objectFit: "cover",  }} />
         <Button variant="contained" sx={{ marginTop: "10px" }}>{buttonText}</Button>
     </StyledFeatureCard>
 );

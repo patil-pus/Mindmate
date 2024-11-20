@@ -31,6 +31,9 @@ public class Client implements Person {
     @Column(name = "profession")
     private String profession;
 
+    @Column(name = "role")
+    private String role = "client";
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<JournalEntry> journalEntries = new ArrayList<>();
@@ -41,14 +44,17 @@ public class Client implements Person {
 
     public Client() {}
 
-    public Client(String name, int age, String sex, String username, String password, String profession) {
+    public Client(String name, int age, String sex, String username, String password, String profession, String role) {
         this.name = name;
         this.age = age;
         this.sex = sex;
         this.username = username;
         this.password = password;
         this.profession = profession;
+        this.role = role;
     }
+
+
     @Override
     public int getId() {
         return id;
@@ -102,6 +108,16 @@ public class Client implements Person {
     @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String getRole() {
+        return role;
+    }
+
+    @Override
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getProfession() {

@@ -14,6 +14,8 @@ public interface Person {
     void setUsername(String username);
     String getPassword();
     void setPassword(String password);
+    String getRole();
+    void setRole(String role);
 
     @Override
     String toString();

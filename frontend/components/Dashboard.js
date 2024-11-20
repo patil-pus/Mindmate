@@ -39,7 +39,7 @@ const ContentContainer = styled(Box)({
     alignItems: "center",
     justifyContent: "center",
     padding: "120px 20px 40px", 
-     minHeight: "100vh",
+    minHeight: "100vh",
 
 });
 
@@ -95,7 +95,7 @@ const MessageBox = styled(Box)({
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, clientData, loading, error } = useGlobal();
+  const { user, clientData, therapists,loading , error } = useGlobal();
   // const { user } = useContext(UserContext);
   const [dashboard, setDashboard] = useState(null);
    const [isLoading, setIsLoading] = useState(true); 
@@ -121,6 +121,7 @@ const Dashboard = () => {
     }, [isLoading]);
 
     console.log("clinet data",clientData);
+    console.log("therapists",therapists);
 
     if (isLoading) {
         return (
@@ -175,21 +176,19 @@ const Dashboard = () => {
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>New Notification</Typography>
                     <Typography variant="body2">You have a new message from your doctor.</Typography>
                 </NotificationContainer>
-            )}
-
-       
+            )}       
             {/* Content */}
             <Box  sx={{ 
                         position: "absolute",  // Use absolute positioning
                         right: "-5.2%",            // Position the box on the right side
                         width: "800px",          // Set a width for the box
-                        height: "30vh",        // Set height
-                        top: "59%",             // Position the box at the center of the screen
-                        padding: "20px",       // Add inner padding for content
+                        //height: "30vh",        // Set height
+                        //top: "59%",             // Position the box at the center of the screen
+                        //padding: "20px",       // Add inner padding for content
                         backgroundColor: "#FFFFFF", // White background
                         borderRadius: "20px",   // Rounded corners for better visuals
                         zIndex:'3',
-                        margin:'10px'
+                       // margin:'10px'
                     }}>
                 {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -199,17 +198,22 @@ const Dashboard = () => {
 
                   {/* Render client data here */}
                   {clientData && clientData.length > 0 ? (
-                    clientData.map((entry, index) => (
-                      <Box 
-                        key={index} 
-                        sx={{
+                  (() => {
+                          const lastEntry = clientData[clientData.length - 1]; // Get the last entry
+                          return (
+                        <Box
+                          key={lastEntry.id || "last-entry"}
+                          sx={{
                           padding: "20px",
+                          position: "absolute",
+                          right: "32%",
+                          top: "1570%",
                           borderRadius: "12px",
                           backgroundColor: "#f0f4ff",
                           border: "1px solid #e0e0e0",
                           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                           color: "black",
-                          margin: "20px 0",
+                          margin: "20px",
                           display: "flex",
                           flexDirection: "column",
                           alignItems: "center",
@@ -219,11 +223,11 @@ const Dashboard = () => {
                         }}
                       >
                 <Typography variant="h5" sx={{ fontWeight: "bold", color: "#3f51b5", mb: 1 }}>
-                Welcome Back {entry.client.name}! 
+                Welcome Back {lastEntry.client.name}! 
                 <br></br>Let's Reflect on Your Day...
                 </Typography>
                 <Typography variant="body2" sx={{ fontStyle: "italic", color: "#7b7b7b", mb: 2 }}>
-                  Last Entry: {new Date(entry.entryDate).toLocaleDateString()}
+                  Last Entry: {new Date(lastEntry.entryDate).toLocaleDateString()}
                 </Typography>
 
              <Box 
@@ -244,69 +248,69 @@ const Dashboard = () => {
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)"
                 }}
                 >
-  {/* Inner Circle for total and label */}
-  <Box 
-    sx={{
-      position: "absolute",
-      width: "90px", 
-      height: "90px", 
-      borderRadius: "50%", 
-      backgroundColor: "#1E1E2F", 
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    }}
-  >
-    <Typography 
-      variant="h6" 
-      sx={{ color: "white", fontWeight: "bold", fontSize: "16px" }}
-    >
-      Mood
-    </Typography>
-    <Typography 
-      variant="body2" 
-      sx={{ color: "white", fontSize: "12px" }}
-    >
-    </Typography>
-  </Box>
+                    {/* Inner Circle for total and label */}
+                    <Box 
+                      sx={{
+                        position: "absolute",
+                        width: "90px", 
+                        height: "90px", 
+                        borderRadius: "50%", 
+                        backgroundColor: "#1E1E2F", 
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography 
+                        variant="h6" 
+                        sx={{ color: "white", fontWeight: "bold", fontSize: "16px" }}
+                      >
+                        Mood
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ color: "white", fontSize: "12px" }}
+                      >
+                      </Typography>
+                    </Box>
 
-</Box>
-    <Typography 
-    variant="body2" 
-    sx={{ 
-      color: "white", 
-      fontSize: "12px", 
-      mt: "auto", // Push it to the bottom using flexbox spacing
-      textAlign: "center" // Center-align the text
-    }}
-  >
-    <a 
-      href="/journal" 
-      style={{
-        color: "#1976D2", 
-        textDecoration: "none", 
-        fontWeight: "bold",
-        cursor: "pointer"
-      }}
-    >
-      View Journal
-    </a>
-  </Typography>
-  </Box>
-                        ))
+                  </Box>
+                      <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: "white", 
+                        fontSize: "12px", 
+                        mt: "auto", // Push it to the bottom using flexbox spacing
+                        textAlign: "center" // Center-align the text
+                      }}
+                    >
+                      <a 
+                        href="/journal" 
+                        style={{
+                          color: "#1976D2", 
+                          textDecoration: "none", 
+                          fontWeight: "bold",
+                          cursor: "pointer"
+                        }}
+                      >
+                        View Journal
+                      </a>
+                    </Typography>
+                    </Box>
+                          );
+                        })()         
                       ) : (
                         <Typography variant="body1">No client data available.</Typography>
                       )}
                     </div>
-
                     {/* Other UI elements... */}
                   </Box>
             <ContentContainer>
                 <HeaderText>Your Home for Health</HeaderText>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
               
-              <ScrollContainer>
+             <ScrollContainer>
               <FeatureCard
                   icon="E"
                   title="Do-anywhere exercises"
@@ -335,7 +339,9 @@ const Dashboard = () => {
                   image="/inperson.webp"
                   buttonText="Learn More"
               />
-            </ScrollContainer>  
+            </ScrollContainer>   
+
+         
             <MessageBox>
                 <Typography variant="h5" color="textPrimary" sx={{mt:2, textAlign: "center" }}>
                     Find the Support you need
@@ -382,7 +388,7 @@ const Dashboard = () => {
                     padding: "10px 0",
                     backgroundColor: "rgba(0, 0, 0, 0.7)",
                     color: "#FFFFFF",
-                    zIndex: 1,
+                    zIndex: 4,
                 }}
             >
                 <Typography variant="body2">© 2023 MindMate. All Rights Reserved.</Typography>

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +33,22 @@ public class TherapistService implements UserDetailsService {
     public Therapist getTherapistById(int therapistId) {
         return therapistDAO.findById(therapistId)
                 .orElseThrow(() -> new IllegalArgumentException("Therapist with id " + therapistId + " not found."));
+    }
+    
+
+    public Therapist getTherapistByUserName(String username)  throws UsernameNotFoundException{
+        Optional<Therapist> therapistOpt = therapistDAO.findByUsername(username);
+        if (!therapistOpt.isPresent()) {
+            throw new UsernameNotFoundException("Therapist not found with username: " + username);
+        }
+
+        Therapist therapist = therapistOpt.get();
+
+        return therapist;
+    }
+
+    public List<Therapist> getAllTherapists() {
+        return therapistDAO.findAll();
     }
 
     // Add a client to a therapist's client list

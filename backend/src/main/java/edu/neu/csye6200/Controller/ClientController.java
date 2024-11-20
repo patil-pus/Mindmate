@@ -63,7 +63,7 @@ public class ClientController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(Map.of("clientId", clientId, "message", "Login successful"));
+                .body(Map.of("clientId", clientId, "client", getAuthenticatedClient, "message", "Login successful"));
     }
 
     // Endpoint to add a journal entry to a client

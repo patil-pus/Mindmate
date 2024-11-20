@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Button, TextField, Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormControl, FormControlLabel, FormLabel } from '@mui/material';
+import React, {  useState } from 'react';
+import { Button, TextField, Snackbar, Alert,Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormControl, FormControlLabel, FormLabel } from '@mui/material';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import { keyframes } from '@mui/system';
+import { useRouter } from 'next/router';
 
 const mindMateLogo = '/logo.png';
 
@@ -13,25 +14,99 @@ const pulsingBackground = keyframes`
 `;
 
 export default function SignUp() {
+  const router = useRouter();
   const [userType, setUserType] = useState('client');
+  const [alertMessage, setAlertMessage] = useState(''); 
+  const [openAlert, setOpenAlert] = useState(false);
 
   const handleUserTypeChange = (event) => {
     setUserType(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenAlert(false);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('Name'),
-      age: data.get('age'),
-      sex: data.get('sex'),
-      email: data.get('email'),
-      password: data.get('password'),
-      userType: data.get('userType'),
-      ...(userType === 'client' ? { insurance: data.get('insurance'), profession: data.get('profession') } : {}),
-      ...(userType === 'therapist' ? { location: data.get('location'), specialization: data.get('specialization') } : {}),
+    const name = data.get('Name');
+    const age = data.get('age');
+    const sex = data.get('sex');
+    const username = data.get('username');
+    const password = data.get('password');
+    const profession = data.get('profession');
+    const location = data.get('location');
+    const specialization = data.get('specialization');
+    const language = data.get('language');
+    const insurance = data.get('insurance');
+
+    if (!name || !age || !sex || !username || !password) {
+      setAlertMessage('Please fill in all required fields.');
+      setOpenAlert(true);
+      return;
+    }
+
+    if (password.length < 3) {
+      setAlertMessage('Password must be at least 3 characters long.');
+      setOpenAlert(true);
+      return;
+    }
+
+    if (userType === 'client' && !profession) {
+      setAlertMessage('Profession is required for clients.');
+      setOpenAlert(true);
+      return;
+    }
+
+    if (userType === 'therapist' && (!location || !specialization || !language || !insurance)) {
+      setAlertMessage('Location, specialization, language, insurance are required for therapists.');
+      setOpenAlert(true);
+      return;
+    }
+
+
+    const user = {
+      name,
+      age,
+      sex,
+      username,
+      password,  
+      role: userType,
+      ...(userType === 'client' && {profession}),
+      ...(userType === 'therapist' && {location, specialization, language,insurance,}),
+    };
+
+    const endpoint =
+    userType === 'client'
+      ? 'http://localhost:8080/api/clients/register'
+      : 'http://localhost:8080/api/therapists/register';
+
+    try{
+
+      const response = await fetch(endpoint, {
+        method:'POST',
+        headers :{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
     });
+
+    if(response.ok){
+      const resData = await response.json();
+      alert('Sign up successful');
+      console.log('Response:', resData); 
+      router.push("/SignIn");
+    }else{
+      const error = await response.json();
+      alert(`Sign-up failed: ${error.message}`);
+    }
+    }catch(error){
+      console.error('Error during sign up:', error);
+    }
   };
 
   return (
@@ -107,12 +182,23 @@ export default function SignUp() {
               I am a
             </FormLabel>
             <RadioGroup row value={userType} onChange={handleUserTypeChange} name="userType">
-              <FormControlLabel value="client" control={<Radio sx={{ color: '#3a86ff' }} />} label="Client" />
-              <FormControlLabel value="therapist" control={<Radio sx={{ color: '#3a86ff' }} />} label="Therapist" />
+              <FormControlLabel value="client" control={<Radio sx={{ color: '#3a86ff' }} />} label="Client" sx={{
+                '& .MuiFormControlLabel-label': {
+                  color: 'black', // Label color
+                  fontWeight: 'bold', // Optional styling
+                },
+    }}/>
+              <FormControlLabel value="therapist" control={<Radio sx={{ color: '#3a86ff' }} />} label="Therapist" sx={{
+                '& .MuiFormControlLabel-label': {
+                  color: 'black', // Label color
+                  fontWeight: 'bold', // Optional styling
+                },
+              }}/>
             </RadioGroup>
           </FormControl>
 
           <Grid container spacing={2}>
+            
             <Grid item xs={12}>
               <TextField required fullWidth id="name" label="Name" name="Name" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
             </Grid>
@@ -123,7 +209,7 @@ export default function SignUp() {
               <TextField required fullWidth id="sex" label="Sex" name="sex" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
             </Grid>
             <Grid item xs={12}>
-              <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
+              <TextField required fullWidth id="username" label="username" name="username" autoComplete="username" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
             </Grid>
             <Grid item xs={12}>
               <TextField required fullWidth name="password" label="Password" type="password" id="password" autoComplete="new-password" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
@@ -144,6 +230,12 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField required fullWidth id="specialization" label="Specialization" name="specialization" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
+                </Grid>
+                    <Grid item xs={12}>
+                  <TextField required fullWidth id="language" label="Language" name="language" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
+                </Grid>
+                    <Grid item xs={12}>
+                  <TextField required fullWidth id="insurance" label="Insurance Acceptd" name="insurance" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: 2 }} />
                 </Grid>
               </>
             )}
@@ -171,6 +263,17 @@ export default function SignUp() {
           >
             Sign Up
           </Button>
+
+          <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseAlert} severity="error">
+          {alertMessage}
+        </Alert>
+      </Snackbar>
 
           <Grid container justifyContent="flex-end" sx={{ mt: 1 }}>
             <Grid item>

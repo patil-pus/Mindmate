@@ -1,7 +1,9 @@
 import React from 'react';
 import { Card, Typography, Box } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
-
+import { useGlobal } from "../contexts/GlobalContext";
+import FeatureCard from "./FeatureCard";
+ 
 
 const scrollAnimation = keyframes`
   0% { transform: translateX(100%); }
@@ -15,7 +17,6 @@ const DoctorCardContainer = styled(Box)({
     padding: "20px",
     margin: "40px 0",
     width: "100%",
-    overflow: "hidden",
     animation: `${scrollAnimation} 60s linear infinite`,
     '@media (max-width:600px)': {
         animation: `${scrollAnimation} 3s linear infinite`, // Faster scrolling on smaller screens
@@ -60,25 +61,24 @@ const TextContainer = styled(Box)({
     textShadow: "1px 1px 2px rgba(0, 0, 0, 0.7)",
 });
 
-const DoctorCard = ({ name, specialization, location, image }) => (
+const DoctorCard = () => {
+  const { therapists, error } = useGlobal();
+  console.log(therapists)
+
+  return (
     <DoctorCardContainer>
-       {[1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14].map((i, index) => (
-                       <StyledCard key={i}>
-                            {/* Background Image */}
-                            <ImageBackground
-                                component="img"
-                                src={`/doc.png`} 
-                                alt={`Therapist ${i}`}
-                            />   
-                            {/* Text Content */}
-                            <TextContainer>
-                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Therapist Name {i}</Typography>
-                                <Typography variant="body2">Specialization</Typography>
-                                <Typography variant="body2">City, Country</Typography>
-                            </TextContainer>
-                        </StyledCard>
-                    ))}
+      {therapists.map((therapist) => (
+        <FeatureCard
+          key={therapist.id}
+          icon="D"
+          title={`${therapist.name}`}
+          description={`Specialization: ${therapist.specialization} - Language: ${therapist.language}`}
+          image={therapist.imageUrl} 
+          buttonText="Learn More"
+        />
+      ))}
     </DoctorCardContainer>
-);
+  );
+};
 
 export default DoctorCard;

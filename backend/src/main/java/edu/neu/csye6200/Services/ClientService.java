@@ -36,6 +36,7 @@ public class ClientService implements UserDetailsService {
 
     // Add a journal entry to a client's list of entries
     public void addJournalEntry(int clientId, JournalEntry journalEntry) {
+        
         Optional<Client> clientOpt = clientDAO.findById(clientId);
         if (clientOpt.isPresent()) {
             Client client = clientOpt.get();

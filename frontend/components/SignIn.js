@@ -6,6 +6,7 @@ import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Lin
 import MuiAlert from '@mui/material/Alert';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import UserContext from '../contexts/UserContext';
+import { red } from '@mui/material/colors';
 
 function Copyright() {
   return (
@@ -26,17 +27,61 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function SignInSide() {
   const router = useRouter();
-  // const { setUser, setError } = useGlobal();
+   const [userType, setUserType] = useState('client');
   const [loginFailed, setLoginFailed] = useState(false);
-  const { updateUser } = useContext(UserContext);
+   const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  //const { updateUser } = useContext(UserContext);
+
+  //  const handleUserTypeChange = (event) => {
+  //   setUserType(event.target.value);
+  // };
+
+   const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenAlert(false);
+  };
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
 
+    if (!email || !password) {
+      setAlertMessage('Please fill in all required fields.');
+      setOpenAlert(true);
+      return;
+    }
+
+    if (password.length < 3) {
+      setAlertMessage('Password must be at least 3 characters long.');
+      setOpenAlert(true);
+      return;
+    }
+
+    //   const user = {
+    //   name,
+    //   age,
+    //   sex,
+    //   username,
+    //   password,  
+    //   role: userType,
+    //   ...(userType === 'client' && {profession}),
+    //   ...(userType === 'therapist' && {location, specialization, language,insurance,}),
+    // // };
+
+    // const endpoint =
+    // userType === 'client'
+    //   ? 'http://localhost:8080/api/clients/register'
+    //   : 'http://localhost:8080/api/therapists/register';
+
+
+
     try {
-      const response = await fetch('http://localhost:8080/api/clients/login', {
+      let response = await fetch('http://localhost:8080/api/clients/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,54 +90,54 @@ export default function SignInSide() {
         credentials: 'include',
       });
 
+      if (!response.ok) {
+      // If client login fails, try therapist login
+      response = await fetch('http://localhost:8080/api/therapists/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: email, password }),
+        credentials: 'include',
+      });
+    }
+
       if (response.ok) {
         const resData = await response.json();
-        sessionStorage.setItem('clientId', resData.clientId);
-        
-        updateUser(resData.clientId);
-        router.push("/Dashboard");
-      } else {
-        setLoginFailed(true);
+        console.log("response data",resData)
+        const { clientId, client, therapistId, therapist }  = resData;
+
+        if(client){
+          const {role} = client;
+        sessionStorage.setItem('clientId',clientId);
+          if (role === 'client') {
+            console.log("client role")
+         router.push('/Dashboard');
+        }else {
+          console.error('Unexpected client role:', role);
+        } 
       }
-    } catch (error) {
-      console.error('Error during login:', error);
+       else if (therapist) {
+        const { role } = therapist;
+        sessionStorage.setItem('therapistId', therapistId);
+        if (role === 'therapist') {
+          console.log('therapist role');
+          // router.push('/TherapistDashboard');
+        } else {
+          console.error('Unexpected therapist role:', role);
+        }
+      } else {
+        console.error('Neither client nor therapist object found in response');
+      }
+    } else {
       setLoginFailed(true);
     }
-  };
-  // the code below uses global state//
-  // need to test with database//
+      } catch (error) {
+          console.error('Error during login:', error);
+          setLoginFailed(true);
+        }
+      };
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   const email = data.get('email');
-  //   const password = data.get('password');
-
-  //   try {
-  //     const response = await fetch('http://localhost:8080/api/clients/login', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ username: email, password }),
-  //       credentials: 'include',
-  //     });
-
-  //     if (response.ok) {
-  //       const resData = await response.json();
-  //       sessionStorage.setItem('clientId', resData.clientId);
-  //       setUser({ clientId: resData.clientId, username: email });
-  //       router.push("/Dashboard");
-  //     } else {
-  //       setError("Login failed. Please check your email and password.");
-  //       setLoginFailed(true);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during login:', error);
-  //     setError(error.message);
-  //     setLoginFailed(true);
-  //   }
-  // };
-
-// end of code snippet to be tested//
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

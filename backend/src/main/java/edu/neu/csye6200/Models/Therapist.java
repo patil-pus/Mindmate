@@ -31,7 +31,7 @@ public class Therapist implements Person {
     @Column(name = "specialization")
     private String specialization;
 
-    @Column(name="Insurance")
+    @Column(name = "Insurance")
     private String insurance;
 
     @Column(name = "location")
@@ -40,14 +40,22 @@ public class Therapist implements Person {
     @Column(name = "language")
     private String language;
 
+    @Column(name = "role")
+    private String role = "therapist";
+
+    @Column(name = "image_url", length = 512)
+    private String imageUrl;
+
     @OneToMany(mappedBy = "therapist", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference(value = "client-therapist")
     private List<Client> clients = new ArrayList<>();
 
     // Constructors
-    public Therapist() {}
+    public Therapist() {
+    }
 
-    public Therapist(String name, int age, String sex, String username, String password, String specialization,String insurance, String location, String language) {
+    public Therapist(String name, int age, String sex, String username, String password, String specialization,
+            String insurance, String location, String language, String role, String imageUrl) {
         this.name = name;
         this.age = age;
         this.sex = sex;
@@ -57,7 +65,10 @@ public class Therapist implements Person {
         this.insurance = insurance;
         this.location = location;
         this.language = language;
+        this.role = role;
+        this.imageUrl = imageUrl;
     }
+
     @Override
     public int getId() {
         return id;
@@ -93,6 +104,14 @@ public class Therapist implements Person {
         this.sex = sex;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public String getUsername() {
         return username;
@@ -111,6 +130,16 @@ public class Therapist implements Person {
     @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String getRole() {
+        return role;
+    }
+
+    @Override
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getInsurance() {
@@ -136,6 +165,7 @@ public class Therapist implements Person {
     public void setLocation(String location) {
         this.location = location;
     }
+
     public String getLanguage() {
         return language;
     }
@@ -161,7 +191,7 @@ public class Therapist implements Person {
     @Override
     public String toString() {
         return "Name: " + name + ", Age: " + age + ", Sex: " + sex + ", Username: " + username +
-                ", Specialization: " + specialization + ", Location: " + location;
+                ", Specialization: " + specialization + ", Location: " + location + ", Image URL: " + imageUrl;
     }
 
 }
