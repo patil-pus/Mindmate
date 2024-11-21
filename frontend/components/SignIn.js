@@ -122,7 +122,7 @@ export default function SignInSide() {
         sessionStorage.setItem('therapistId', therapistId);
         if (role === 'therapist') {
           console.log('therapist role');
-          // router.push('/TherapistDashboard');
+          router.push('/TherapistDashboard');
         } else {
           console.error('Unexpected therapist role:', role);
         }

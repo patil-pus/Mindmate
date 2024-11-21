@@ -160,7 +160,7 @@ const Dashboard = () => {
                     </Typography>
                     <Button color="inherit">Home</Button>
                     <Button color="inherit">Chat</Button>
-                    <Button color="inherit">Profile</Button>
+                    <Button href="/PatientProfile" color="inherit">Profile</Button>
                     <Button color="inherit">Settings</Button>
                     <IconButton color="inherit">
                         <Badge color="secondary" variant="dot">
@@ -285,9 +285,10 @@ const Dashboard = () => {
                         textAlign: "center" // Center-align the text
                       }}
                     >
-                      <a 
-                        href="/journal" 
+                      <a      
+                        href="/Journal" 
                         style={{
+                          margin: "20px",
                           color: "#1976D2", 
                           textDecoration: "none", 
                           fontWeight: "bold",
