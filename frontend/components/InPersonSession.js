@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { Modal } from 'react-bootstrap';  // For the modal pop-up calendar
-import 'bootstrap/dist/css/bootstrap.min.css';  // Importing Bootstrap for modal styling
 
 const therapists = [
     { id: 1, name: "Dr. Alice Johnson", specialty: "CBT Therapist" },
@@ -10,20 +8,22 @@ const therapists = [
 ];
 
 const InPersonSession = () => {
-    const [showCalendar, setShowCalendar] = useState(false);
     const [selectedTherapist, setSelectedTherapist] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
 
     const handleBookSession = (therapist) => {
         setSelectedTherapist(therapist);
-        setShowCalendar(true);
     };
 
-    const handleClose = () => setShowCalendar(false);
+    const handleDateSelect = (e) => {
+        setSelectedDate(e.target.value);
+    };
 
     return (
         <div style={styles.container}>
             <h1 style={styles.title}>Book an In-Person Session</h1>
             <div style={styles.mainContent}>
+                {/* Therapist List */}
                 <div style={styles.therapistsList}>
                     <h3 style={styles.subtitle}>Our Therapists</h3>
                     <ul style={styles.list}>
@@ -42,25 +42,31 @@ const InPersonSession = () => {
                     </ul>
                 </div>
 
+                {/* Calendar Section */}
                 <div style={styles.calendarSection}>
-                    <Modal show={showCalendar} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Book Session with {selectedTherapist?.name}</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            {/* You can use any calendar component here. For example, react-calendar */}
-                            <div style={styles.calendar}>
-                                <p>Select a date for your session:</p>
-                                <input type="date" style={styles.datePicker} />
-                                <button
-                                    style={styles.bookConfirmButton}
-                                    onClick={() => alert('Session Booked!')}
-                                >
-                                    Confirm Booking
-                                </button>
+                    {selectedTherapist && (
+                        <div>
+                            <h3 style={styles.calendarTitle}>
+                                Book Session with {selectedTherapist.name}
+                            </h3>
+                            <p style={styles.calendarDescription}>Select a date for your session:</p>
+
+                            {/* Calendar Component */}
+                            <div style={styles.calendarWrapper}>
+                                <input
+                                    type="date"
+                                    value={selectedDate || ''}
+                                    onChange={handleDateSelect}
+                                    style={styles.datePicker}
+                                />
+                                {selectedDate && (
+                                    <div style={styles.selectedDate}>
+                                        <p>Selected Date: {selectedDate}</p>
+                                    </div>
+                                )}
                             </div>
-                        </Modal.Body>
-                    </Modal>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -123,25 +129,33 @@ const styles = {
         borderRadius: '8px',
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
     },
-    calendar: {
+    calendarWrapper: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
     },
+    calendarTitle: {
+        fontSize: '28px',
+        color: '#333',
+        marginBottom: '10px',
+    },
+    calendarDescription: {
+        fontSize: '18px',
+        color: '#555',
+        marginBottom: '20px',
+    },
     datePicker: {
-        padding: '10px',
-        margin: '15px 0',
+        padding: '15px',
+        fontSize: '18px',
+        width: '250px',
         borderRadius: '5px',
         border: '1px solid #ddd',
     },
-    bookConfirmButton: {
-        backgroundColor: '#005f85',
-        color: '#fff',
-        padding: '10px 20px',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        fontSize: '16px',
-        border: 'none',
+    selectedDate: {
+        marginTop: '20px',
+        fontSize: '18px',
+        color: '#333',
+        fontWeight: 'bold',
     },
 };
 
