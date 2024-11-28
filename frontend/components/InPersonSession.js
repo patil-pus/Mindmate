@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { Button, TextField, Grid, Card, CardContent, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
+// Sample therapist list
 const therapists = [
     { id: 1, name: "Dr. Alice Johnson", specialty: "CBT Therapist" },
     { id: 2, name: "Dr. John Smith", specialty: "Anxiety & Depression" },
@@ -39,7 +41,7 @@ const InPersonSession = () => {
         setBookingConfirmed(true);
     };
 
-    // Get the current date in yyyy-mm-dd format
+    // Get current date in yyyy-mm-dd format
     const getCurrentDate = () => {
         const today = new Date();
         const year = today.getFullYear();
@@ -50,144 +52,156 @@ const InPersonSession = () => {
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.title}>Book an In-Person Session</h1>
-            <div style={styles.mainContent}>
+            <Typography variant="h3" gutterBottom style={styles.title}>
+                Book an In-Person Session
+            </Typography>
+            <Grid container spacing={4}>
                 {/* Therapist List */}
-                <div style={styles.therapistsList}>
-                    <h3 style={styles.subtitle}>Our Therapists</h3>
-                    <ul style={styles.list}>
-                        {therapists.map((therapist) => (
-                            <li key={therapist.id} style={styles.therapistItem}>
-                                <h4>{therapist.name}</h4>
-                                <p>{therapist.specialty}</p>
-                                <button
-                                    style={styles.bookButton}
-                                    onClick={() => handleBookSession(therapist)}
-                                >
-                                    Book Session
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <Grid item xs={12} sm={6} md={4}>
+                    <Card style={styles.card}>
+                        <CardContent>
+                            <Typography variant="h5" style={styles.cardTitle}>Our Therapists</Typography>
+                            <div style={styles.list}>
+                                {therapists.map((therapist) => (
+                                    <div key={therapist.id} style={styles.therapistItem}>
+                                        <Typography variant="h6">{therapist.name}</Typography>
+                                        <Typography variant="body2" color="textSecondary">{therapist.specialty}</Typography>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            style={styles.bookButton}
+                                            onClick={() => handleBookSession(therapist)}
+                                        >
+                                            Book Session
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
                 {/* Calendar and Booking Section */}
-                <div style={styles.calendarSection}>
+                <Grid item xs={12} sm={6} md={8}>
                     {selectedTherapist && (
-                        <div>
-                            <h3 style={styles.calendarTitle}>
-                                Book Session with {selectedTherapist.name}
-                            </h3>
-                            <p style={styles.calendarDescription}>Select a date for your session:</p>
+                        <Card style={styles.card}>
+                            <CardContent>
+                                <Typography variant="h5" style={styles.calendarTitle}>
+                                    Book Session with {selectedTherapist.name}
+                                </Typography>
+                                <Typography variant="body1" style={styles.calendarDescription}>
+                                    Select a date for your session:
+                                </Typography>
 
-                            {/* Calendar Component */}
-                            <div style={styles.calendarWrapper}>
-                                <input
+                                {/* Date Picker */}
+                                <TextField
+                                    label="Select Date"
                                     type="date"
                                     value={selectedDate || ''}
                                     onChange={handleDateSelect}
                                     style={styles.datePicker}
-                                    min={getCurrentDate()}  // Prevent older dates
+                                    InputLabelProps={{ shrink: true }}
+                                    inputProps={{ min: getCurrentDate() }}  // Prevent older dates
                                 />
+
                                 {selectedDate && (
-                                    <div style={styles.selectedDate}>
-                                        <p>Selected Date: {selectedDate}</p>
-                                    </div>
+                                    <Typography variant="body1" style={styles.selectedDate}>
+                                        Selected Date: {selectedDate}
+                                    </Typography>
                                 )}
-                            </div>
 
-                            {/* Time Selection */}
-                            <div style={styles.timeSelector}>
-                                <label style={styles.label}>Select Time:</label>
-                                <select
-                                    value={selectedTime}
-                                    onChange={handleTimeSelect}
-                                    style={styles.timeSelect}
-                                >
-                                    <option value="">--Select a time--</option>
-                                    {Array.from({ length: 10 }, (_, i) => i + 9).map((hour) => (
-                                        <option key={hour} value={`${hour}:00`}>
-                                            {hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
+                                {/* Time Selection */}
+                                <FormControl fullWidth style={styles.timeSelector}>
+                                    <InputLabel>Select Time</InputLabel>
+                                    <Select
+                                        value={selectedTime}
+                                        onChange={handleTimeSelect}
+                                        label="Select Time"
+                                    >
+                                        {Array.from({ length: 10 }, (_, i) => i + 9).map((hour) => (
+                                            <MenuItem key={hour} value={`${hour}:00`}>
+                                                {hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
 
-                            {/* Client Notes */}
-                            <div style={styles.clientNotesWrapper}>
-                                <label style={styles.label}>Session Description or Client Notes:</label>
-                                <textarea
+                                {/* Client Notes */}
+                                <TextField
+                                    label="Session Description or Client Notes"
                                     value={clientNotes}
                                     onChange={handleClientNotesChange}
+                                    multiline
+                                    rows={4}
+                                    fullWidth
                                     style={styles.textarea}
-                                    placeholder="Add any notes or description for your session"
+                                    variant="outlined"
                                 />
-                            </div>
 
-                            {/* Confirm Booking Button */}
-                            <div style={styles.confirmWrapper}>
-                                <button
-                                    style={styles.confirmButton}
-                                    onClick={handleConfirmBooking}
-                                >
-                                    Confirm Booking
-                                </button>
-                            </div>
-                        </div>
+                                {/* Confirm Booking Button */}
+                                <div style={styles.confirmWrapper}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        style={styles.confirmButton}
+                                        onClick={handleConfirmBooking}
+                                    >
+                                        Confirm Booking
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
                     )}
 
-                    {/* Booking Confirmation Information */}
+                    {/* Booking Confirmation */}
                     {bookingConfirmed && (
-                        <div style={styles.bookingDetails}>
-                            <h3 style={styles.bookingTitle}>Booking Confirmed!</h3>
-                            <p style={styles.bookingInfo}>
-                                Therapist: {selectedTherapist.name}
-                            </p>
-                            <p style={styles.bookingInfo}>
-                                Date: {selectedDate}
-                            </p>
-                            <p style={styles.bookingInfo}>
-                                Time: {selectedTime}
-                            </p>
-                            <p style={styles.bookingInfo}>
-                                Notes: {clientNotes}
-                            </p>
-                        </div>
+                        <Card style={styles.card}>
+                            <CardContent>
+                                <Typography variant="h5" color="success" style={styles.bookingTitle}>
+                                    Booking Confirmed!
+                                </Typography>
+                                <Typography variant="body1" style={styles.bookingInfo}>
+                                    Therapist: {selectedTherapist.name}
+                                </Typography>
+                                <Typography variant="body1" style={styles.bookingInfo}>
+                                    Date: {selectedDate}
+                                </Typography>
+                                <Typography variant="body1" style={styles.bookingInfo}>
+                                    Time: {selectedTime}
+                                </Typography>
+                                <Typography variant="body1" style={styles.bookingInfo}>
+                                    Notes: {clientNotes}
+                                </Typography>
+                            </CardContent>
+                        </Card>
                     )}
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         </div>
     );
 };
 
 const styles = {
     container: {
-        backgroundColor: '#f4f7fb',
+        backgroundColor: '#f0f4f8',
         minHeight: '100vh',
         padding: '20px',
         fontFamily: 'Arial, sans-serif',
     },
     title: {
         textAlign: 'center',
-        color: '#333',
-        fontSize: '36px',
-        marginBottom: '20px',
+        color: '#005f85',
     },
-    mainContent: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-    therapistsList: {
-        width: '40%',
+    card: {
         backgroundColor: '#fff',
         padding: '20px',
         borderRadius: '8px',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
     },
-    subtitle: {
-        fontSize: '24px',
+    cardTitle: {
         color: '#005f85',
-        marginBottom: '10px',
+        fontSize: '24px',
+        marginBottom: '15px',
     },
     list: {
         listStyle: 'none',
@@ -201,93 +215,46 @@ const styles = {
         boxShadow: '0 1px 5px rgba(0, 0, 0, 0.1)',
     },
     bookButton: {
-        backgroundColor: '#005f85',
-        color: '#fff',
-        border: 'none',
-        padding: '10px 20px',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        fontSize: '16px',
-    },
-    calendarSection: {
-        width: '55%',
-        backgroundColor: '#fff',
-        padding: '20px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-    },
-    calendarWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        marginTop: '10px',
     },
     calendarTitle: {
-        fontSize: '28px',
         color: '#333',
-        marginBottom: '10px',
+        fontSize: '24px',
+        marginBottom: '15px',
     },
     calendarDescription: {
-        fontSize: '18px',
         color: '#555',
         marginBottom: '20px',
     },
     datePicker: {
-        padding: '15px',
-        fontSize: '18px',
-        width: '250px',
-        borderRadius: '5px',
-        border: '1px solid #ddd',
+        width: '100%',
+        marginBottom: '20px',
     },
     selectedDate: {
-        marginTop: '20px',
-        fontSize: '18px',
+        fontSize: '16px',
         color: '#333',
         fontWeight: 'bold',
     },
     timeSelector: {
-        marginTop: '20px',
-    },
-    timeSelect: {
-        padding: '10px',
-        fontSize: '18px',
-        width: '250px',
-        borderRadius: '5px',
-        border: '1px solid #ddd',
-    },
-    clientNotesWrapper: {
-        marginTop: '20px',
+        marginBottom: '20px',
     },
     textarea: {
-        padding: '10px',
-        fontSize: '16px',
-        width: '100%',
-        height: '150px',
-        borderRadius: '5px',
-        border: '1px solid #ddd',
-        resize: 'vertical',
+        marginTop: '20px',
+        marginBottom: '20px',
     },
     confirmWrapper: {
-        marginTop: '20px',
         textAlign: 'center',
     },
     confirmButton: {
-        backgroundColor: '#005f85',
-        color: '#fff',
-        border: 'none',
-        padding: '12px 25px',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        fontSize: '18px',
-    },
-    bookingDetails: {
-        marginTop: '20px',
+        padding: '10px 20px',
+        fontSize: '16px',
     },
     bookingTitle: {
-        fontSize: '28px',
         color: '#28a745',
+        fontSize: '24px',
     },
     bookingInfo: {
-        fontSize: '18px',
+        fontSize: '16px',
         color: '#333',
     },
 };
