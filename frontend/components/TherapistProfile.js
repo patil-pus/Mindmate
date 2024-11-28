@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Avatar, Paper, Button, Grid, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 import { motion } from "framer-motion"; // For animations
@@ -24,8 +24,8 @@ const ProfileCard = styled(Paper)({
 });
 
 const TherapistProfile = () => {
-    const [isEditing, setIsEditing] = useState(false); // State to toggle editing
-    const [isImageFieldVisible, setIsImageFieldVisible] = useState(false); // State to toggle visibility of image field
+    const [isEditing, setIsEditing] = useState(false); // Toggle edit mode
+    const [isImageFieldVisible, setIsImageFieldVisible] = useState(false); // Control visibility of the image field
     const [profileData, setProfileData] = useState({
         name: "Dr. Shabrina",
         specialization: "Psychologist",
@@ -34,11 +34,29 @@ const TherapistProfile = () => {
         imageUrl: "", // Profile image URL
     });
 
-    // Toggle edit/save mode
-    const handleEdit = () => setIsEditing(true);
+    // Load profile data from sessionStorage on component mount
+    useEffect(() => {
+        const savedProfileData = sessionStorage.getItem("therapistProfile");
+        if (savedProfileData) {
+            const parsedData = JSON.parse(savedProfileData);
+            setProfileData(parsedData);
+            if (parsedData.imageUrl) {
+                setIsImageFieldVisible(true); // Show the image URL field if an image exists
+            }
+        }
+    }, []);
+
+    // Save profile data to sessionStorage
     const handleSave = () => {
+        sessionStorage.setItem("therapistProfile", JSON.stringify(profileData));
         setIsEditing(false);
-        console.log("Saved Data:", profileData); // Add save logic here
+    };
+
+    // Save image URL independently and disable the field
+    const handleSaveImage = () => {
+        sessionStorage.setItem("therapistProfile", JSON.stringify(profileData));
+        setIsImageFieldVisible(false); // Hide the "Add Profile Picture" button
+        alert("Profile image saved successfully!");
     };
 
     // Handle form field changes
@@ -50,7 +68,7 @@ const TherapistProfile = () => {
         }));
     };
 
-    // Show image URL input field
+    // Show the image URL input field
     const handleAddImageField = () => setIsImageFieldVisible(true);
 
     return (
@@ -76,7 +94,7 @@ const TherapistProfile = () => {
                                 margin: "auto",
                                 bgcolor: "#1976D2",
                             }}
-                            src={profileData.imageUrl} // Dynamically set image URL
+                            src={profileData.imageUrl} // Dynamically set the image URL
                         >
                             {!profileData.imageUrl && "T"}
                         </Avatar>
@@ -137,7 +155,7 @@ const TherapistProfile = () => {
                             </Grid>
 
                             {/* Add Profile Picture Button */}
-                            {!isImageFieldVisible && !isEditing && (
+                            {!profileData.imageUrl && (
                                 <Grid item xs={12}>
                                     <Button
                                         variant="outlined"
@@ -160,19 +178,29 @@ const TherapistProfile = () => {
                                         onChange={handleChange}
                                         disabled={!isEditing && profileData.imageUrl !== ""}
                                     />
+                                    <Box mt={2} display="flex" justifyContent="center">
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            onClick={handleSaveImage}
+                                            disabled={!profileData.imageUrl} // Only enable if the URL is not empty
+                                        >
+                                            Save Image
+                                        </Button>
+                                    </Box>
                                 </Grid>
                             )}
                         </Grid>
 
-                        {/* Action Buttons */}
+                        {/* General Action Buttons */}
                         <Box mt={3} display="flex" justifyContent="space-between">
                             {!isEditing ? (
-                                <Button variant="contained" color="primary" onClick={handleEdit}>
+                                <Button variant="contained" color="primary" onClick={() => setIsEditing(true)}>
                                     Edit
                                 </Button>
                             ) : (
                                 <Button variant="contained" color="success" onClick={handleSave}>
-                                    Save
+                                    Save Profile
                                 </Button>
                             )}
                         </Box>
