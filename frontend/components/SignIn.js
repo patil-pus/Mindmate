@@ -62,24 +62,6 @@ export default function SignInSide() {
       return;
     }
 
-    //   const user = {
-    //   name,
-    //   age,
-    //   sex,
-    //   username,
-    //   password,  
-    //   role: userType,
-    //   ...(userType === 'client' && {profession}),
-    //   ...(userType === 'therapist' && {location, specialization, language,insurance,}),
-    // // };
-
-    // const endpoint =
-    // userType === 'client'
-    //   ? 'http://localhost:8080/api/clients/register'
-    //   : 'http://localhost:8080/api/therapists/register';
-
-
-
     try {
       let response = await fetch('http://localhost:8080/api/clients/login', {
         method: 'POST',

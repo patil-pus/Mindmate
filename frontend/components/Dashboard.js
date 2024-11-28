@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 // import UserContext from "../contexts/UserContext";
 import { useGlobal } from "../contexts/GlobalContext";
-import { AppBar, Toolbar, Box,CircularProgress, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar } from "@mui/material";
+import { AppBar, Toolbar, Box,CircularProgress, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar, Link } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { motion } from 'framer-motion';
@@ -356,14 +356,15 @@ const Dashboard = () => {
                   title="Journal Your Thoughts"
                   description="Reflect on your day, your feelings, and keep a private journal that helps you understand yourself better."
                   image="/journal.jpg"
-                  buttonText="Start Writing"
+                  buttonText={<Link href="/Journal" style={{ textDecoration: 'none', color: 'inherit' }}>Start Journaling</Link>}
+                
               />
               <FeatureCard
                   icon="M"
                   title="Meet your Therapist!"
                   description="Find peace and clarity with personalized, in-person therapy — guided by experts, designed for you."
                   image="/inperson.webp"
-                  buttonText="Learn More"
+                 buttonText={<Link href="/InpersonAppointment" style={{ textDecoration: 'none', color: 'inherit' }}>Schedule Session</Link>}
               />
             </ScrollContainer>   
 

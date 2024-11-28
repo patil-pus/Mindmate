@@ -113,6 +113,7 @@ export const GlobalProvider = ({ children }) => {
       } else {
         setError('Failed to fetch journal data');
         console.error('Failed to fetch journal data');
+        setClientData(null);
       }
     } catch (error) {
       setError('Error fetching journal data');
@@ -140,6 +141,7 @@ export const GlobalProvider = ({ children }) => {
       } else {
         setError('Failed to fetch therapists');
         console.error('Failed to fetch therapists');
+        setTherapists(null);
       }
     } catch (error) {
       setError('Error fetching therapists');
