@@ -25,11 +25,13 @@ const ProfileCard = styled(Paper)({
 
 const TherapistProfile = () => {
     const [isEditing, setIsEditing] = useState(false); // State to toggle editing
+    const [isImageFieldVisible, setIsImageFieldVisible] = useState(false); // State to toggle visibility of image field
     const [profileData, setProfileData] = useState({
         name: "Dr. Shabrina",
         specialization: "Psychologist",
         email: "shabrina@example.com",
         phone: "(123) 456-7890",
+        imageUrl: "", // Profile image URL
     });
 
     // Toggle edit/save mode
@@ -47,6 +49,9 @@ const TherapistProfile = () => {
             [name]: value,
         }));
     };
+
+    // Show image URL input field
+    const handleAddImageField = () => setIsImageFieldVisible(true);
 
     return (
         <ProfileContainer>
@@ -71,8 +76,9 @@ const TherapistProfile = () => {
                                 margin: "auto",
                                 bgcolor: "#1976D2",
                             }}
+                            src={profileData.imageUrl} // Dynamically set image URL
                         >
-                            T
+                            {!profileData.imageUrl && "T"}
                         </Avatar>
                     </motion.div>
                     <Typography variant="h5" mt={2} fontWeight="bold">
@@ -129,6 +135,33 @@ const TherapistProfile = () => {
                                     disabled={!isEditing}
                                 />
                             </Grid>
+
+                            {/* Add Profile Picture Button */}
+                            {!isImageFieldVisible && !isEditing && (
+                                <Grid item xs={12}>
+                                    <Button
+                                        variant="outlined"
+                                        fullWidth
+                                        onClick={handleAddImageField}
+                                    >
+                                        Add Profile Picture
+                                    </Button>
+                                </Grid>
+                            )}
+
+                            {/* Image URL */}
+                            {isImageFieldVisible && (
+                                <Grid item xs={12}>
+                                    <TextField
+                                        label="Profile Image URL"
+                                        fullWidth
+                                        value={profileData.imageUrl}
+                                        name="imageUrl"
+                                        onChange={handleChange}
+                                        disabled={!isEditing && profileData.imageUrl !== ""}
+                                    />
+                                </Grid>
+                            )}
                         </Grid>
 
                         {/* Action Buttons */}

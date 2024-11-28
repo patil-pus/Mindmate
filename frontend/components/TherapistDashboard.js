@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, Avatar, Grid, Paper, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import { Box, Typography, Avatar, Grid, Paper, Button, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
-// import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import MessageIcon from "@mui/icons-material/Message";
-// import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
-// import BarChartIcon from "@mui/icons-material/BarChart";
-import PatientProfile from "./PatientProfile";
-import TherapistProfile from "./TherapistProfile";
-
+import MessageIcon from "@mui/icons-material/Message";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 // Styled Components for different sections
 const Sidebar = styled(Box)({
@@ -33,6 +29,21 @@ const ProfileAvatar = styled(Avatar)({
     "&:hover": {
         backgroundColor: "#135ba1",
     },
+});
+
+const SidebarIcon = styled(Box)({
+    color: "#5F6368",
+    marginBottom: "20px",
+    cursor: "pointer",
+    fontSize: "24px",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    transition: "color 0.2s ease",
+    "&:hover": {
+        color: "#1976D2",
+    },
+    textDecoration: "none",
 });
 
 const MainContent = styled(Box)({
@@ -65,17 +76,6 @@ const ProfileCard = styled(Paper)({
     backgroundColor: "#FFFFFF",
     borderRadius: "12px",
     boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-});
-
-const SidebarIcon = styled(Box)({
-    color: "#5F6368",
-    marginBottom: "20px",
-    cursor: "pointer",
-    fontSize: "24px",
-    transition: "color 0.2s ease",
-    "&:hover": {
-        color: "#1976D2",
-    },
 });
 
 const ScheduleBox = styled(Box)({
@@ -120,18 +120,26 @@ const TherapistDashboard = () => {
                 {/* Profile Avatar */}
                 <ProfileAvatar>DS</ProfileAvatar>
                 {/* Sidebar Icons */}
-                <Link href="/PatientProfile" passHref>
+                <Link href="/TherapistDashboard" passHref>
                     <SidebarIcon>
                         <HomeIcon />
                     </SidebarIcon>
                 </Link>
-                <Link href="/TherapistProfile" passHref>
+                <Link href="/messages" passHref>
                     <SidebarIcon>
                         <MessageIcon />
                     </SidebarIcon>
                 </Link>
-
-
+                <Link href="/TherapistProfile" passHref>
+                    <SidebarIcon>
+                        <AccountCircleIcon />
+                    </SidebarIcon>
+                </Link>
+                <Link href="/LogoutPage" passHref>
+                    <SidebarIcon>
+                        <ExitToAppIcon />
+                    </SidebarIcon>
+                </Link>
             </Sidebar>
 
             {/* Main Content */}
@@ -140,9 +148,15 @@ const TherapistDashboard = () => {
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={8}>
                         <WelcomeCard>
-                            <Typography variant="h5" fontWeight="bold">Welcome, Dr. Shabrina</Typography>
-                            <Typography variant="subtitle1" color="textSecondary">Have a nice day at work</Typography>
-                            <Button variant="contained" color="primary" sx={{ marginTop: "10px" }}>Add Patient</Button>
+                            <Typography variant="h5" fontWeight="bold">
+                                Welcome, Dr. Shabrina
+                            </Typography>
+                            <Typography variant="subtitle1" color="textSecondary">
+                                Have a nice day at work
+                            </Typography>
+                            <Button variant="contained" color="primary" sx={{ marginTop: "10px" }}>
+                                Add Patient
+                            </Button>
                         </WelcomeCard>
                     </Grid>
 
