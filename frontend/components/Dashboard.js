@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 // import UserContext from "../contexts/UserContext";
 import { useGlobal } from "../contexts/GlobalContext";
-import { AppBar, Toolbar, Box, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar } from "@mui/material";
+import { AppBar, Toolbar, Box,CircularProgress, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { motion } from 'framer-motion';
@@ -101,6 +101,31 @@ const Dashboard = () => {
    const [isLoading, setIsLoading] = useState(true); 
   const [query, setQuery] = useState("");
   const [showNotification, setShowNotification] = useState(false);
+  const [filteredTherapists, setFilteredTherapists] = useState([]);
+  const [loadSpinner, setLoadSpinner] = useState(false);
+
+
+    const handleSearch = () => {
+      if (!query.trim()) {
+    setFilteredTherapists([]);
+    console.log("Query is empty, no therapists returned.");
+    return;
+  }
+    if (!therapists || therapists.length === 0) return;
+
+    setLoadSpinner(true);
+
+     setTimeout(() => {
+    const results = therapists.filter((therapist) =>
+      therapist.name.toLowerCase().includes(query.toLowerCase()) ||
+      therapist.specialization.toLowerCase().includes(query.toLowerCase()) ||
+      therapist.language.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredTherapists(results);
+    setLoadSpinner(false); 
+    console.log("filtered therapists",results);
+  },1000);
+    }
 
     useEffect(() => {
     if (!loading && !user) {
@@ -350,7 +375,6 @@ const Dashboard = () => {
             </MessageBox>
                          
 
-            {/* Wrapper for Search Bar with Relative Positioning */}
             <Box sx={{ position: "relative", width: "100%", maxWidth: "600px", mt: 2 }}>
                 
                 {/* Main Search Field */}
@@ -370,7 +394,52 @@ const Dashboard = () => {
                     }}
                 />
                         </Box>
+                        <Button
+                          variant="contained"
+                          onClick={handleSearch}
+                          sx={{
+                            ml: 3,
+                            marginTop : 2,
+                            backgroundColor: "#007BFF",
+                            color: "#fff",
+                            "&:hover": {
+                              backgroundColor: "#0056b3",
+                            },
+                          }}
+                        >
+                          Search
+                        </Button>
                     </Box>      
+                    {/* Loading State */}
+                     {loadSpinner && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <CircularProgress />
+        </Box>
+      )}
+              
+                {error && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  Error: {error}
+                </Typography>
+              )}
+              { query && filteredTherapists.length === 0 && (
+              <Typography sx={{ mt: 2 }}>No therapists found matching your query.</Typography>
+            )}
+                  {/* Display Results */}
+            { filteredTherapists.length > 0 && (
+              <Box sx={{ mt: 4, display: "flex", flexWrap: "wrap", gap: 2 }}>
+                {filteredTherapists.map((therapist) => (
+                  <FeatureCard
+                    key={therapist.id}
+                    icon="D"
+                    title={therapist.name}
+                    description={`Specialization: ${therapist.specialization} - Language: ${therapist.language}`}
+                    image={therapist.imageUrl}
+                    buttonText="Learn More"
+                  />
+                ))}
+              </Box>
+            )}
                 <div>
                         <ExpertSection />
                 </div>

@@ -24,10 +24,9 @@ public class Session {
     private Date sessionDate;
 
     @Column(name = "duration", nullable = false)
-    private int duration;  // Duration of the session in minutes
-
+    private int duration;
     @Column(name = "type")
-    private String type;  // Type of session (e.g., video, in-person)
+    private String type;
 
     @Column(name = "status")
     private String status;  // Status of the session (e.g., scheduled, completed, canceled)

@@ -64,6 +64,14 @@ const TextContainer = styled(Box)({
 const DoctorCard = () => {
   const { therapists, error } = useGlobal();
   console.log(therapists)
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!therapists || therapists.length === 0) {
+    return <div>No therapists available at the moment.</div>;
+  }
+
 
   return (
     <DoctorCardContainer>
