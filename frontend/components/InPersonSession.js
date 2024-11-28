@@ -10,13 +10,33 @@ const therapists = [
 const InPersonSession = () => {
     const [selectedTherapist, setSelectedTherapist] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState('');
+    const [clientNotes, setClientNotes] = useState('');
+    const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
     const handleBookSession = (therapist) => {
         setSelectedTherapist(therapist);
+        setBookingConfirmed(false); // Reset booking confirmation
     };
 
     const handleDateSelect = (e) => {
         setSelectedDate(e.target.value);
+    };
+
+    const handleTimeSelect = (e) => {
+        setSelectedTime(e.target.value);
+    };
+
+    const handleClientNotesChange = (e) => {
+        setClientNotes(e.target.value);
+    };
+
+    const handleConfirmBooking = () => {
+        if (!selectedDate || !selectedTime || !clientNotes) {
+            alert("Please fill in all the details to confirm your booking.");
+            return;
+        }
+        setBookingConfirmed(true);
     };
 
     return (
@@ -42,7 +62,7 @@ const InPersonSession = () => {
                     </ul>
                 </div>
 
-                {/* Calendar Section */}
+                {/* Calendar and Booking Section */}
                 <div style={styles.calendarSection}>
                     {selectedTherapist && (
                         <div>
@@ -65,6 +85,63 @@ const InPersonSession = () => {
                                     </div>
                                 )}
                             </div>
+
+                            {/* Time Selection */}
+                            <div style={styles.timeSelector}>
+                                <label style={styles.label}>Select Time:</label>
+                                <select
+                                    value={selectedTime}
+                                    onChange={handleTimeSelect}
+                                    style={styles.timeSelect}
+                                >
+                                    <option value="">--Select a time--</option>
+                                    {Array.from({ length: 10 }, (_, i) => i + 9).map((hour) => (
+                                        <option key={hour} value={`${hour}:00`}>
+                                            {hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Client Notes */}
+                            <div style={styles.clientNotesWrapper}>
+                                <label style={styles.label}>Session Description or Client Notes:</label>
+                                <textarea
+                                    value={clientNotes}
+                                    onChange={handleClientNotesChange}
+                                    style={styles.textarea}
+                                    placeholder="Add any notes or description for your session"
+                                />
+                            </div>
+
+                            {/* Confirm Booking Button */}
+                            <div style={styles.confirmWrapper}>
+                                <button
+                                    style={styles.confirmButton}
+                                    onClick={handleConfirmBooking}
+                                >
+                                    Confirm Booking
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Booking Confirmation Information */}
+                    {bookingConfirmed && (
+                        <div style={styles.bookingDetails}>
+                            <h3 style={styles.bookingTitle}>Booking Confirmed!</h3>
+                            <p style={styles.bookingInfo}>
+                                Therapist: {selectedTherapist.name}
+                            </p>
+                            <p style={styles.bookingInfo}>
+                                Date: {selectedDate}
+                            </p>
+                            <p style={styles.bookingInfo}>
+                                Time: {selectedTime}
+                            </p>
+                            <p style={styles.bookingInfo}>
+                                Notes: {clientNotes}
+                            </p>
                         </div>
                     )}
                 </div>
@@ -157,6 +234,40 @@ const styles = {
         color: '#333',
         fontWeight: 'bold',
     },
-};
-
-export default InPersonSession;
+    timeSelector: {
+        marginTop: '20px',
+    },
+    timeSelect: {
+        padding: '10px',
+        fontSize: '18px',
+        width: '250px',
+        borderRadius: '5px',
+        border: '1px solid #ddd',
+    },
+    clientNotesWrapper: {
+        marginTop: '20px',
+    },
+    textarea: {
+        padding: '10px',
+        fontSize: '16px',
+        width: '100%',
+        height: '150px',
+        borderRadius: '5px',
+        border: '1px solid #ddd',
+        resize: 'vertical',
+    },
+    confirmWrapper: {
+        marginTop: '20px',
+        textAlign: 'center',
+    },
+    confirmButton: {
+        backgroundColor: '#005f85',
+        color: '#fff',
+        border: 'none',
+        padding: '12px 25px',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontSize: '18px',
+    },
+    bookingDetails: {
+        marginTop
