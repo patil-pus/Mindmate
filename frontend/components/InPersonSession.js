@@ -39,6 +39,15 @@ const InPersonSession = () => {
         setBookingConfirmed(true);
     };
 
+    // Get the current date in yyyy-mm-dd format
+    const getCurrentDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0');
+        const day = today.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     return (
         <div style={styles.container}>
             <h1 style={styles.title}>Book an In-Person Session</h1>
@@ -78,6 +87,7 @@ const InPersonSession = () => {
                                     value={selectedDate || ''}
                                     onChange={handleDateSelect}
                                     style={styles.datePicker}
+                                    min={getCurrentDate()}  // Prevent older dates
                                 />
                                 {selectedDate && (
                                     <div style={styles.selectedDate}>
@@ -270,4 +280,16 @@ const styles = {
         fontSize: '18px',
     },
     bookingDetails: {
-        marginTop
+        marginTop: '20px',
+    },
+    bookingTitle: {
+        fontSize: '28px',
+        color: '#28a745',
+    },
+    bookingInfo: {
+        fontSize: '18px',
+        color: '#333',
+    },
+};
+
+export default InPersonSession;
