@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.6",
     "@mui/material": "^6.1.6",
+    "@stomp/stompjs": "^7.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.11",
@@ -23,6 +24,7 @@
     "react-dom": "^18.3.1",
     "react-parallax-tilt": "^1.7.252",
     "react-spring": "^9.7.4",
+    "sockjs-client": "^1.6.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },

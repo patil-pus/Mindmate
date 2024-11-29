@@ -184,7 +184,7 @@ const Dashboard = () => {
                         MindMate
                     </Typography>
                     <Button color="inherit">Home</Button>
-                    <Button color="inherit">Chat</Button>
+                    <Button color="inherit" href="/Chat">Chat</Button>
                     <Button href="/PatientProfile" color="inherit">Profile</Button>
                     <Button color="inherit">Settings</Button>
                     <IconButton color="inherit">
