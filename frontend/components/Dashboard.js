@@ -217,119 +217,7 @@ const Dashboard = () => {
                     }}>
                 {error && <p style={{ color: "red" }}>{error}</p>}
 
-                <div>
-                  <h1>Welcome, {user || "Guest"}!</h1>
-                  <p>Client Data:</p>
-
-                  {/* Render client data here */}
-                  {clientData && clientData.length > 0 ? (
-                  (() => {
-                          const lastEntry = clientData[clientData.length - 1]; // Get the last entry
-                          return (
-                        <Box
-                          key={lastEntry.id || "last-entry"}
-                          sx={{
-                          padding: "20px",
-                          position: "absolute",
-                          right: "32%",
-                          top: "1570%",
-                          borderRadius: "12px",
-                          backgroundColor: "#f0f4ff",
-                          border: "1px solid #e0e0e0",
-                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                          color: "black",
-                          margin: "20px",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          textAlign: "center",
-                          maxWidth: "400px",
-                          mx: "auto"
-                        }}
-                      >
-                <Typography variant="h5" sx={{ fontWeight: "bold", color: "#3f51b5", mb: 1 }}>
-                Welcome Back {lastEntry.client.name}! 
-                <br></br>Let's Reflect on Your Day...
-                </Typography>
-                <Typography variant="body2" sx={{ fontStyle: "italic", color: "#7b7b7b", mb: 2 }}>
-                  Last Entry: {new Date(lastEntry.entryDate).toLocaleDateString()}
-                </Typography>
-
-             <Box 
-                sx={{
-                    position: "relative", 
-                    width: "150px", 
-                    height: "150px", 
-                    borderRadius: "50%", 
-                    background: `conic-gradient(
-                    #4CAF50 0% 40%, 
-                    #FFC107 40% 70%, 
-                    #F44336 70% 90%, 
-                    #2196F3 90% 100%
-                    )`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)"
-                }}
-                >
-                    {/* Inner Circle for total and label */}
-                    <Box 
-                      sx={{
-                        position: "absolute",
-                        width: "90px", 
-                        height: "90px", 
-                        borderRadius: "50%", 
-                        backgroundColor: "#1E1E2F", 
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography 
-                        variant="h6" 
-                        sx={{ color: "white", fontWeight: "bold", fontSize: "16px" }}
-                      >
-                        Mood
-                      </Typography>
-                      <Typography 
-                        variant="body2" 
-                        sx={{ color: "white", fontSize: "12px" }}
-                      >
-                      </Typography>
-                    </Box>
-
-                  </Box>
-                      <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        color: "white", 
-                        fontSize: "12px", 
-                        mt: "auto", // Push it to the bottom using flexbox spacing
-                        textAlign: "center" // Center-align the text
-                      }}
-                    >
-                      <a      
-                        href="/Journal" 
-                        style={{
-                          margin: "20px",
-                          color: "#1976D2", 
-                          textDecoration: "none", 
-                          fontWeight: "bold",
-                          cursor: "pointer"
-                        }}
-                      >
-                        View Journal
-                      </a>
-                    </Typography>
-                    </Box>
-                          );
-                        })()         
-                      ) : (
-                        <Typography variant="body1">No client data available.</Typography>
-                      )}
-                    </div>
+              
                     {/* Other UI elements... */}
                   </Box>
             <ContentContainer>
@@ -364,7 +252,7 @@ const Dashboard = () => {
                   title="Meet your Therapist!"
                   description="Find peace and clarity with personalized, in-person therapy — guided by experts, designed for you."
                   image="/inperson.webp"
-                 buttonText={<Link href="/InpersonAppointment" style={{ textDecoration: 'none', color: 'inherit' }}>Schedule Session</Link>}
+                 buttonText={<Link href="/InPersonSession" style={{ textDecoration: 'none', color: 'inherit' }}>Schedule Session</Link>}
               />
             </ScrollContainer>   
 
