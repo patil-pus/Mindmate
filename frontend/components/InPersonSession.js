@@ -3,12 +3,12 @@ import { Button, TextField, Grid, Card, CardContent, Typography, Select, MenuIte
 import { useGlobal } from "../contexts/GlobalContext";
 
 // Sample therapist list
-// const therapists = [
-//     { id: 1, name: "Dr. Alice Johnson", specialty: "CBT Therapist" },
-//     { id: 2, name: "Dr. John Smith", specialty: "Anxiety & Depression" },
-//     { id: 3, name: "Dr. Emma Brown", specialty: "Trauma Specialist" },
-//     { id: 4, name: "Dr. Michael Lee", specialty: "Family Therapy" },
-// ];
+const therapists = [
+    { id: 1, name: "Dr. Alice Johnson", specialty: "CBT Therapist" },
+    { id: 2, name: "Dr. John Smith", specialty: "Anxiety & Depression" },
+    { id: 3, name: "Dr. Emma Brown", specialty: "Trauma Specialist" },
+    { id: 4, name: "Dr. Michael Lee", specialty: "Family Therapy" },
+];
 
 const InPersonSession = () => {
     const [selectedTherapist, setSelectedTherapist] = useState(null);
@@ -16,7 +16,7 @@ const InPersonSession = () => {
     const [selectedTime, setSelectedTime] = useState('');
     const [clientNotes, setClientNotes] = useState('');
     const [bookingConfirmed, setBookingConfirmed] = useState(false);
-    const { user, clientData, therapists,loading , error } = useGlobal();
+    //const { user, clientData, therapists,loading , error } = useGlobal();
 
     const handleBookSession = (therapist) => {
         setSelectedTherapist(therapist);

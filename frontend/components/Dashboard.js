@@ -252,7 +252,7 @@ const Dashboard = () => {
                   title="Meet your Therapist!"
                   description="Find peace and clarity with personalized, in-person therapy — guided by experts, designed for you."
                   image="/inperson.webp"
-                 buttonText={<Link href="/InPersonSession" style={{ textDecoration: 'none', color: 'inherit' }}>Schedule Session</Link>}
+                 buttonText={<Link href="/InpersonAppointment" style={{ textDecoration: 'none', color: 'inherit' }}>Schedule Session</Link>}
               />
             </ScrollContainer>   
 
