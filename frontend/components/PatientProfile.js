@@ -42,7 +42,7 @@ const PatientProfile = () => {
             {/* Profile Header */}
             <ProfileCard>
                 <Avatar
-                    src={clientData?.image_url || ""}
+                    src={clientData?.imageUrl || ""}
                     sx={{ width: 100, height: 100, margin: "auto", bgcolor: "#1976D2" }}
                 >
                     {clientData?.name?.charAt(0)}

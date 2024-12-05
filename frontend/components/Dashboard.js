@@ -188,6 +188,7 @@ const Dashboard = () => {
                     <Button color="inherit" href="/Chat">Chat</Button>
                     <Button href="/PatientProfile" color="inherit">Profile</Button>
                     <Button color="inherit">Settings</Button>
+                    <Button href="/LogoutPage" color="inherit">Logout</Button>
                     <IconButton color="inherit">
                         <Badge color="secondary" variant="dot">
                             <NotificationsIcon />

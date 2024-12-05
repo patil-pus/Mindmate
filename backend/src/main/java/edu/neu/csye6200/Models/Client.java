@@ -64,6 +64,7 @@ public class Client implements Person {
     public String getName() {
         return name;
     }
+    
 
     @Override
     public void setName(String name) {
@@ -105,6 +106,10 @@ public class Client implements Person {
         return password;
     }
 
+
+    @Column(name = "image_url", length = 512)
+    private String imageUrl;
+
     @Override
     public void setPassword(String password) {
         this.password = password;
@@ -138,6 +143,14 @@ public class Client implements Person {
 
     public List<JournalEntry> getJournalEntries() {
         return journalEntries;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void addJournalEntry(JournalEntry entry) {
