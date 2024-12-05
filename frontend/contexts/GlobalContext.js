@@ -93,13 +93,14 @@ export const GlobalProvider = ({ children }) => {
         credentials: "include",
       });
 
-      console.log("res", res);
+      console.log("response for user data", res);
       if (res.ok) {
         const user = await res.json();
 
         setUser(user);
         return user; // Return the user object for further actions
       } else {
+         console.log("NOOOO response for user data", res);
         throw new Error("Failed to fetch user");
       }
     } catch (error) {
@@ -110,6 +111,7 @@ export const GlobalProvider = ({ children }) => {
     }
     return null;
   };
+  
 
   // Fetch journal data for the current user
   const fetchUserJournal = async (clientId) => {
@@ -219,7 +221,8 @@ export const GlobalProvider = ({ children }) => {
     }
     fetchUsername();
     fetchTherapists();
-  }, [state.user]);
+    fetchUser();
+  }, []);
 
   return (
     <GlobalContext.Provider

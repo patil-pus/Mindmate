@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography, Avatar, Paper, Button, Grid } from "@mui/material";
 import { styled } from "@mui/system";
+import { useGlobal } from "../contexts/GlobalContext";
 
 const ProfileContainer = styled(Box)({
     display: "flex",
@@ -29,25 +30,41 @@ const SectionCard = styled(Paper)({
 });
 
 const PatientProfile = () => {
+    const { user } = useGlobal(); // Assuming user contains client details
+    const clientData = user; // Use the `user` object directly as `clientData`
+
+    if (!clientData) {
+        return <Typography>Loading...</Typography>; // Handle case when user is not yet loaded
+    }
+
     return (
         <ProfileContainer>
             {/* Profile Header */}
             <ProfileCard>
-                <Avatar sx={{ width: 100, height: 100, margin: "auto", bgcolor: "#1976D2" }}>P</Avatar>
-                <Typography variant="h5" mt={2} fontWeight="bold">John Doe</Typography>
-                <Typography variant="body2" color="textSecondary" mb={1}>
-                    Patient ID: 12345
+                <Avatar
+                    src={clientData?.image_url || ""}
+                    sx={{ width: 100, height: 100, margin: "auto", bgcolor: "#1976D2" }}
+                >
+                    {clientData?.name?.charAt(0)}
+                </Avatar>
+                <Typography variant="h5" mt={2} fontWeight="bold">
+                    {clientData?.name || "N/A"}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" mb={1}>
-                    Email: john.doe@example.com
+                    Patient ID: {clientData?.id || "Unknown"}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" mb={1}>
-                    Phone: (123) 456-7890
+                    Profession: {clientData?.profession || "Not Specified"}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" mb={1}>
-                    Appointments: 10
+                    Age: {clientData?.age || "Unknown"}
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 2 }}>Edit Profile</Button>
+                <Typography variant="body2" color="textSecondary" mb={1}>
+                    Gender: {clientData?.sex || "Not Specified"}
+                </Typography>
+                <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+                    Edit Profile
+                </Button>
             </ProfileCard>
 
             {/* Additional Sections */}
@@ -90,47 +107,6 @@ const PatientProfile = () => {
                                     - Blood Test: Feb 10, 2024 - 9:00 AM
                                 </Typography>
                             </Box>
-                        </SectionCard>
-                    </Grid>
-
-                    {/* Health Metrics */}
-                    <Grid item xs={12}>
-                        <SectionCard>
-                            <Typography variant="h6" fontWeight="bold" mb={2}>
-                                Health Metrics
-                            </Typography>
-                            <Grid container spacing={2}>
-                                <Grid item xs={4}>
-                                    <Box textAlign="center">
-                                        <Typography variant="h4" fontWeight="bold" color="primary">
-                                            120/80
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary">
-                                            Blood Pressure
-                                        </Typography>
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <Box textAlign="center">
-                                        <Typography variant="h4" fontWeight="bold" color="primary">
-                                            72 bpm
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary">
-                                            Heart Rate
-                                        </Typography>
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <Box textAlign="center">
-                                        <Typography variant="h4" fontWeight="bold" color="primary">
-                                            23.5
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary">
-                                            BMI
-                                        </Typography>
-                                    </Box>
-                                </Grid>
-                            </Grid>
                         </SectionCard>
                     </Grid>
                 </Grid>

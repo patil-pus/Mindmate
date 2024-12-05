@@ -145,6 +145,7 @@ const Dashboard = () => {
         return () => clearTimeout(hideNotification);
     }, [isLoading]);
 
+    console.log("user data",user)
     console.log("clinet data",clientData);
     console.log("therapists",therapists);
 
@@ -252,7 +253,7 @@ const Dashboard = () => {
                   title="Meet your Therapist!"
                   description="Find peace and clarity with personalized, in-person therapy — guided by experts, designed for you."
                   image="/inperson.webp"
-                 buttonText={<Link href="/InpersonAppointment" style={{ textDecoration: 'none', color: 'inherit' }}>Schedule Session</Link>}
+                 buttonText={<Link href="/InPersonSession" style={{ textDecoration: 'none', color: 'inherit' }}>Schedule Session</Link>}
               />
             </ScrollContainer>   
 

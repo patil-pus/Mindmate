@@ -125,7 +125,7 @@ const TherapistDashboard = () => {
                         <HomeIcon />
                     </SidebarIcon>
                 </Link>
-                <Link href="/messages" passHref>
+                <Link href="/Chat" passHref>
                     <SidebarIcon>
                         <MessageIcon />
                     </SidebarIcon>
