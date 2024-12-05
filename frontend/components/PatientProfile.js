@@ -59,7 +59,7 @@ const PatientProfile = () => {
                 <Typography variant="body2" color="textSecondary" mb={1}>
                     Age: {clientData?.age || "Unknown"}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" mb={1}>
+                <Typography variant="body2" color="textSecondary" mb={1}>                        
                     Gender: {clientData?.sex || "Not Specified"}
                 </Typography>
                 <Button variant="contained" color="primary" sx={{ mt: 2 }}>

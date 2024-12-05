@@ -8,6 +8,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import UserContext from '../contexts/UserContext';
 import { red } from '@mui/material/colors';
 
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">

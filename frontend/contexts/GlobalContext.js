@@ -127,7 +127,7 @@ export const GlobalProvider = ({ children }) => {
       );
 
       if (res.ok) {
-        const journalData = await res;
+        const journalData = await res.json();
         console.log("Fetched journal data:", journalData);
         setClientData(journalData);
         return journalData;
