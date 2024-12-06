@@ -1,367 +1,369 @@
-'use client';
-import React, { useState } from 'react';
-import { Calendar, Check } from 'lucide-react';
+"use client"
 
-// Sample therapist list
-const therapists = [
-    { id: 1, name: "Dr. Alice Johnson", specialty: "CBT Therapist" },
-    { id: 2, name: "Dr. John Smith", specialty: "Anxiety & Depression" },
-    { id: 3, name: "Dr. Emma Brown", specialty: "Trauma Specialist" },
-    { id: 4, name: "Dr. Michael Lee", specialty: "Family Therapy" },
-];
+import React, { useState } from "react";
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Container,
+    Grid,
+    Button,
+    Card,
+    CardContent,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Box,
+    Alert,
+} from "@mui/material";
+import { LocalizationProvider, DatePicker, TimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
-const InPersonSession = () => {
-    const [selectedTherapist, setSelectedTherapist] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedTime, setSelectedTime] = useState('');
-    const [clientNotes, setClientNotes] = useState('');
-    const [bookingConfirmed, setBookingConfirmed] = useState(false);
-    //const { user, clientData, therapists,loading , error } = useGlobal();
-
-// Sample Therapist Data
 const therapists = [
     {
         id: 1,
-        name: "Dr. Emily Rodriguez",
+        name: "Dr. Alice Carter ⭐",
         pronouns: "She/Her",
-        specialization: "Anxiety & Stress Management",
-        area: "Beacon Hill",
-        feedbacks: [
-            "Helped me understand my triggers and develop coping strategies.",
-            "Extremely compassionate and provides a safe, non-judgmental space."
+        specialization: "Anxiety, Depression",
+        location: "Downtown Boston",
+        reviews: [
+            {
+                feedback: "Dr. Carter helped me navigate my anxiety with care and expertise.",
+                name: "Sarah J.",
+            },
+            {
+                feedback: "Compassionate and attentive – highly recommend.",
+                name: "John D.",
+            },
+            {
+                feedback: "She transformed the way I handle my stress.",
+                name: "Emily R.",
+            },
         ],
-        popularityScore: 4.8
     },
     {
         id: 2,
-        name: "Alex Kim",
-        pronouns: "They/Them",
-        specialization: "LGBTQ+ Counseling",
-        area: "Downtown Boston",
-        feedbacks: [
-            "Created a welcoming environment that made me feel truly understood.",
-            "Insightful perspectives that helped me navigate personal challenges ."
+        name: "Dr. John Doe ⭐",
+        pronouns: "He/Him",
+        specialization: "Trauma",
+        location: "Back Bay",
+        reviews: [
+            {
+                feedback: "John truly listens and provides practical solutions.",
+                name: "Chris M.",
+            },
+
+            {
+                feedback: "Always professional and approachable.",
+                name: "Nina K.",
+            },
         ],
-        popularityScore: 4.5
     },
     {
         id: 3,
-        name: "Raj Kapoor",
-        pronouns: "He/Him",
-        specialization: "Relationship and Couples Counseling",
-        area: "North End",
-        feedbacks: [
-            "We started couples counseling at a point where we couldn't see a future together. Over months, we learned how to listen and communicate better. Our therapist helped us reflect on ourselves and realize we both needed to change to make our relationship work.",
-            "My partner and I sought help to reconnect. Our therapist helped us become more positive with each other and voice our struggles. We felt safe and genuinely cared for."
+        name: "Dr. Emily Stone",
+        pronouns: "They/Them",
+        specialization: "LGBTQ+ Support, Stress Management",
+        location: "Beacon Hill",
+        reviews: [
+            {
+                feedback: "Emily created a safe and welcoming space for me.",
+                name: "Liam P.",
+            },
+            {
+                feedback: "A life-changing experience – thank you, Emily!",
+                name: "Jade L.",
+            },
+            {
+                feedback: "Best therapist I’ve ever worked with.",
+                name: "Riley B.",
+            },
         ],
-        popularityScore: 4.9
-    }
-    ,
+    },
     {
         id: 4,
-        name: "Maggie Wheeler",
-        pronouns: "She/Her",
-        specialization: "Grief Counseling",
-        area: "Mission Hill",
-        feedbacks: [
-            "Dr. Maggie helped me with my intense grief and tragic loss by listening to my soul anguish, and then she gave me specific things to do when the waves start to pull me under.",
-            "I was provided with a safe space by Dr. Maggie that I desperately needed during a very dark time. I had no idea what to expect, but I can say for sure that her counseling saved my life."
+        name: "Dr. Raj Kundra",
+        pronouns: "He/Him",
+        specialization: "Career and Life Transitions",
+        location: "Charlestown",
+        reviews: [
+            {
+                feedback: "He helped me gain clarity during a tough career transition and provided tools to manage stress and uncertainty. I now feel confident and excited about the future.",
+                name: "Daniel W",
+            },
         ],
-        popularityScore: 4.1
-    }
+    },
+    {
+        id: 5,
+        name: "Dr. Anjali Mehta",
+        pronouns: "She/Her",
+        specialization: "Couples Therapist",
+        location: "North End",
+        reviews: [
+            {
+                feedback: "Anjali has been incredible in helping us navigate our relationship challenges. She created a safe space where we could express ourselves openly and learn how to communicate better. Thanks to her, we feel more connected than ever",
+                name: "Laura M",
+            },
+
+        ],
+    },
 ];
 
-const CustomCalendar = ({ onDateSelect, selectedDate }) => {
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDay, setSelectedDay] = useState(null);
-
-
-    const daysInMonth = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 1,
-        0
-    ).getDate();
-
-    const firstDayOfMonth = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        1
-    ).getDay();
-
-    const generateCalendarDays = () => {
-        const days = [];
-
-        // Add empty cells for days before the first day of the month
-        for (let i = 0; i < firstDayOfMonth; i++) {
-            days.push(null);
-        }
-
-        // Add actual days of the month
-        for (let day = 1; day <= daysInMonth; day++) {
-            const date = new Date(
-                currentDate.getFullYear(),
-                currentDate.getMonth(),
-                day
-            );
-
-            // Disable past dates
-            const isPastDate = date < new Date().setHours(0,0,0,0);
-            days.push({ day, isPastDate, date });
-        }
-
-        return days;
-    };
-
-    const handleDateSelect = (dateObj) => {
-        if (dateObj && !dateObj.isPastDate) {
-            setSelectedDay(dateObj.day);
-            onDateSelect(dateObj.date);
-        }
-    };
-
-    const changeMonth = (direction) => {
-        const newDate = new Date(currentDate);
-        newDate.setMonth(currentDate.getMonth() + direction);
-        setCurrentDate(newDate);
-        setSelectedDay(null);
-    };
-
-    const calendarDays = generateCalendarDays();
-    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-    return (
-        <div className="bg-white rounded-xl shadow-lg p-4">
-            <div className="flex justify-between items-center mb-4">
-                <button
-                    onClick={() => changeMonth(-1)}
-                    className="text-teal-600 hover:bg-teal-50 p-2 rounded"
-                >
-                    ←
-                </button>
-                <h3 className="text-xl font-semibold text-teal-800">
-                    {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
-                </h3>
-                <button
-                    onClick={() => changeMonth(1)}
-                    className="text-teal-600 hover:bg-teal-50 p-2 rounded"
-                >
-                    →
-                </button>
-            </div>
-
-            <div className="grid grid-cols-7 gap-1 text-center">
-                {weekdays.map(day => (
-                    <div key={day} className="text-xs text-gray-500 font-medium">{day}</div>
-                ))}
-
-                {calendarDays.map((dateObj, index) => (
-                    <div
-                        key={index}
-                        className={`
-              p-2 
-              ${dateObj ?
-                            (dateObj.isPastDate ?
-                                'text-gray-300 cursor-not-allowed' :
-                                'hover:bg-teal-100 cursor-pointer') :
-                            ''
-                        }
-              ${selectedDay === dateObj?.day ? 'bg-teal-500 text-white' : ''}
-              rounded text-center
-            `}
-                        onClick={() => handleDateSelect(dateObj)}
-                    >
-                        {dateObj ? dateObj.day : ''}
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const MindMateBooking = () => {
-    const [step, setStep] = useState(0);
+function BookingPage() {
     const [selectedTherapist, setSelectedTherapist] = useState(null);
-    const [bookingDate, setBookingDate] = useState(null);
-    const [bookingTime, setBookingTime] = useState('');
-    const [description, setDescription] = useState('');
-    const [isConfirmed, setIsConfirmed] = useState(false);
+    const [openBookingDialog, setOpenBookingDialog] = useState(false);
+    const [bookingDetails, setBookingDetails] = useState({
+        date: null,
+        time: null,
+        description: "",
+    });
+    const [error, setError] = useState("");
 
-    const timeSlots = [
-        '9:00 AM', '10:00 AM', '11:00 AM',
-        '1:00 PM', '2:00 PM', '3:00 PM',
-        '4:00 PM', '5:00 PM'
-    ];
-
-    const handleTherapistSelect = (therapist) => {
+    const handleBookSession = (therapist) => {
         setSelectedTherapist(therapist);
-        setStep(1);
+        setOpenBookingDialog(true);
     };
 
-    const handleBookingConfirm = () => {
-        setStep(2);
-        setIsConfirmed(true);
-    };
-
-    const renderStep = () => {
-        switch(step) {
-            case 0:
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-100 p-8">
-                        <h1 className="text-4xl font-bold text-center text-teal-800 mb-6 drop-shadow-md">
-                            MindMate: Your Mental Wellness Journey
-                        </h1>
-
-                        <p className="text-center text-teal-700 max-w-2xl mx-auto mb-8">
-                            Connect with compassionate professionals who understand your unique mental health needs.
-                            Our carefully curated therapists are here to support you through lifes challenges.
-                        </p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {therapists.map((therapist) => (
-                                <div
-                                    key={therapist.id}
-                                    className="bg-white rounded-xl shadow-lg overflow-hidden transform transition hover:scale-105 hover:shadow-2xl"
-                                >
-                                    <div className="p-6">
-                                        <h2 className="text-2xl font-semibold text-teal-800 mb-2">
-                                            {therapist.name}
-                                        </h2>
-                                        <p className="text-gray-600 mb-1">
-                                            {therapist.pronouns}
-                                        </p>
-                                        <p className="text-gray-700 mb-2">
-                                            <span className="font-semibold">Specialization:</span> {therapist.specialization}
-                                        </p>
-                                        <p className="text-gray-700 mb-2">
-                                            <span className="font-semibold">Area:</span> {therapist.area}
-                                        </p>
-                                        <div className="mb-4">
-                                            <span className="font-semibold block mb-1">Client Feedbacks:</span>
-                                            <ul className="list-disc list-inside text-sm text-gray-600">
-                                                {therapist.feedbacks.map((feedback, index) => (
-                                                    <li key={index} className="mb-1">{feedback}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                        <div className="flex items-center mb-4">
-                      <span className="text-gray-700">
-                        Rating: {therapist.popularityScore} / 5.0
-                      </span>
-                                        </div>
-                                        <button
-                                            onClick={() => handleTherapistSelect(therapist)}
-                                            className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition"
-                                        >
-                                            Book Session
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-
-            case 1:
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-100 flex items-center justify-center p-8">
-                        <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-4xl grid md:grid-cols-2 gap-8">
-                            <div>
-                                <h2 className="text-3xl font-bold text-teal-800 mb-6">
-                                    Book Session with {selectedTherapist.name}
-                                </h2>
-
-                                <CustomCalendar
-                                    onDateSelect={(date) => setBookingDate(date)}
-                                    selectedDate={bookingDate}
-                                />
-                            </div>
-
-                            <div>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">Selected Date</label>
-                                        <input
-                                            type="text"
-                                            value={bookingDate ? bookingDate.toLocaleDateString() : ''}
-                                            readOnly
-                                            className="w-full px-3 py-2 border rounded-lg bg-gray-100"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">Time Slot</label>
-                                        <select
-                                            value={bookingTime}
-                                            onChange={(e) => setBookingTime(e.target.value)}
-                                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                                        >
-                                            <option value="">Select a time</option>
-                                            {timeSlots.map((time) => (
-                                                <option key={time} value={time}>
-                                                    {time}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">Session Description</label>
-                                        <textarea
-                                            rows={4}
-                                            value={description}
-                                            onChange={(e) => setDescription(e.target.value)}
-                                            placeholder="Briefly describe what you'd like to discuss in your session..."
-                                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                                        />
-                                    </div>
-
-                                    <button
-                                        onClick={handleBookingConfirm}
-                                        disabled={!bookingDate || !bookingTime || !description}
-                                        className="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition disabled:opacity-50"
-                                    >
-                                        Confirm Booking
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-
-            case 2:
-                return (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl shadow-2xl p-8 text-center max-w-md">
-                            <Check className="mx-auto text-green-500 text-6xl mb-4" />
-                            <h2 className="text-2xl font-bold text-teal-800 mb-4">
-                                Booking Confirmed! 🎉
-                            </h2>
-                            <div className="text-gray-700 mb-6">
-                                <p>Therapist: {selectedTherapist.name}</p>
-                                <p>Date: {bookingDate.toLocaleDateString()}</p>
-                                <p>Time: {bookingTime}</p>
-                            </div>
-                            <button
-                                onClick={() => setStep(0)}
-                                className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition"
-                            >
-                                Back to Therapists
-                            </button>
-                        </div>
-                    </div>
-                );
-
-            default:
-                return null;
+    const handleConfirmBooking = () => {
+        if (!bookingDetails.date || !bookingDetails.time || !bookingDetails.description) {
+            setError("Please fill all fields to confirm your booking.");
+            return;
         }
+        setError("");
+        alert(
+            `Booking confirmed with ${selectedTherapist.name} on ${dayjs(bookingDetails.date).format(
+                "DD/MM/YYYY"
+            )} at ${dayjs(bookingDetails.time).format("hh:mm A")}.`
+        );
+        setOpenBookingDialog(false);
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-100">
-            {renderStep()}
-        </div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Box sx={{ background: "#e3f2fd", minHeight: "100vh", py: 4 }}>
+                {/* Header */}
+                <AppBar position="static" style={{ backgroundColor: "#1a73e8" }}>
+                    <Toolbar>
+                        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                            MindMate
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+
+                {/* Hero Section */}
+                <Container sx={{ py: 5 }}>
+                    <Typography
+                        variant="h3"
+                        align="center"
+                        gutterBottom
+                        style={{ fontWeight: "bold", color: "#1a237e" }}
+                    >
+                        Welcome to Your Path to Wellness
+                    </Typography>
+                    <Typography
+                        variant="h6"
+                        align="center"
+                        gutterBottom
+                        style={{ color: "#5c6bc0", marginBottom: "20px" }}
+                    >
+                        Discover the support and guidance you deserve with our professional therapy services.
+                        Whether you're seeking help for personal growth, emotional challenges, or simply need someone to talk to, we’re here to listen and empower you.
+                    </Typography>
+                </Container>
+
+                {/* How It Works */}
+                <Container sx={{ py: 5 }}>
+                    <Typography variant="h4" align="center" gutterBottom style={{ color: "#1a237e", fontWeight: "bold" }}>
+                        How It Works
+                    </Typography>
+                    <Grid container spacing={4} sx={{ marginBottom: "40px" }}>
+                        <Grid item xs={12} sm={4}>
+                            <Box sx={{ background: "#dbe9f4", padding: "20px", borderRadius: "8px" }}>
+                                <Typography variant="h6" color="primary" gutterBottom>
+                                    1. Choose Your Therapist
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Browse our diverse team of licensed therapists. Find someone who aligns with your needs and preferences.
+                                </Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Box sx={{ background: "#dbe9f4", padding: "20px", borderRadius: "8px" }}>
+                                <Typography variant="h6" color="primary" gutterBottom>
+                                    2. Select Your Session Time
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Select the time for the session as per your convenience. We offer flexible options tailored to your lifestyle.
+                                </Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Box sx={{ background: "#dbe9f4", padding: "20px", borderRadius: "8px" }}>
+                                <Typography variant="h6" color="primary" gutterBottom>
+                                    3. Book Your Appointment
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Use our easy online scheduling system to select a date and time that works best for you.
+                                </Typography>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </Container>
+
+                {/* Therapist Section */}
+                <Container>
+                    <Typography
+                        variant="h4"
+                        align="center"
+                        gutterBottom
+                        style={{ fontWeight: "bold", color: "#1a237e" }}
+                    >
+                        Therapists Who Will Help You Grow
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        align="center"
+                        style={{
+                            color: "#3949ab",
+                            marginBottom: "30px",
+                        }}
+                    >
+                        We vet every therapist so you can start from a place of trust.
+                    </Typography>
+
+                    <Grid container spacing={4}>
+                        {therapists.map((therapist) => (
+                            <Grid item xs={12} sm={6} md={4} key={therapist.id}>
+                                <Card
+                                    style={{
+                                        borderRadius: "15px",
+                                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)",
+                                        background: "#ffffff",
+                                    }}
+                                >
+                                    <CardContent>
+                                        <Typography
+                                            variant="h6"
+                                            style={{
+                                                fontWeight: "bold",
+                                                color: "#1a73e8", // Therapist name in blue shade
+                                            }}
+                                        >
+                                            {therapist.name}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            <strong>Pronouns:</strong> {therapist.pronouns}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            <strong>Specialization:</strong> {therapist.specialization}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            <strong>Location:</strong> {therapist.location}
+                                        </Typography>
+                                        <Box sx={{ mt: 2 }}>
+                                            <Typography variant="h6" color="primary" style={{ fontWeight: "normal" }}>
+                                                Client Feedbacks
+                                            </Typography>
+                                            {therapist.reviews.map((review, index) => (
+                                                <Typography
+                                                    key={index}
+                                                    variant="body2"
+                                                    color="textSecondary"
+                                                    style={{ fontStyle: "italic" }}
+                                                >
+                                                    <strong>{review.feedback}</strong> - {review.name}
+                                                </Typography>
+                                            ))}
+                                        </Box>
+                                    </CardContent>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => handleBookSession(therapist)}
+                                        fullWidth
+                                        style={{
+                                            backgroundColor: "#1a73e8",
+                                            color: "#fff",
+                                            borderRadius: "0 0 15px 15px",
+                                            padding: "10px",
+                                        }}
+                                    >
+                                        Book Now
+                                    </Button>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Container>
+
+                {/* Footer */}
+                <Box
+                    sx={{
+                        backgroundColor: "#F0FFFF", // Warning red shade
+                        color: "#FF0000",
+                        py: 4,
+                        mt: 5,
+                        textAlign: "center",
+                        borderTop: "3px solid #d32f2f", // Red border for warning
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                    }}
+                >
+                    <Typography variant="body2">
+                        If you are in a life-threatening situation, do not use this site. Call the Suicide and
+                        Crisis Lifeline, a free, 24-hour hotline, at <strong>988</strong>. Your call will be
+                        routed to the crisis center near you. If your issue is an emergency, call <strong>911</strong>{" "}
+                        or go to your nearest emergency room.
+                    </Typography>
+                </Box>
+
+                {/* Booking Confirmation Dialog */}
+                <Dialog open={openBookingDialog} onClose={() => setOpenBookingDialog(false)}>
+                    <DialogTitle>Confirm Your Booking</DialogTitle>
+                    <DialogContent>
+                        <DatePicker
+                            label="Date"
+                            value={bookingDetails.date}
+                            onChange={(newValue) =>
+                                setBookingDetails({ ...bookingDetails, date: newValue })
+                            }
+                            renderInput={(params) => <TextField {...params} fullWidth />}
+                        />
+                        <TimePicker
+                            label="Time"
+                            value={bookingDetails.time}
+                            onChange={(newValue) =>
+                                setBookingDetails({ ...bookingDetails, time: newValue })
+                            }
+                            renderInput={(params) => <TextField {...params} fullWidth />}
+                        />
+                        <TextField
+                            label="Description"
+                            multiline
+                            rows={4}
+                            fullWidth
+                            value={bookingDetails.description}
+                            onChange={(e) =>
+                                setBookingDetails({ ...bookingDetails, description: e.target.value })
+                            }
+                            sx={{ mb: 2 }}
+                        />
+                        {error && <Alert severity="error">{error}</Alert>}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenBookingDialog(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleConfirmBooking} color="primary">
+                            Confirm Booking
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+        </LocalizationProvider>
     );
-};
 }
 
-export default MindMateBooking;
+export default BookingPage;
