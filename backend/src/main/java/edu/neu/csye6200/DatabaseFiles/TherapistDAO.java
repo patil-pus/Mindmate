@@ -1,6 +1,5 @@
 package edu.neu.csye6200.DatabaseFiles;
 
-import edu.neu.csye6200.Models.Client;
 import edu.neu.csye6200.Models.Therapist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

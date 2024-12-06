@@ -1,6 +1,7 @@
 package edu.neu.csye6200.Services;
 
 import edu.neu.csye6200.DatabaseFiles.TherapistDAO;
+import edu.neu.csye6200.DatabaseFiles.ClientDAO;
 import edu.neu.csye6200.Models.Client;
 import edu.neu.csye6200.Models.Therapist;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,76 +19,74 @@ import java.util.Optional;
 @Service
 public class TherapistService implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private TherapistDAO therapistDAO;
+    private final PasswordEncoder passwordEncoder;
+    private final TherapistDAO therapistDAO;
+    private final ClientDAO clientDAO;
 
-    // Register a new therapist
+    @Autowired
+    public TherapistService(PasswordEncoder passwordEncoder, TherapistDAO therapistDAO, ClientDAO clientDAO) {
+        this.passwordEncoder = passwordEncoder;
+        this.therapistDAO = therapistDAO;
+        this.clientDAO = clientDAO;
+    }
+
     public Therapist registerTherapist(Therapist therapist) {
         therapist.setPassword(passwordEncoder.encode(therapist.getPassword()));
         return therapistDAO.save(therapist);
     }
 
-    // Retrieve a therapist by ID
     public Therapist getTherapistById(int therapistId) {
         return therapistDAO.findById(therapistId)
                 .orElseThrow(() -> new IllegalArgumentException("Therapist with id " + therapistId + " not found."));
     }
-    
 
-    public Therapist getTherapistByUserName(String username)  throws UsernameNotFoundException{
-        Optional<Therapist> therapistOpt = therapistDAO.findByUsername(username);
-        if (!therapistOpt.isPresent()) {
-            throw new UsernameNotFoundException("Therapist not found with username: " + username);
-        }
-
-        Therapist therapist = therapistOpt.get();
-
-        return therapist;
+    public Therapist getTherapistByUserName(String username) throws UsernameNotFoundException {
+        return therapistDAO.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Therapist not found with username: " + username));
     }
 
     public List<Therapist> getAllTherapists() {
         return therapistDAO.findAll();
     }
 
-    // Add a client to a therapist's client list
-    public void addClientToTherapist(int therapistId, Client client) {
-        Therapist therapist = therapistDAO.findById(therapistId)
-                .orElseThrow(() -> new IllegalArgumentException("Therapist with id " + therapistId + " not found."));
-
-        // Check if the client is already assigned to the therapist
-        if (!therapist.getClients().contains(client)) {
-            therapist.addClient(client);  // Adds client to therapist's list and sets therapist reference in Client
-            therapistDAO.save(therapist);  // Save the updated therapist
-        } else {
-            throw new IllegalStateException("Client is already assigned to this therapist.");
+    public Therapist updateTherapist(int therapistId, Therapist updatedTherapist) {
+        Therapist existingTherapist = getTherapistById(therapistId);
+        if (updatedTherapist.getName() != null) {
+            existingTherapist.setName(updatedTherapist.getName());
         }
+        if (updatedTherapist.getSpecialization() != null) {
+            existingTherapist.setSpecialization(updatedTherapist.getSpecialization());
+        }
+        if (updatedTherapist.getLocation() != null) {
+            existingTherapist.setLocation(updatedTherapist.getLocation());
+        }
+        if (updatedTherapist.getInsurance() != null) {
+            existingTherapist.setInsurance(updatedTherapist.getInsurance());
+        }
+        if (updatedTherapist.getImageUrl() != null) {
+            existingTherapist.setImageUrl(updatedTherapist.getImageUrl());
+        }
+        return therapistDAO.save(existingTherapist);
     }
+
+    public void addClientToTherapist(int therapistId, int clientId) {
+        Therapist therapist = getTherapistById(therapistId);
+        Client client = clientDAO.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Client with id " + clientId + " not found."));
+        therapist.getClients().add(client);
+        client.setTherapist(therapist);
+        therapistDAO.save(therapist);
+        clientDAO.save(client);
+    }
+
+    public List<Client> getClientsByTherapistId(int therapistId) {
+        Therapist therapist = getTherapistById(therapistId);
+        return therapist.getClients();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Optional<Therapist> therapistOpt = therapistDAO.findByUsername(username);
-        if (!therapistOpt.isPresent()) {
-            throw new UsernameNotFoundException("Therapist not found with username: " + username);
-        }
-
-        Therapist therapist = therapistOpt.get();
-
-        // Create a UserDetails object that Spring Security can use
-        return new User(therapist.getUsername(), therapist.getPassword(), new ArrayList<>());  // Roles/authorities can be passed if needed
-    }
-
-    // Remove a client from a therapist's client list
-    public void removeClientFromTherapist(int therapistId, Client client) {
-        Therapist therapist = therapistDAO.findById(therapistId)
-                .orElseThrow(() -> new IllegalArgumentException("Therapist with id " + therapistId + " not found."));
-
-        if (therapist.getClients().contains(client)) {
-            therapist.removeClient(client);  // Removes client from therapist's list and clears therapist reference in Client
-            therapistDAO.save(therapist);  // Save the updated therapist
-        } else {
-            throw new IllegalStateException("Client is not assigned to this therapist.");
-        }
+        Therapist therapist = getTherapistByUserName(username);
+        return new User(therapist.getUsername(), therapist.getPassword(), new ArrayList<>());
     }
 }
