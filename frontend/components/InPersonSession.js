@@ -84,7 +84,7 @@ const therapists = [
         ],
     },
     {
-        id: 3,
+        id: 4,
         name: "Dr. Raj Kundra",
         pronouns: "He/Him",
         specialization: "Career and Life Transitions",
@@ -97,7 +97,7 @@ const therapists = [
         ],
     },
     {
-        id: 3,
+        id: 5,
         name: "Dr. Anjali Mehta",
         pronouns: "She/Her",
         specialization: "Couples Therapist",
