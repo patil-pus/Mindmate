@@ -3,6 +3,7 @@ import { Card, Typography, Box } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
 import { useGlobal } from "../contexts/GlobalContext";
 import FeatureCard from "./FeatureCard";
+import { useRouter } from 'next/router';
  
 
 const scrollAnimation = keyframes`
@@ -63,30 +64,46 @@ const TextContainer = styled(Box)({
 
 const DoctorCard = () => {
   const { therapists, error } = useGlobal();
-  console.log(therapists)
+  const router = useRouter();
+
   if (error) {
-    return <div>Error: {error}</div>;
+      return (
+          <Box sx={{ textAlign: "center", padding: "20px" }}>
+              <Typography variant="h6" color="error">
+                  Error loading therapists: {error}
+              </Typography>
+          </Box>
+      );
   }
 
   if (!therapists || therapists.length === 0) {
-    return <div>No therapists available at the moment.</div>;
+      return (
+          <Box sx={{ textAlign: "center", padding: "20px" }}>
+              <Typography variant="h6">No therapists available.</Typography>
+          </Box>
+      );
   }
 
+  const handleLearnMore = (id) => {
+      router.push(`/doctor-profile?id=${id}`);
+  };
 
   return (
-    <DoctorCardContainer>
-      {therapists.map((therapist) => (
-        <FeatureCard
-          key={therapist.id}
-          icon="D"
-          title={`${therapist.name}`}
-          description={`Specialization: ${therapist.specialization} - Language: ${therapist.language}`}
-          image={therapist.imageUrl} 
-          buttonText="Learn More"
-        />
-      ))}
-    </DoctorCardContainer>
+      <DoctorCardContainer>
+          {therapists.map((therapist) => (
+              <FeatureCard
+                  key={therapist.id}
+                  icon="D"
+                  title={`${therapist.name}`}
+                  description={`Specialization: ${therapist.specialization} - Language: ${therapist.language}`}
+                  image={therapist.imageUrl}
+                  buttonText="Learn More"
+                  onClick={() => handleLearnMore(therapist.id)}
+              />
+          ))}
+      </DoctorCardContainer>
   );
 };
+
 
 export default DoctorCard;

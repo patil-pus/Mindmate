@@ -1,7 +1,23 @@
+
 'use client';
 
 import React, { useState } from 'react';
-import { Typography, Paper, TextField, Button, Select, MenuItem, FormControl, InputLabel, Box, Grid, Card, CardContent, Avatar,} from '@mui/material';
+import {
+    Typography,
+    Paper,
+    TextField,
+    Button,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Box,
+    Grid,
+    Card,
+    CardContent,
+    Avatar,
+} from '@mui/material';
+
 import { styled } from '@mui/material/styles';
 import { useGlobal } from '../contexts/GlobalContext'; // Import Global Context
 import axios from 'axios';
@@ -41,7 +57,7 @@ const Journal = () => {
             });
 
             if (response.status === 200) {
-                
+
                 const newJournal = {
                     id: response.data.id, // Assuming backend returns the new journal ID
                     mood,

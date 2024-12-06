@@ -33,20 +33,47 @@ public class TherapistController {
 
     // Register a new therapist
     @PostMapping("/register")
-    public ResponseEntity<Therapist> registerTherapist(@RequestBody Therapist therapist) {
-        Therapist registeredTherapist = therapistService.registerTherapist(therapist);
-        return ResponseEntity.ok(registeredTherapist);
+    public ResponseEntity<?> registerTherapist(@RequestBody Therapist therapist) {
+        // Basic validation checks
+        if (therapist.getUsername() == null || therapist.getUsername().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Username is required for therapist."));
+        }
+        if (therapist.getPassword() == null || therapist.getPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Password is required for therapist."));
+        }
+        if (therapist.getName() == null || therapist.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Name is required for therapist."));
+        }
+        if (therapist.getLocation() == null || therapist.getLocation().trim().isEmpty() ||
+                therapist.getSpecialization() == null || therapist.getSpecialization().trim().isEmpty() ||
+                therapist.getLanguage() == null || therapist.getLanguage().trim().isEmpty() ||
+                therapist.getInsurance() == null || therapist.getInsurance().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Location, specialization, language, and insurance are required for therapist."));
+        }
+
+        try {
+            Therapist registeredTherapist = therapistService.registerTherapist(therapist);
+            return ResponseEntity.ok(registeredTherapist);
+        } catch (Exception e) {
+            System.err.println("Error registering therapist: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(Map.of("message", "Internal server error while registering therapist."));
+        }
     }
 
     // Login for therapist
     @PostMapping("/login")
     public ResponseEntity<?> loginTherapist(@RequestBody Therapist therapist) throws Exception {
+        if (therapist.getUsername() == null || therapist.getUsername().trim().isEmpty() ||
+                therapist.getPassword() == null || therapist.getPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Username and password are required for therapist login."));
+        }
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(therapist.getUsername(), therapist.getPassword())
             );
         } catch (UsernameNotFoundException e) {
-            throw new Exception("Incorrect username or password", e);
+            return ResponseEntity.status(401).body(Map.of("message", "Incorrect username or password."));
         }
 
         final UserDetails userDetails = therapistService.loadUserByUsername(therapist.getUsername());
@@ -68,21 +95,22 @@ public class TherapistController {
                 .body(Map.of("therapistId", therapistId, "therapist", authenticatedTherapist, "message", "Login successful"));
     }
 
-    // Retrieve a therapist by ID
     @GetMapping("/{therapistId}")
     public ResponseEntity<Therapist> getTherapist(@PathVariable int therapistId) {
         Therapist therapist = therapistService.getTherapistById(therapistId);
-        return ResponseEntity.ok(therapist);
+        if (therapist != null) {
+            return ResponseEntity.ok(therapist);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // Retrieve all therapists
     @GetMapping("/getAllTherapists")
     public ResponseEntity<List<Therapist>> getAllTherapists() {
         List<Therapist> therapists = therapistService.getAllTherapists();
         return ResponseEntity.ok(therapists);
     }
 
-    // Update therapist details
     @PutMapping("/{therapistId}")
     public ResponseEntity<Therapist> updateTherapist(
             @PathVariable int therapistId,
@@ -91,7 +119,6 @@ public class TherapistController {
         return ResponseEntity.ok(therapist);
     }
 
-    // Assign a client to a therapist
     @PostMapping("/{therapistId}/client/{clientId}")
     public ResponseEntity<Therapist> assignClient(@PathVariable int therapistId, @PathVariable int clientId) {
         therapistService.addClientToTherapist(therapistId, clientId);
@@ -99,7 +126,6 @@ public class TherapistController {
         return ResponseEntity.ok(updatedTherapist);
     }
 
-    // Retrieve all clients assigned to a therapist
     @GetMapping("/{therapistId}/clients")
     public ResponseEntity<List<Client>> getClients(@PathVariable int therapistId) {
         List<Client> clients = therapistService.getClientsByTherapistId(therapistId);

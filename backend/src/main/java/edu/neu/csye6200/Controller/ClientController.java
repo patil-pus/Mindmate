@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
@@ -26,27 +25,55 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    //register
+    // Register a new client
     @PostMapping("/register")
-    public ResponseEntity<Client> registerClient(@RequestBody Client client) {
-        Client registeredClient = clientService.registerClient(client); // Save the client and retrieve the saved instance
-        return ResponseEntity.ok(registeredClient); // Return the registered client in the response
+    public ResponseEntity<?> registerClient(@RequestBody Client client) {
+        // Basic validation checks
+        if (client.getUsername() == null || client.getUsername().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Username is required."));
+        }
+        if (client.getPassword() == null || client.getPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Password is required."));
+        }
+        if (client.getName() == null || client.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Name is required."));
+        }
+        if (client.getProfession() == null || client.getProfession().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Profession is required for a client."));
+        }
+
+        try {
+            Client registeredClient = clientService.registerClient(client);
+            return ResponseEntity.ok(registeredClient);
+        } catch (Exception e) {
+            // Log the error and return a 500 with a message
+            System.err.println("Error registering client: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(Map.of("message", "Internal server error while registering client."));
+        }
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> loginClient(@RequestBody Client client) throws Exception {
+        if (client.getUsername() == null || client.getUsername().trim().isEmpty() ||
+                client.getPassword() == null || client.getPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Username and password are required."));
+        }
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(client.getUsername(), client.getPassword())
             );
         } catch (UsernameNotFoundException e) {
-            throw new Exception("Incorrect username or password", e);
+            return ResponseEntity.status(401).body(Map.of("message", "Incorrect username or password."));
         }
-        // Generate JWT after successful login
+
         final UserDetails userDetails = clientService.loadUserByUsername(client.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
@@ -66,10 +93,9 @@ public class ClientController {
                 .body(Map.of("clientId", clientId, "client", getAuthenticatedClient, "message", "Login successful"));
     }
 
-    // Endpoint to add a journal entry to a client
     @PostMapping("/{clientId}/journal")
     public ResponseEntity<String> addJournalEntry(@PathVariable int clientId, @RequestBody JournalEntry entry) {
-        entry.setEntryDate(new Date());  // Set the current date for the journal entry
+        entry.setEntryDate(new Date());
         clientService.addJournalEntry(clientId, entry);
         return ResponseEntity.ok("Journal entry added successfully");
     }
@@ -84,7 +110,6 @@ public class ClientController {
         }
     }
 
-    // Endpoint to assign a therapist to a client
     @PostMapping("/{clientId}/therapist/{therapistId}")
     public ResponseEntity<Client> assignTherapist(@PathVariable int clientId, @PathVariable int therapistId) {
         clientService.assignTherapist(clientId, therapistId);
@@ -92,7 +117,6 @@ public class ClientController {
         return ResponseEntity.ok(updatedClient);
     }
 
-    // Endpoint to retrieve a client by ID
     @GetMapping("/{clientId}")
     public ResponseEntity<Client> getClient(@PathVariable int clientId) {
         Client client = clientService.getClientById(clientId);

@@ -30,12 +30,17 @@ const SectionCard = styled(Paper)({
 });
 
 const PatientProfile = () => {
-    const { user } = useGlobal(); // Assuming user contains client details
-    const clientData = user; // Use the `user` object directly as `clientData`
+    const { user, userType } = useGlobal();
 
-    if (!clientData) {
-        return <Typography>Loading...</Typography>; // Handle case when user is not yet loaded
+    // If userType isn't 'client', we know we have therapist data or no user
+    console.log(user);
+    console.log(userType);
+    if (!user || userType !== 'client') {
+        console.log("No client");
+        return <Typography>Loading client profile...</Typography>;
     }
+
+    const clientData = user;
 
     return (
         <ProfileContainer>

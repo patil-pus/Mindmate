@@ -4,7 +4,6 @@ import { styled } from "@mui/system";
 import { motion } from "framer-motion";
 import { useGlobal } from "../contexts/GlobalContext";
 
-// Styled Components
 const ProfileContainer = styled(Box)({
     display: "flex",
     flexDirection: "column",
@@ -26,20 +25,18 @@ const ProfileCard = styled(Paper)({
 
 const TherapistProfile = () => {
     const [isEditing, setIsEditing] = useState(false);
-    const { therapists, setTherapists } = useGlobal(); // Access global context
+    const { therapists, setTherapists } = useGlobal();
     const therapistId = typeof window !== "undefined" ? sessionStorage.getItem("therapistId") : null;
-    console.log(therapistId);
 
     const [profileData, setProfileData] = useState({
         name: "",
         specialization: "",
         location: "",
         insurance: "",
-        imageUrl: "",
+        image_url: "",
     });
 
-    // Load therapist data from global context
-    console.log(therapists);
+    // Load therapist data from global context once therapists are loaded
     useEffect(() => {
         if (therapists && therapistId) {
             const currentTherapist = therapists.find(
@@ -52,10 +49,10 @@ const TherapistProfile = () => {
                     specialization: currentTherapist.specialization || "",
                     location: currentTherapist.location || "",
                     insurance: currentTherapist.insurance || "",
-                    imageUrl: currentTherapist.imageUrl || "",
+                    image_url: currentTherapist.image_url || "",
                 });
             } else {
-                console.error("Therapist with the specified ID not found.");
+                console.error("Therapist with the specified ID not found in global context.");
             }
         }
     }, [therapists, therapistId]);
@@ -71,8 +68,6 @@ const TherapistProfile = () => {
                 body: JSON.stringify(profileData),
             });
 
-            console.log(response);
-
             if (response.ok) {
                 const updatedTherapist = await response.json();
 
@@ -84,11 +79,20 @@ const TherapistProfile = () => {
                 );
                 setTherapists(updatedTherapists);
 
+                // Update local state to reflect changes immediately, including image
+                setProfileData({
+                    name: updatedTherapist.name || "",
+                    specialization: updatedTherapist.specialization || "",
+                    location: updatedTherapist.location || "",
+                    insurance: updatedTherapist.insurance || "",
+                    image_url: updatedTherapist.image_url || "",
+                });
+
                 alert("Profile updated successfully!");
                 setIsEditing(false);
             } else {
-                alert("Failed to update profile.");
                 console.error("Failed to update profile:", response.statusText);
+                alert("Failed to update profile.");
             }
         } catch (error) {
             console.error("Error updating profile:", error);
@@ -128,9 +132,9 @@ const TherapistProfile = () => {
                                 margin: "auto",
                                 bgcolor: "#1976D2",
                             }}
-                            src={profileData.imageUrl} // Display profile image
+                            src={profileData.image_url}
                         >
-                            {!profileData.imageUrl && "T"}
+                            {!profileData.image_url && "T"}
                         </Avatar>
                     </motion.div>
                     <Typography variant="h5" mt={2} fontWeight="bold">
@@ -156,8 +160,8 @@ const TherapistProfile = () => {
                                 <TextField
                                     label="Profile Image URL"
                                     fullWidth
-                                    value={profileData.imageUrl}
-                                    name="imageUrl"
+                                    value={profileData.image_url}
+                                    name="image_url"
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                 />
