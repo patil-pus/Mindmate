@@ -33,6 +33,8 @@ const PatientProfile = () => {
     const { user, userType } = useGlobal();
 
     // If userType isn't 'client', we know we have therapist data or no user
+    console.log(user);
+    console.log(userType);
     if (!user || userType !== 'client') {
         console.log("No client");
         return <Typography>Loading client profile...</Typography>;
