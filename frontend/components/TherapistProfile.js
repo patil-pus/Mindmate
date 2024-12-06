@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Avatar, Paper, Button, Grid, TextField } from "@mui/material";
 import { styled } from "@mui/system";
-import { motion } from "framer-motion"; // For animations
+import { motion } from "framer-motion";
+import { useGlobal } from "../contexts/GlobalContext";
 
 // Styled Components
 const ProfileContainer = styled(Box)({
@@ -24,39 +25,75 @@ const ProfileCard = styled(Paper)({
 });
 
 const TherapistProfile = () => {
-    const [isEditing, setIsEditing] = useState(false); // Toggle edit mode
-    const [isImageFieldVisible, setIsImageFieldVisible] = useState(false); // Control visibility of the image field
+    const [isEditing, setIsEditing] = useState(false);
+    const { therapists, setTherapists } = useGlobal(); // Access global context
+    const therapistId = typeof window !== "undefined" ? sessionStorage.getItem("therapistId") : null;
+    console.log(therapistId);
+
     const [profileData, setProfileData] = useState({
-        name: "Dr. Shabrina",
-        specialization: "Psychologist",
-        email: "shabrina@example.com",
-        phone: "(123) 456-7890",
-        imageUrl: "", // Profile image URL
+        name: "",
+        specialization: "",
+        location: "",
+        insurance: "",
+        imageUrl: "",
     });
 
-    // Load profile data from sessionStorage on component mount
+    // Load therapist data from global context
+    console.log(therapists);
     useEffect(() => {
-        const savedProfileData = sessionStorage.getItem("therapistProfile");
-        if (savedProfileData) {
-            const parsedData = JSON.parse(savedProfileData);
-            setProfileData(parsedData);
-            if (parsedData.imageUrl) {
-                setIsImageFieldVisible(true); // Show the image URL field if an image exists
+        if (therapists && therapistId) {
+            const currentTherapist = therapists.find(
+                (therapist) => String(therapist.id) === String(therapistId)
+            );
+
+            if (currentTherapist) {
+                setProfileData({
+                    name: currentTherapist.name || "",
+                    specialization: currentTherapist.specialization || "",
+                    location: currentTherapist.location || "",
+                    insurance: currentTherapist.insurance || "",
+                    imageUrl: currentTherapist.imageUrl || "",
+                });
+            } else {
+                console.error("Therapist with the specified ID not found.");
             }
         }
-    }, []);
+    }, [therapists, therapistId]);
 
-    // Save profile data to sessionStorage
-    const handleSave = () => {
-        sessionStorage.setItem("therapistProfile", JSON.stringify(profileData));
-        setIsEditing(false);
-    };
+    // Save updates to the database
+    const handleSave = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/therapists/${therapistId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(profileData),
+            });
 
-    // Save image URL independently and disable the field
-    const handleSaveImage = () => {
-        sessionStorage.setItem("therapistProfile", JSON.stringify(profileData));
-        setIsImageFieldVisible(false); // Hide the "Add Profile Picture" button
-        alert("Profile image saved successfully!");
+            console.log(response);
+
+            if (response.ok) {
+                const updatedTherapist = await response.json();
+
+                // Update global context
+                const updatedTherapists = therapists.map((therapist) =>
+                    String(therapist.id) === String(therapistId)
+                        ? { ...therapist, ...updatedTherapist }
+                        : therapist
+                );
+                setTherapists(updatedTherapists);
+
+                alert("Profile updated successfully!");
+                setIsEditing(false);
+            } else {
+                alert("Failed to update profile.");
+                console.error("Failed to update profile:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("An error occurred while updating the profile.");
+        }
     };
 
     // Handle form field changes
@@ -67,9 +104,6 @@ const TherapistProfile = () => {
             [name]: value,
         }));
     };
-
-    // Show the image URL input field
-    const handleAddImageField = () => setIsImageFieldVisible(true);
 
     return (
         <ProfileContainer>
@@ -94,7 +128,7 @@ const TherapistProfile = () => {
                                 margin: "auto",
                                 bgcolor: "#1976D2",
                             }}
-                            src={profileData.imageUrl} // Dynamically set the image URL
+                            src={profileData.imageUrl} // Display profile image
                         >
                             {!profileData.imageUrl && "T"}
                         </Avatar>
@@ -103,103 +137,48 @@ const TherapistProfile = () => {
                         Therapist Profile
                     </Typography>
 
-                    {/* Profile Form */}
                     <Box mt={3}>
                         <Grid container spacing={2}>
-                            {/* Name */}
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Name"
-                                    fullWidth
-                                    value={profileData.name}
-                                    name="name"
-                                    onChange={handleChange}
-                                    disabled={!isEditing}
-                                />
-                            </Grid>
-
-                            {/* Specialization */}
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Specialization"
-                                    fullWidth
-                                    value={profileData.specialization}
-                                    name="specialization"
-                                    onChange={handleChange}
-                                    disabled={!isEditing}
-                                />
-                            </Grid>
-
-                            {/* Email */}
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Email"
-                                    fullWidth
-                                    value={profileData.email}
-                                    name="email"
-                                    onChange={handleChange}
-                                    disabled={!isEditing}
-                                />
-                            </Grid>
-
-                            {/* Phone */}
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Phone"
-                                    fullWidth
-                                    value={profileData.phone}
-                                    name="phone"
-                                    onChange={handleChange}
-                                    disabled={!isEditing}
-                                />
-                            </Grid>
-
-                            {/* Add Profile Picture Button */}
-                            {!profileData.imageUrl && (
-                                <Grid item xs={12}>
-                                    <Button
-                                        variant="outlined"
-                                        fullWidth
-                                        onClick={handleAddImageField}
-                                    >
-                                        Add Profile Picture
-                                    </Button>
-                                </Grid>
-                            )}
-
-                            {/* Image URL */}
-                            {isImageFieldVisible && (
-                                <Grid item xs={12}>
+                            {["name", "specialization", "location", "insurance"].map((field) => (
+                                <Grid item xs={12} key={field}>
                                     <TextField
-                                        label="Profile Image URL"
+                                        label={field.charAt(0).toUpperCase() + field.slice(1)}
                                         fullWidth
-                                        value={profileData.imageUrl}
-                                        name="imageUrl"
+                                        value={profileData[field]}
+                                        name={field}
                                         onChange={handleChange}
-                                        disabled={!isEditing && profileData.imageUrl !== ""}
+                                        disabled={!isEditing}
                                     />
-                                    <Box mt={2} display="flex" justifyContent="center">
-                                        <Button
-                                            variant="contained"
-                                            color="success"
-                                            onClick={handleSaveImage}
-                                            disabled={!profileData.imageUrl} // Only enable if the URL is not empty
-                                        >
-                                            Save Image
-                                        </Button>
-                                    </Box>
                                 </Grid>
-                            )}
+                            ))}
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Profile Image URL"
+                                    fullWidth
+                                    value={profileData.imageUrl}
+                                    name="imageUrl"
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </Grid>
                         </Grid>
 
-                        {/* General Action Buttons */}
                         <Box mt={3} display="flex" justifyContent="space-between">
                             {!isEditing ? (
-                                <Button variant="contained" color="primary" onClick={() => setIsEditing(true)}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => setIsEditing(true)}
+                                >
                                     Edit
                                 </Button>
                             ) : (
-                                <Button variant="contained" color="success" onClick={handleSave}>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    onClick={handleSave}
+                                >
                                     Save Profile
                                 </Button>
                             )}

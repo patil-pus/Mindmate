@@ -1,11 +1,10 @@
-// contexts/GlobalContext.js
 import React, { createContext, useEffect, useReducer, useContext } from "react";
 
 // Initial state
 const initialState = {
   user: null,
   clientData: null,
-  therapists: null,
+  therapists: [],
   loading: false,
   error: null,
   username: null,
@@ -19,19 +18,9 @@ const globalReducer = (state, action) => {
     case "SET_USERNAME":
       return { ...state, username: action.payload };
     case "SET_CLIENT_DATA":
-      return {
-        ...state,
-        clientData: action.payload,
-        loading: false,
-        error: null,
-      };
+      return { ...state, clientData: action.payload, loading: false };
     case "SET_THERAPISTS":
-      return {
-        ...state,
-        therapists: action.payload,
-        loading: false,
-        error: null,
-      };
+      return { ...state, therapists: action.payload, loading: false };
     case "SET_LOADING":
       return { ...state, loading: true, error: null };
     case "SET_ERROR":
@@ -43,205 +32,132 @@ const globalReducer = (state, action) => {
   }
 };
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
+
 const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
 
-  const setUser = (user) => {
-    dispatch({ type: "SET_USER", payload: user });
-  };
+  const setLoading = () => dispatch({ type: "SET_LOADING" });
+  const setError = (error) => dispatch({ type: "SET_ERROR", payload: error });
 
-  const setUsername = (username) => {
-    dispatch({ type: "SET_USERNAME", payload: username });
-  };
+  // Helper function to handle API requests
+  const fetchAPI = async (url, options = {}) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}${url}`, {
+        ...options,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("authToken") || ""}`,
+          ...options.headers, // Merge any additional headers
+        },
+      });
 
-  const setClientData = (clientData) => {
-    dispatch({ type: "SET_CLIENT_DATA", payload: clientData });
-  };
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`Error response from ${url}: ${res.status} - ${errorText}`);
+        throw new Error(`HTTP ${res.status}: ${errorText}`);
+      }
 
-  const setTherapists = (therapists) => {
-    dispatch({ type: "SET_THERAPISTS", payload: therapists });
-  };
-
-  const setLoading = () => {
-    dispatch({ type: "SET_LOADING" });
-  };
-
-  const setError = (error) => {
-    dispatch({ type: "SET_ERROR", payload: error });
-  };
-
-  const logout = () => {
-    dispatch({ type: "LOGOUT" });
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        return await res.json();
+      } else {
+        console.warn(`Expected JSON but got ${contentType} from ${url}`);
+        return null; // Gracefully handle non-JSON responses
+      }
+    } catch (error) {
+      console.error(`Error fetching ${url}:`, error);
+      throw error;
+    }
   };
 
   const fetchUser = async () => {
     const clientId = sessionStorage.getItem("clientId");
     if (!clientId) {
-      console.error("No clientId found in sessionStorage");
-      setError("No clientId found in sessionStorage");
-      setLoading(false);
-      return null;
+      setError("Client ID not found");
+      return;
     }
-
-    // Fetch user data
+    setLoading();
     try {
-      setLoading();
-      const res = await fetch(`http://localhost:8080/api/clients/${clientId}`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      console.log("response for user data", res);
-      if (res.ok) {
-        const user = await res.json();
-
-        setUser(user);
-        return user; // Return the user object for further actions
-      } else {
-         console.log("NOOOO response for user data", res);
-        throw new Error("Failed to fetch user");
-      }
+      const user = await fetchAPI(`/clients/${clientId}`);
+      dispatch({ type: "SET_USER", payload: user });
     } catch (error) {
       setError("Error fetching user");
-      console.error("Error fetching user:", error);
-    } finally {
-      setLoading(false);
     }
-    return null;
   };
-  
 
-  // Fetch journal data for the current user
-  const fetchUserJournal = async (clientId) => {
-    console.log("Fetching journal data for clientId:", clientId);
+  const fetchUserJournal = async () => {
+    const clientId = sessionStorage.getItem("clientId");
+    if (!clientId) {
+      setError("Client ID not found");
+      return;
+    }
+    setLoading();
     try {
-      setLoading();
-      const res = await fetch(
-        `http://localhost:8080/api/clients/${clientId}/getJournal`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      if (res.ok) {
-        const journalData = await res.json();
-        console.log("Fetched journal data:", journalData);
-        setClientData(journalData);
-        return journalData;
-      } else {
-        setError("Failed to fetch journal data");
-        console.error("Failed to fetch journal data");
-        setClientData(null);
-      }
+      const journalData = await fetchAPI(`/clients/${clientId}/getJournal`);
+      dispatch({ type: "SET_CLIENT_DATA", payload: journalData });
     } catch (error) {
       setError("Error fetching journal data");
-      console.error("Error fetching journal data:", error);
-    } finally {
-      setLoading(false);
     }
-    return null;
   };
 
-  // Fetch all therapists
   const fetchTherapists = async () => {
+    setLoading();
     try {
-      setLoading();
-      const res = await fetch(
-        `http://localhost:8080/api/therapists/getAllTherapists`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      if (res.ok) {
-        const therapists = await res.json();
-        console.log("Fetched therapsists data:", therapists);
-        setTherapists(therapists);
-        return therapists; // Return therapists if needed
-      } else {
-        setError("Failed to fetch therapists");
-        console.error("Failed to fetch therapists");
-        setTherapists(null);
-      }
+      const therapists = await fetchAPI(`/therapists/getAllTherapists`);
+      dispatch({ type: "SET_THERAPISTS", payload: therapists });
     } catch (error) {
       setError("Error fetching therapists");
-      console.error("Error fetching therapists:", error);
-    } finally {
-      setLoading(false);
     }
-    return null;
   };
+
   const fetchUsername = async () => {
     const userId = sessionStorage.getItem("clientId");
+    if (!userId) {
+      setError("User ID not found");
+      return;
+    }
+    setLoading();
     try {
-      let response = await fetch(
-        `http://localhost:8080/api/clients/${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
-
-      if (!response.ok) {
-        response = await fetch(
-          `http://localhost:8080/api/therapists/${userId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
-      }
-
-      if (response.ok) {
-        const resData = await response.json();
-        console.log("response data", resData);
-        const { name } = resData;
-        console.log("client name",name, response );
-
-        setUsername(name);
-      }
+      let user = await fetchAPI(`/clients/${userId}`);
+      if (!user) user = await fetchAPI(`/therapists/${userId}`);
+      dispatch({ type: "SET_USERNAME", payload: user?.name });
     } catch (error) {
-      console.error("Error during login:", error);
+      setError("Error fetching username");
     }
   };
+
+  const logout = () => {
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("clientId");
+    dispatch({ type: "LOGOUT" });
+  };
+
   useEffect(() => {
-    const clientId = sessionStorage.getItem("clientId");
-    if (clientId) {
-      fetchUserJournal(clientId);
-    }
-    fetchUsername();
-    fetchTherapists();
     fetchUser();
+    fetchUserJournal();
+    fetchTherapists();
+    fetchUsername();
   }, []);
 
   return (
-    <GlobalContext.Provider
-      value={{
-        ...state,
-        setUser,
-        setClientData,
-        setTherapists,
-        setLoading,
-        setError,
-        logout,
-        fetchUser,
-        setUsername,
-      }}
-    >
-      {children}
-    </GlobalContext.Provider>
+      <GlobalContext.Provider
+          value={{
+            ...state,
+            fetchUser,
+            fetchUserJournal,
+            fetchTherapists,
+            fetchUsername,
+            logout,
+          }}
+      >
+        {children}
+      </GlobalContext.Provider>
   );
 };
 
-//custom hook for using the context
+// Custom hook for using the context
 export const useGlobal = () => useContext(GlobalContext);
