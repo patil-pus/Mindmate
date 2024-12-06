@@ -1,7 +1,7 @@
 package edu.neu.csye6200.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class Therapist implements Person {
     @Column(name = "specialization")
     private String specialization;
 
-    @Column(name = "Insurance")
+    @Column(name = "insurance")
     private String insurance;
 
     @Column(name = "location")
@@ -55,7 +55,7 @@ public class Therapist implements Person {
     }
 
     public Therapist(String name, int age, String sex, String username, String password, String specialization,
-            String insurance, String location, String language, String role, String imageUrl) {
+                     String insurance, String location, String language, String role, String imageUrl) {
         this.name = name;
         this.age = age;
         this.sex = sex;
@@ -69,6 +69,7 @@ public class Therapist implements Person {
         this.imageUrl = imageUrl;
     }
 
+    // Getters and Setters
     @Override
     public int getId() {
         return id;
@@ -178,14 +179,24 @@ public class Therapist implements Person {
         return clients;
     }
 
-    public void addClient(Client client) {
-        clients.add(client);
-        client.setTherapist(this);
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
     }
 
+    // Add a client to the therapist's list
+    public void addClient(Client client) {
+        if (!clients.contains(client)) {
+            clients.add(client);
+            client.setTherapist(this);
+        }
+    }
+
+    // Remove a client from the therapist's list
     public void removeClient(Client client) {
-        clients.remove(client);
-        client.setTherapist(null);
+        if (clients.contains(client)) {
+            clients.remove(client);
+            client.setTherapist(null);
+        }
     }
 
     @Override
@@ -193,5 +204,4 @@ public class Therapist implements Person {
         return "Name: " + name + ", Age: " + age + ", Sex: " + sex + ", Username: " + username +
                 ", Specialization: " + specialization + ", Location: " + location + ", Image URL: " + imageUrl;
     }
-
 }
