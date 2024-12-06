@@ -11,6 +11,7 @@ const initialState = {
   username: null,
 };
 
+// Reducer function
 const globalReducer = (state, action) => {
   switch (action.type) {
     case "SET_USER":
@@ -79,18 +80,29 @@ export const GlobalProvider = ({ children }) => {
         credentials: "include",
       });
 
-      console.log("Journal fetch status:", res.status, "content-type:", res.headers.get('content-type'));
+      console.log("Journal fetch response status:", res.status);
+      console.log("Journal fetch response content-type:", res.headers.get('content-type'));
 
       if (res.ok) {
         const contentType = res.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
+          // Parse as JSON
           const journalData = await res.json();
           console.log("Fetched journal data:", journalData);
-          setClientData(journalData || []);
-          return journalData || [];
+          if (journalData) {
+            setClientData(journalData);
+            return journalData;
+          } else {
+            // If journalData is null or empty
+            console.warn("No journal entries returned, setting empty array");
+            setClientData([]);
+            return [];
+          }
         } else {
+          // Non-JSON or empty response handling
           const text = await res.text();
-          console.warn("Non-JSON or empty journal response:", text);
+          console.warn("Non-JSON or empty response for journal data:", text);
+          // Assume no journal data if empty
           setClientData([]);
           return [];
         }
@@ -107,6 +119,9 @@ export const GlobalProvider = ({ children }) => {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   };
+
+  // Other fetch functions (fetchUser, fetchUsername, fetchTherapists) would remain as before
+  // Make sure to add similar checks for them if you expect non-JSON or empty responses.
 
   const fetchUser = async () => {
     const clientId = sessionStorage.getItem("clientId");
@@ -137,16 +152,11 @@ export const GlobalProvider = ({ children }) => {
         console.log("Fetched client user data:", user);
         if (user && user.id) {
           setUser(user);
-          // Since we got a clientId, user is client
           setUserType("client");
           return user;
         } else {
           setError("Received invalid or null user data");
         }
-      } else if (therapistId) {
-        // If there's a therapistId, fetch therapist user similarly if needed
-        // and set userType to "therapist" after fetching therapist data.
-        // For now, you can add similar code if required.
       }
       return null;
     } catch (error) {
@@ -178,7 +188,7 @@ export const GlobalProvider = ({ children }) => {
       const contentType = res.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         const text = await res.text();
-        console.warn("Therapists response not JSON:", text);
+        console.warn("Therapists response is not JSON:", text);
         setError("Therapists data is not in expected JSON format");
         setTherapists([]);
         return [];
@@ -187,7 +197,7 @@ export const GlobalProvider = ({ children }) => {
       const therapists = await res.json();
       console.log("Fetched therapists data:", therapists);
       if (!therapists || !Array.isArray(therapists)) {
-        setError("Therapists data not in expected format");
+        setError("Therapists data is not in expected format");
         setTherapists([]);
         return [];
       }
@@ -231,7 +241,7 @@ export const GlobalProvider = ({ children }) => {
       }
 
       if (!url) {
-        console.warn("No clientId or therapistId for fetchUsername.");
+        console.warn("No clientId or therapistId found for fetchUsername.");
         return;
       }
 
@@ -271,46 +281,22 @@ export const GlobalProvider = ({ children }) => {
   useEffect(() => {
     const clientId = sessionStorage.getItem("clientId");
     const therapistId = sessionStorage.getItem("therapistId");
-
-    // Determine userType based on which ID is present
-    if (clientId) {
-      setUserType("client");
-      console.log("UserType set to client");
-    } else if (therapistId) {
-      setUserType("therapist");
-      console.log("UserType set to therapist");
-    } else {
-      console.log("No user logged in");
-    }
-
-    console.log("useEffect startup: clientId:", clientId, "therapistId:", therapistId, "userType:", state.userType);
+    console.log("useEffect startup: clientId:", clientId, "therapistId:", therapistId);
 
     if (clientId || therapistId) {
       fetchUser()
-          .then((fetchedUser) => {
-            console.log("After fetchUser, user:", fetchedUser, "userType:", state.userType);
-            if (fetchedUser || therapistId) return fetchUsername();
+          .then((user) => {
+            if (user || therapistId) return fetchUsername();
           })
-          .then(() => {
-            // Only fetch therapists if therapistId is present
-            if (therapistId) return fetchTherapists();
-          })
-          .then(() => {
+          .then(() => fetchTherapists())
+          .then((therapists) => {
             if (clientId) return fetchUserJournal();
           })
           .catch((error) => {
             console.error("Error in chained data fetch:", error);
-          })
-          .finally(() => {
-            if (state.loading) {
-              dispatch({ type: "SET_LOADING", payload: false });
-            }
           });
     } else {
       console.log("No clientId or therapistId in session. Not fetching data.");
-      if (state.loading) {
-        dispatch({ type: "SET_LOADING", payload: false });
-      }
     }
   }, []);
 
