@@ -127,14 +127,18 @@ export const GlobalProvider = ({ children }) => {
       );
 
       if (res.ok) {
-        const journalData = await res.json();
-        console.log("Fetched journal data:", journalData);
-        setClientData(journalData);
-        return journalData;
+            const text = await res.text(); // Read response as plain text
+            const journalData = text ? JSON.parse(text) : {}; // Parse JSON only if the response is not empty
+            console.log("Fetched journal data:", journalData);
+            setClientData(journalData);
+            return journalData;
+
       } else {
         setError("Failed to fetch journal data");
-        console.error("Failed to fetch journal data");
-        setClientData(null);
+       console.error("Failed to fetch journal data. Status:", res.status);
+       setClientData(null);
+    return {}; 
+        
       }
     } catch (error) {
       setError("Error fetching journal data");
