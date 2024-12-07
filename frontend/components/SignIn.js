@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Paper, Box, Grid, Typography, Snackbar } from '@mui/material';
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Link,
+    Paper,
+    Box,
+    Grid,
+    Typography,
+    Snackbar,
+} from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -59,7 +72,7 @@ export default function SignInSide() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username: email, password }),
-                credentials: 'include',
+                credentials: 'include', // Include cookies
             });
 
             if (!response.ok) {
@@ -70,46 +83,33 @@ export default function SignInSide() {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ username: email, password }),
-                    credentials: 'include',
+                    credentials: 'include', // Include cookies
                 });
             }
 
             if (response.ok) {
                 const resData = await response.json();
-                console.log("response data", resData);
-                const { clientId, client, therapistId, therapist }  = resData;
+                const { client, therapist } = resData;
 
                 if (client) {
-                    const { role } = client;
-                    sessionStorage.setItem('clientId', clientId);
-                    if (role === 'client') {
-                        console.log("client role");
-                        // **NEW**: Set userType for client
-                        sessionStorage.setItem('userType', 'client');
-                        router.push('/Dashboard');
-                    } else {
-                        console.error('Unexpected client role:', role);
-                    }
+                    sessionStorage.setItem('clientId', client.id);
+                    sessionStorage.setItem('userType', 'client');
+                    router.push('/Dashboard'); // Redirect to client dashboard
                 } else if (therapist) {
-                    const { role } = therapist;
-                    sessionStorage.setItem('therapistId', therapistId);
-                    if (role === 'therapist') {
-                        console.log('therapist role');
-                        // **NEW**: Set userType for therapist
-                        sessionStorage.setItem('userType', 'therapist');
-                        router.push('/TherapistDashboard');
-                    } else {
-                        console.error('Unexpected therapist role:', role);
-                    }
+                    sessionStorage.setItem('therapistId', therapist.id);
+                    sessionStorage.setItem('userType', 'therapist');
+                    router.push('/TherapistDashboard'); // Redirect to therapist dashboard
                 } else {
-                    console.error('Neither client nor therapist object found in response');
+                    setAlertMessage('Unexpected error: User role not found.');
+                    setOpenAlert(true);
                 }
             } else {
                 setLoginFailed(true);
             }
         } catch (error) {
             console.error('Error during login:', error);
-            setLoginFailed(true);
+            setAlertMessage('An error occurred during login. Please try again.');
+            setOpenAlert(true);
         }
     };
 
@@ -169,24 +169,6 @@ export default function SignInSide() {
                     >
                         MindMate
                     </Typography>
-                    <Typography
-                        variant="h5"
-                        sx={{
-                            mb: 1,
-                            color: 'black',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                            fontSize: '2.25rem',
-                            letterSpacing: '0.5px',
-                            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
-                        }}
-                    >
-                        Let's start your path to wellness...
-                    </Typography>
-
-                    <Avatar sx={{ m: 2, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>

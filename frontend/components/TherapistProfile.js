@@ -26,6 +26,7 @@ const ProfileCard = styled(Paper)({
 const TherapistProfile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const { therapists, setTherapists } = useGlobal();
+    console.log("therapists", therapists);
     const therapistId = typeof window !== "undefined" ? sessionStorage.getItem("therapistId") : null;
 
     const [profileData, setProfileData] = useState({
