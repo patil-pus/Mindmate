@@ -16,6 +16,7 @@ import {
     Box,
     Alert,
     Badge,
+    Snackbar,
     IconButton,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -23,7 +24,8 @@ import { motion } from 'framer-motion';
 import { LocalizationProvider, DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { useGlobal } from "../contexts/GlobalContext"; // Import global context
+import { useGlobal } from "../contexts/GlobalContext"; 
+import { useRouter } from 'next/router';
 
 function BookingPage() {
     const { therapists, error } = useGlobal(); // Access therapists from the global context
@@ -35,6 +37,9 @@ function BookingPage() {
         description: "",
     });
     const [formError, setFormError] = useState("");
+     const [successMessage, setSuccessMessage] = useState("");
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const router = useRouter();
 
     const handleBookSession = (therapist) => {
         setSelectedTherapist(therapist);
@@ -43,17 +48,25 @@ function BookingPage() {
 
     const handleConfirmBooking = () => {
         if (!bookingDetails.date || !bookingDetails.time || !bookingDetails.description) {
-            setFormError("Please fill all fields to confirm your booking.");
+           alert("Please fill all fields to confirm your booking.");
             return;
         }
         setFormError("");
-        alert(
-            `Booking confirmed with ${selectedTherapist?.name} on ${dayjs(bookingDetails.date).format(
-                "DD/MM/YYYY"
-            )} at ${dayjs(bookingDetails.time).format("hh:mm A")}.`
-        );
-        setOpenBookingDialog(false);
+     const message = `Booking confirmed with ${selectedTherapist?.name} on ${dayjs(
+            bookingDetails.date
+        ).format("DD/MM/YYYY")} at ${dayjs(bookingDetails.time).format("hh:mm A")}.`;
+
+        setSuccessMessage(message);
+        setShowSnackbar(true); 
+           setTimeout(() => {
+            setShowSnackbar(false); // Hide Snackbar
+            router.push("/InpersonAppointment"); // Navigate to the payment page
+        }, 800);
     };
+     const handleCloseSnackbar = () => {
+        setShowSnackbar(false);
+    };
+
 
     if (error) {
         return (
@@ -229,47 +242,144 @@ function BookingPage() {
                 </Container>
 
                 {/* Booking Confirmation Dialog */}
-                <Dialog open={openBookingDialog} onClose={() => setOpenBookingDialog(false)}>
-                    <DialogTitle>Confirm Your Booking</DialogTitle>
-                    <DialogContent>
-                        <DatePicker
-                            label="Date"
-                            value={bookingDetails.date}
-                            onChange={(newValue) =>
-                                setBookingDetails({ ...bookingDetails, date: newValue })
-                            }
-                            renderInput={(params) => <TextField {...params} fullWidth />}
-                        />
-                        <TimePicker
-                            label="Time"
-                            value={bookingDetails.time}
-                            onChange={(newValue) =>
-                                setBookingDetails({ ...bookingDetails, time: newValue })
-                            }
-                            renderInput={(params) => <TextField {...params} fullWidth />}
-                        />
-                        <TextField
-                            label="Description"
-                            multiline
-                            rows={4}
-                            fullWidth
-                            value={bookingDetails.description}
-                            onChange={(e) =>
-                                setBookingDetails({ ...bookingDetails, description: e.target.value })
-                            }
-                            sx={{ mb: 2 }}
-                        />
-                        {formError && <Alert severity="error">{formError}</Alert>}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setOpenBookingDialog(false)} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={handleConfirmBooking} color="primary">
-                            Confirm Booking
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+              <Dialog
+    open={openBookingDialog}
+    onClose={() => setOpenBookingDialog(false)}
+    PaperProps={{
+        sx: {
+            padding: 3,
+            borderRadius: 3,
+        },
+    }}
+>
+    <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center" }}>
+        Confirm Your Booking
+    </DialogTitle>
+    <DialogContent>
+        {/* Date Picker */}
+        <Box sx={{ mb: 4 }}>
+            <DatePicker
+                label="Select Date"
+                value={bookingDetails.date}
+                onChange={(newValue) =>
+                    setBookingDetails({ ...bookingDetails, date: newValue })
+                }
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        fullWidth
+                        sx={{
+                            "& .MuiInputBase-root": {
+                                backgroundColor: "#f9f9f9",
+                                borderRadius: 2,
+                            },
+                        }}
+                    />
+                )}
+            />
+        </Box>
+
+        {/* Time Picker */}
+        <Box sx={{ mb: 3 }}>
+            <TimePicker
+                label="Select Time"
+                value={bookingDetails.time}
+                onChange={(newValue) =>
+                    setBookingDetails({ ...bookingDetails, time: newValue })
+                }
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        fullWidth
+                        sx={{
+                            "& .MuiInputBase-root": {
+                                backgroundColor: "#f9f9f9",
+                                borderRadius: 2,
+                            },
+                        }}
+                    />
+                )}
+            />
+        </Box>
+
+        {/* Description */}
+        <Box sx={{ mb: 3 }}>
+            <TextField
+                label="Description"
+                multiline
+                rows={4}
+                fullWidth
+                value={bookingDetails.description}
+                onChange={(e) =>
+                    setBookingDetails({ ...bookingDetails, description: e.target.value })
+                }
+                sx={{
+                    "& .MuiInputBase-root": {
+                        backgroundColor: "#f9f9f9",
+                        borderRadius: 2,
+                    },
+                }}
+            />
+        </Box>
+
+        {/* Error Message */}
+        {formError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+                {formError}
+            </Alert>
+        )}
+    </DialogContent>
+
+    <DialogActions
+        sx={{
+            justifyContent: "center",
+            gap: 2,
+            paddingBottom: 2,
+        }}
+    >
+        <Button
+            onClick={() => setOpenBookingDialog(false)}
+            variant="outlined"
+            color="primary"
+            sx={{ padding: "8px 24px", borderRadius: 2 }}
+        >
+            Cancel
+        </Button>
+        <Button
+            onClick={handleConfirmBooking}
+            variant="contained"
+            color="primary"
+            sx={{
+                padding: "8px 24px",
+                backgroundColor: "#1a73e8",
+                borderRadius: 2,
+                "&:hover": { backgroundColor: "#165bb4" },
+            }}
+        >
+            Confirm Booking
+        </Button>
+        <Snackbar
+                open={showSnackbar}
+                autoHideDuration={4000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity="success"
+                    sx={{
+                        width: "100%",
+                        backgroundColor: "#d4edda",
+                        color: "#155724",
+                        fontWeight: "bold",
+                    }}
+                >
+                    {successMessage}
+                </Alert>
+            </Snackbar>
+    </DialogActions>
+</Dialog>
+
             </Box>
         </LocalizationProvider>
     );
