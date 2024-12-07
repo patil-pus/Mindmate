@@ -15,7 +15,11 @@ import {
     TextField,
     Box,
     Alert,
+    Badge,
+    IconButton,
 } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { motion } from 'framer-motion';
 import { LocalizationProvider, DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -73,13 +77,38 @@ function BookingPage() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box sx={{ background: "#e3f2fd", minHeight: "100vh", py: 4 }}>
                 {/* Header */}
-                <AppBar position="static" style={{ backgroundColor: "#1a73e8" }}>
-                    <Toolbar>
-                        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                            MindMate
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
+                <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
+                <Toolbar>
+                     <motion.img
+                        src={'/logo.png'}
+                        alt="MindMate Logo"
+                        style={{
+                        width: 90,
+                        height: 80,
+                        marginBottom: 20,
+                        marginTop: 20,
+                        margin:20,
+                        borderRadius: '50%',
+                        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.4)',
+                        padding: 10,
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        }}
+                    />
+                    <Typography variant="h4" sx={{ flexGrow: 9 }}>
+                        MindMate
+                    </Typography>
+                    <Button color="inherit">Home</Button>
+                    <Button color="inherit" href="/Chat">Chat</Button>
+                    <Button href="/PatientProfile" color="inherit">Profile</Button>
+                    <Button color="inherit">Settings</Button>
+                    <Button href="/LogoutPage" color="inherit">Logout</Button>
+                    <IconButton color="inherit">
+                        <Badge color="secondary" variant="dot">
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
 
                 {/* Hero Section */}
                 <Container sx={{ py: 5 }}>
@@ -87,7 +116,7 @@ function BookingPage() {
                         variant="h3"
                         align="center"
                         gutterBottom
-                        style={{ fontWeight: "bold", color: "#1a237e" }}
+                        style={{ fontWeight: "bold", color: "#1a237e", marginTop:'100px' }}
                     >
                         Welcome to Your Path to Wellness
                     </Typography>
@@ -124,69 +153,79 @@ function BookingPage() {
                     </Typography>
 
                     <Grid container spacing={4}>
-                        {therapists.map((therapist) => (
-                            <Grid item xs={12} sm={6} md={4} key={therapist.id}>
-                                <Box
-                                    style={{
-                                        borderRadius: "15px",
-                                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)",
-                                        background: "#ffffff",
-                                        padding: "20px",
-                                    }}
-                                >
-                                    <Typography
-                                        variant="h6"
-                                        style={{
-                                            fontWeight: "bold",
-                                            color: "#1a73e8", // Therapist name in blue shade
-                                        }}
-                                    >
-                                        {therapist.name}
-                                    </Typography>
-                                   
-                                    <Typography variant="body2" color="textSecondary">
-                                        <strong>Specialization:</strong> {therapist.specialization}
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        <strong>Location:</strong> {therapist.location}
-                                    </Typography>
-                                    <Box sx={{ mt: 2 }}>
-                                        <Typography
-                                            variant="h6"
-                                            color="primary"
-                                            style={{ fontWeight: "normal" }}
-                                        >
-                                            Client Feedbacks
-                                        </Typography>
-                                        {therapist.reviews?.map((review, index) => (
-                                            <Typography
-                                                key={index}
-                                                variant="body2"
-                                                color="textSecondary"
-                                                style={{ fontStyle: "italic" }}
-                                            >
-                                                <strong>{review.feedback}</strong> - {review.name}
-                                            </Typography>
-                                        ))}
-                                    </Box>
-                                    <Button
-                                        variant="contained"
-                                        onClick={() => handleBookSession(therapist)}
-                                        fullWidth
-                                        style={{
-                                            backgroundColor: "#1a73e8",
-                                            color: "#fff",
-                                            borderRadius: "8px",
-                                            marginTop: "15px",
-                                            padding: "10px",
-                                        }}
-                                    >
-                                        Book Now
-                                    </Button>
-                                </Box>
-                            </Grid>
-                        ))}
-                    </Grid>
+    {therapists.map((therapist) => (
+        <Grid item xs={12} sm={6} md={4} key={therapist.id}>
+            <Box
+                style={{
+                    borderRadius: "15px",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)",
+                    background: "#ffffff",
+                    padding: "20px",
+                    textAlign: "center",
+                }}
+            >
+                {/* Therapist Image */}
+                <Box
+                    component="img"
+                    src={therapist.imageUrl}
+                    alt={therapist.name}
+                    style={{
+                        width: "100%",
+                        height: "200px",
+                        objectFit: "cover",
+                        borderRadius: "15px 15px 0 0",
+                        marginBottom: "15px",
+                    }}
+                />
+
+                {/* Therapist Name */}
+                <Typography
+                    variant="h6"
+                    style={{
+                        fontWeight: "bold",
+                        color: "#1a73e8", // Therapist name in blue shade
+                    }}
+                >
+                    {therapist.name}
+                </Typography>
+
+                {/* Therapist Details */}
+                <Typography variant="body2" color="textSecondary">
+                    <strong>Specialization:</strong> {therapist.specialization}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                    <strong>Location:</strong> {therapist.location}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                    <strong>Age:</strong> {therapist.age}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                    <strong>Language:</strong> {therapist.language}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                    <strong>Insurance:</strong> {therapist.insurance}
+                </Typography>
+
+                {/* Booking Button */}
+                <Button
+                    variant="contained"
+                    onClick={() => handleBookSession(therapist)}
+                    fullWidth
+                    style={{
+                        backgroundColor: "#1a73e8",
+                        color: "#fff",
+                        borderRadius: "8px",
+                        marginTop: "15px",
+                        padding: "10px",
+                    }}
+                >
+                    Book Now
+                </Button>
+            </Box>
+        </Grid>
+    ))}
+</Grid>
+
                 </Container>
 
                 {/* Booking Confirmation Dialog */}
