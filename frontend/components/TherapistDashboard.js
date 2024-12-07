@@ -1,52 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Avatar, Grid, Paper, Button, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import { Box, Typography, Avatar, Grid, Paper, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
 import HomeIcon from "@mui/icons-material/Home";
 import MessageIcon from "@mui/icons-material/Message";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { AppBar, Toolbar, IconButton, Badge } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useGlobal } from "../contexts/GlobalContext";
 
-// Styled Components for different sections
-const Sidebar = styled(Box)({
-    backgroundColor: "#F7F9FC",
-    color: "#5F6368",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "20px",
-    height: "100vh",
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-});
+// Animated Number Hook (Logic unchanged)
+const useAnimatedNumber = (targetValue) => {
+    const [value, setValue] = useState(0);
 
-const ProfileAvatar = styled(Avatar)({
-    width: "60px",
-    height: "60px",
-    marginBottom: "20px",
-    backgroundColor: "#1976D2",
-    fontSize: "20px",
-    cursor: "pointer",
-    "&:hover": {
-        backgroundColor: "#135ba1",
-    },
-});
+    useEffect(() => {
+        let start = 0;
+        const duration = 1000; // 1 second
+        const stepTime = Math.abs(Math.floor(duration / targetValue));
+        const timer = setInterval(() => {
+            start += 1;
+            if (start >= targetValue) {
+                clearInterval(timer);
+                start = targetValue;
+            }
+            setValue(start);
+        }, stepTime);
+        return () => clearInterval(timer);
+    }, [targetValue]);
 
-const SidebarIcon = styled(Box)({
-    color: "#5F6368",
-    marginBottom: "20px",
-    cursor: "pointer",
-    fontSize: "24px",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    transition: "color 0.2s ease",
-    "&:hover": {
-        color: "#1976D2",
-    },
-    textDecoration: "none",
-});
+    return value;
+};
 
+// Styled components
 const MainContent = styled(Box)({
+    flex: 1,
     padding: "20px",
     width: "100%",
     backgroundColor: "#F9FAFB",
@@ -70,81 +59,77 @@ const StatsCard = styled(Paper)({
     boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
 });
 
+const ScheduleBox = styled(Box)({
+    backgroundColor: "#FFFFFF",
+    padding: "20px",
+    borderRadius: "12px",
+    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+    color: "#1976D2",
+});
+
 const ProfileCard = styled(Paper)({
     padding: "20px",
     color: "#333333",
     backgroundColor: "#FFFFFF",
     borderRadius: "12px",
     boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+    marginTop: "20px",
 });
-
-const ScheduleBox = styled(Box)({
-    backgroundColor: "#FFFFFF",
-    padding: "20px",
-    borderRadius: "12px",
-    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-    color: "#1976D2", // Text color for appointments
-});
-
-// Animation Hook for Numbers
-const useAnimatedNumber = (targetValue) => {
-    const [value, setValue] = useState(0);
-
-    useEffect(() => {
-        let start = 0;
-        const duration = 1000; // 1 second
-        const stepTime = Math.abs(Math.floor(duration / targetValue));
-        const timer = setInterval(() => {
-            start += 1;
-            if (start >= targetValue) {
-                clearInterval(timer);
-                start = targetValue;
-            }
-            setValue(start);
-        }, stepTime);
-        return () => clearInterval(timer);
-    }, [targetValue]);
-
-    return value;
-};
 
 const TherapistDashboard = () => {
-    // Animated Numbers
     const patients = useAnimatedNumber(1032);
     const consultations = useAnimatedNumber(207);
 
-    return (
-        <Box display="flex">
-            {/* Sidebar */}
-            <Sidebar>
-                {/* Profile Avatar */}
-                <ProfileAvatar>DS</ProfileAvatar>
-                {/* Sidebar Icons */}
-                <Link href="/TherapistDashboard" passHref>
-                    <SidebarIcon>
-                        <HomeIcon />
-                    </SidebarIcon>
-                </Link>
-                <Link href="/Chat" passHref>
-                    <SidebarIcon>
-                        <MessageIcon />
-                    </SidebarIcon>
-                </Link>
-                <Link href="/TherapistProfile" passHref>
-                    <SidebarIcon>
-                        <AccountCircleIcon />
-                    </SidebarIcon>
-                </Link>
-                <Link href="/LogoutPage" passHref>
-                    <SidebarIcon>
-                        <ExitToAppIcon />
-                    </SidebarIcon>
-                </Link>
-            </Sidebar>
 
-            {/* Main Content */}
-            <MainContent>
-                {/* Welcome and Stats Section */}
+    return (
+        <Box display="flex" flexDirection="column" height="100vh">
+            {/* Top Navigation Bar (UI Updated) */}
+            <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
+                <Toolbar>
+                    <Box
+                        component="img"
+                        src={'/logo.png'}
+                        alt="MindMate Logo"
+                        sx={{
+                            width: 90,
+                            height: 80,
+                            marginBottom: 2,
+                            marginTop: 2,
+                            marginRight: 2,
+                            borderRadius: '50%',
+                            boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.4)',
+                            padding: 1,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        }}
+                    />
+                    <Typography variant="h4" sx={{ flexGrow: 1 }}>
+                        MindMate
+                    </Typography>
+                    <Button color="inherit" href="/TherapistDashboard">
+                        <HomeIcon sx={{ marginRight: 1 }} /> Home
+                    </Button>
+                    <Button color="inherit" href="/Chat">
+                        <MessageIcon sx={{ marginRight: 1 }} /> Chat
+                    </Button>
+                    <Button href="/TherapistProfile" color="inherit">
+                        <AccountCircleIcon sx={{ marginRight: 1 }} /> Profile
+                    </Button>
+                    <Button color="inherit">
+                        <SettingsIcon sx={{ marginRight: 1 }} /> Settings
+                    </Button>
+                    <Button href="/LogoutPage" color="inherit">
+                        <ExitToAppIcon sx={{ marginRight: 1 }} /> Logout
+                    </Button>
+                    <IconButton color="inherit">
+                        <Badge color="secondary" variant="dot">
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+
+            {/* Main content */}
+            <MainContent sx={{ mt: 10 }}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={8}>
                         <WelcomeCard>
@@ -178,7 +163,6 @@ const TherapistDashboard = () => {
                     </Grid>
                 </Grid>
 
-                {/* Schedule Section */}
                 <Box mt={4}>
                     <Typography variant="h5" fontWeight="bold" mb={2}>
                         Upcoming Appointments
@@ -195,39 +179,21 @@ const TherapistDashboard = () => {
                         </Typography>
                     </ScheduleBox>
                 </Box>
-            </MainContent>
 
-            {/* Profile Section */}
-            <Box width="300px" p={2}>
                 <ProfileCard>
                     <Avatar sx={{ width: 80, height: 80, margin: "auto", bgcolor: "#1976D2" }}>D</Avatar>
                     <Typography variant="h6" align="center" mt={2}>Dr. Shabrina</Typography>
                     <Typography variant="body2" align="center" color="textSecondary">Cardiologist</Typography>
                     <Box mt={2}>
                         <Typography variant="body2" fontWeight="bold">Last Patients</Typography>
-                        <List>
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>AW</Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Arya Wijaya Kusuma" secondary="Jan 28, 9 AM" />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>SI</Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Sheryl Indirani" secondary="Jan 27, 10 AM" />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>NM</Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Nafiu Efenday" secondary="Jan 26, 7 AM" />
-                            </ListItem>
-                        </List>
+                        <Box mt={1}>
+                            <Typography variant="body2" color="textSecondary">- Arya Wijaya Kusuma: Jan 28, 9 AM</Typography>
+                            <Typography variant="body2" color="textSecondary">- Sheryl Indirani: Jan 27, 10 AM</Typography>
+                            <Typography variant="body2" color="textSecondary">- Nafiu Efenday: Jan 26, 7 AM</Typography>
+                        </Box>
                     </Box>
                 </ProfileCard>
-            </Box>
+            </MainContent>
         </Box>
     );
 };

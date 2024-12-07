@@ -109,7 +109,7 @@ export const GlobalProvider = ({ children }) => {
       } else {
         const errorText = await res.text();
         console.error("Failed to fetch journal data:", errorText);
-        throw new Error("Failed to fetch journal data");
+       // throw new Error("Failed to fetch journal data");
       }
     } catch (error) {
       setError(error.message);
