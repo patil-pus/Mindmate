@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Avatar, Grid, Paper, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import Link from "next/link";
+import { AppBar, Toolbar, IconButton, Badge } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import MessageIcon from "@mui/icons-material/Message";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { AppBar, Toolbar, IconButton, Badge } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useGlobal } from "../contexts/GlobalContext";
 
-// Animated Number Hook (Logic unchanged)
 const useAnimatedNumber = (targetValue) => {
     const [value, setValue] = useState(0);
 
     useEffect(() => {
         let start = 0;
-        const duration = 1000; // 1 second
+        const duration = 1000;
         const stepTime = Math.abs(Math.floor(duration / targetValue));
         const timer = setInterval(() => {
             start += 1;
@@ -33,7 +31,6 @@ const useAnimatedNumber = (targetValue) => {
     return value;
 };
 
-// Styled components
 const MainContent = styled(Box)({
     flex: 1,
     padding: "20px",
@@ -50,23 +47,6 @@ const WelcomeCard = styled(Paper)({
     boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
 });
 
-const StatsCard = styled(Paper)({
-    padding: "20px",
-    textAlign: "center",
-    color: "#333333",
-    backgroundColor: "#FFFFFF",
-    borderRadius: "12px",
-    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-});
-
-const ScheduleBox = styled(Box)({
-    backgroundColor: "#FFFFFF",
-    padding: "20px",
-    borderRadius: "12px",
-    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-    color: "#1976D2",
-});
-
 const ProfileCard = styled(Paper)({
     padding: "20px",
     color: "#333333",
@@ -77,31 +57,32 @@ const ProfileCard = styled(Paper)({
 });
 
 const TherapistDashboard = () => {
+    const { user, userType, error } = useGlobal(); // Access logged-in user and userType
     const patients = useAnimatedNumber(1032);
     const consultations = useAnimatedNumber(207);
 
+    if (error) {
+        return (
+            <Box sx={{ textAlign: "center", padding: "20px" }}>
+                <Typography variant="h6" color="error">
+                    Error: {error}
+                </Typography>
+            </Box>
+        );
+    }
+
+    if (!user || userType !== "therapist") {
+        return (
+            <Box sx={{ textAlign: "center", padding: "20px" }}>
+                <Typography variant="h6">Loading therapist data...</Typography>
+            </Box>
+        );
+    }
 
     return (
         <Box display="flex" flexDirection="column" height="100vh">
-            {/* Top Navigation Bar (UI Updated) */}
             <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
                 <Toolbar>
-                    <Box
-                        component="img"
-                        src={'/logo.png'}
-                        alt="MindMate Logo"
-                        sx={{
-                            width: 90,
-                            height: 80,
-                            marginBottom: 2,
-                            marginTop: 2,
-                            marginRight: 2,
-                            borderRadius: '50%',
-                            boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.4)',
-                            padding: 1,
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                        }}
-                    />
                     <Typography variant="h4" sx={{ flexGrow: 1 }}>
                         MindMate
                     </Typography>
@@ -128,16 +109,15 @@ const TherapistDashboard = () => {
                 </Toolbar>
             </AppBar>
 
-            {/* Main content */}
             <MainContent sx={{ mt: 10 }}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={8}>
                         <WelcomeCard>
                             <Typography variant="h5" fontWeight="bold">
-                                Welcome, Dr. Shabrina
+                                Welcome, Dr. {user.name || "Therapist"}
                             </Typography>
                             <Typography variant="subtitle1" color="textSecondary">
-                                Have a nice day at work
+                                Have a great day at work!
                             </Typography>
                             <Button variant="contained" color="primary" sx={{ marginTop: "10px" }}>
                                 Add Patient
@@ -146,53 +126,21 @@ const TherapistDashboard = () => {
                     </Grid>
 
                     <Grid item xs={12} md={4}>
-                        <StatsCard>
-                            <Typography variant="h6" fontWeight="bold">Patient Statistics</Typography>
-                            <Typography variant="body1" color="textSecondary">This Month</Typography>
-                            <Box display="flex" justifyContent="space-between" mt={2}>
-                                <Box>
-                                    <Typography variant="h4" color="primary">{patients}</Typography>
-                                    <Typography variant="body2" color="textSecondary">Patients</Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="h4" color="primary">{consultations}</Typography>
-                                    <Typography variant="body2" color="textSecondary">Consultations</Typography>
-                                </Box>
-                            </Box>
-                        </StatsCard>
+                        <ProfileCard>
+                            <Avatar
+                                sx={{ width: 80, height: 80, margin: "auto", bgcolor: "#1976D2" }}
+                            >
+                                {user.name?.charAt(0).toUpperCase() || "D"}
+                            </Avatar>
+                            <Typography variant="h6" align="center" mt={2}>
+                                Dr. {user.name}
+                            </Typography>
+                            <Typography variant="body2" align="center" color="textSecondary">
+                                {user.specialization || "Specialist"}
+                            </Typography>
+                        </ProfileCard>
                     </Grid>
                 </Grid>
-
-                <Box mt={4}>
-                    <Typography variant="h5" fontWeight="bold" mb={2}>
-                        Upcoming Appointments
-                    </Typography>
-                    <ScheduleBox>
-                        <Typography variant="body1" mb={1}>
-                            Check-up - Jan 28, 10 AM
-                        </Typography>
-                        <Typography variant="body1" mb={1}>
-                            Consultation - Jan 28, 2 PM
-                        </Typography>
-                        <Typography variant="body1">
-                            Surgery - Jan 29, 9 AM
-                        </Typography>
-                    </ScheduleBox>
-                </Box>
-
-                <ProfileCard>
-                    <Avatar sx={{ width: 80, height: 80, margin: "auto", bgcolor: "#1976D2" }}>D</Avatar>
-                    <Typography variant="h6" align="center" mt={2}>Dr. Shabrina</Typography>
-                    <Typography variant="body2" align="center" color="textSecondary">Cardiologist</Typography>
-                    <Box mt={2}>
-                        <Typography variant="body2" fontWeight="bold">Last Patients</Typography>
-                        <Box mt={1}>
-                            <Typography variant="body2" color="textSecondary">- Arya Wijaya Kusuma: Jan 28, 9 AM</Typography>
-                            <Typography variant="body2" color="textSecondary">- Sheryl Indirani: Jan 27, 10 AM</Typography>
-                            <Typography variant="body2" color="textSecondary">- Nafiu Efenday: Jan 26, 7 AM</Typography>
-                        </Box>
-                    </Box>
-                </ProfileCard>
             </MainContent>
         </Box>
     );
