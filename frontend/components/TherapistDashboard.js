@@ -19,7 +19,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useGlobal } from "../contexts/GlobalContext";
-
+import { useRouter } from 'next/router';
 const useAnimatedNumber = (targetValue) => {
     const [value, setValue] = useState(0);
 
@@ -71,6 +71,7 @@ const StatBox = styled(Box)({
 });
 
 const TherapistDashboard = () => {
+    const router = useRouter();
     const { user, error } = useGlobal();
     const [userType, setUserType] = useState(null);
     const patients = useAnimatedNumber(1032); // Animated number for Patients Today
@@ -112,7 +113,7 @@ const TherapistDashboard = () => {
                     <Button color="inherit" href="/TherapistDashboard">
                         <HomeIcon sx={{ marginRight: 1 }} /> Home
                     </Button>
-                    <Button color="inherit" href="/Chat">
+                    <Button color="inherit" onClick={() => router.push("/Chat")}>
                         <MessageIcon sx={{ marginRight: 1 }} /> Chat
                     </Button>
                     <Button href="/TherapistProfile" color="inherit">

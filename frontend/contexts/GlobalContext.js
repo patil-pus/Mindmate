@@ -9,8 +9,9 @@ const initialState = {
   loading: false,
   error: null,
   username: null,
-  name: null
+  name: null,
 };
+const GlobalContext = createContext();
 
 // Reducer function
 const globalReducer = (state, action) => {
@@ -48,17 +49,19 @@ const globalReducer = (state, action) => {
   }
 };
 
-const GlobalContext = createContext();
-
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
 
   const setUser = (user) => dispatch({ type: "SET_USER", payload: user });
   const setName = (name) => dispatch({ type: "SET_NAME", payload: name });
-  const setUserType = (userType) => dispatch({ type: "SET_USER_TYPE", payload: userType });
-  const setUsername = (username) => dispatch({ type: "SET_USERNAME", payload: username });
-  const setClientData = (clientData) => dispatch({ type: "SET_CLIENT_DATA", payload: clientData });
-  const setTherapists = (therapists) => dispatch({ type: "SET_THERAPISTS", payload: therapists });
+  const setUserType = (userType) =>
+    dispatch({ type: "SET_USER_TYPE", payload: userType });
+  const setUsername = (username) =>
+    dispatch({ type: "SET_USERNAME", payload: username });
+  const setClientData = (clientData) =>
+    dispatch({ type: "SET_CLIENT_DATA", payload: clientData });
+  const setTherapists = (therapists) =>
+    dispatch({ type: "SET_THERAPISTS", payload: therapists });
   const setLoading = () => dispatch({ type: "SET_LOADING" });
   const setError = (error) => dispatch({ type: "SET_ERROR", payload: error });
 
@@ -79,13 +82,19 @@ export const GlobalProvider = ({ children }) => {
 
     try {
       setLoading();
-      const res = await fetch(`http://localhost:8080/api/clients/${clientId}/getJournal`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const res = await fetch(
+        `http://localhost:8080/api/clients/${clientId}/getJournal`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
 
       console.log("Journal fetch response status:", res.status);
-      console.log("Journal fetch response content-type:", res.headers.get('content-type'));
+      console.log(
+        "Journal fetch response content-type:",
+        res.headers.get("content-type")
+      );
 
       if (res.ok) {
         const contentType = res.headers.get("content-type");
@@ -114,8 +123,7 @@ export const GlobalProvider = ({ children }) => {
         const errorText = await res.text();
         console.error("Failed to fetch journal data:", errorText);
 
-       // throw new Error("Failed to fetch journal data");
-
+        // throw new Error("Failed to fetch journal data");
       }
     } catch (error) {
       setError(error.message);
@@ -132,7 +140,12 @@ export const GlobalProvider = ({ children }) => {
   const fetchUser = async () => {
     const clientId = sessionStorage.getItem("clientId");
     const therapistId = sessionStorage.getItem("therapistId");
-    console.log("Fetching user. clientId:", clientId, "therapistId:", therapistId);
+    console.log(
+      "Fetching user. clientId:",
+      clientId,
+      "therapistId:",
+      therapistId
+    );
 
     if (!clientId && !therapistId) {
       console.log("No clientId or therapistId, not fetching user.");
@@ -142,10 +155,13 @@ export const GlobalProvider = ({ children }) => {
     try {
       setLoading();
       if (clientId) {
-        const res = await fetch(`http://localhost:8080/api/clients/${clientId}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(
+          `http://localhost:8080/api/clients/${clientId}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (!res.ok) {
           const errorText = await res.text();
@@ -178,10 +194,13 @@ export const GlobalProvider = ({ children }) => {
     try {
       setLoading();
       console.log("Fetching therapists...");
-      const res = await fetch("http://localhost:8080/api/therapists/getAllTherapists", {
-        method: "GET",
-        credentials: "include",
-      });
+      const res = await fetch(
+        "http://localhost:8080/api/therapists/getAllTherapists",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
 
       if (!res.ok) {
         const errorText = await res.text();
@@ -214,13 +233,16 @@ export const GlobalProvider = ({ children }) => {
       console.log("therapistId from session:", therapistId);
       if (therapistId) {
         const loggedInTherapist = therapists.find(
-            (t) => t.id === parseInt(therapistId, 10)
+          (t) => t.id === parseInt(therapistId, 10)
         );
         if (loggedInTherapist) {
           setUser(loggedInTherapist);
           setUserType("therapist");
         } else {
-          console.warn("No matching therapist found for therapistId:", therapistId);
+          console.warn(
+            "No matching therapist found for therapistId:",
+            therapistId
+          );
         }
       }
       return therapists;
@@ -234,56 +256,72 @@ export const GlobalProvider = ({ children }) => {
   };
 
   const fetchName = async () => {
-    const userType = sessionStorage.getItem("userType")
-    const name = sessionStorage.getItem("name")
-    setName(name)
-    
+    const userType = sessionStorage.getItem("userType");
+    const name = sessionStorage.getItem("name");
+    setName(name);
+    setUserType(userType);
   };
 
+  const fetchUserType = () => {
+    const userType = sessionStorage.getItem("userType");
+    setUserType(userType);
+  };
   useEffect(() => {
     const clientId = sessionStorage.getItem("clientId");
     const therapistId = sessionStorage.getItem("therapistId");
-    console.log("useEffect startup: clientId:", clientId, "therapistId:", therapistId);
+    console.log(
+      "useEffect startup: clientId:",
+      clientId,
+      "therapistId:",
+      therapistId
+    );
 
     if (clientId || therapistId) {
       fetchUser()
-          .then((user) => {
-            if (user || therapistId) return fetchName();
-          })
-          .then(() => fetchTherapists())
-          .then((therapists) => {
-            if (clientId) return fetchUserJournal();
-          })
-          .catch((error) => {
-            console.error("Error in chained data fetch:", error);
-          });
+        .then((user) => {
+          if (user || therapistId) return fetchName();
+        })
+        .then(() => fetchTherapists())
+        .then((therapists) => {
+          if (clientId) return fetchUserJournal();
+        })
+        .then(() => fetchUserType())
+        .catch((error) => {
+          console.error("Error in chained data fetch:", error);
+        });
     } else {
       console.log("No clientId or therapistId in session. Not fetching data.");
     }
   }, []);
 
   return (
-      <GlobalContext.Provider
-          value={{
-            ...state,
-            setUser,
-            setName,
-            setUserType,
-            setUsername,
-            setClientData,
-            setTherapists,
-            setLoading,
-            setError,
-            logout,
-            fetchUser,
-            fetchUserJournal,
-            fetchTherapists,
-          }}
-      >
-        {children}
-      </GlobalContext.Provider>
+    <GlobalContext.Provider
+      value={{
+        ...state,
+        setUser,
+        setName,
+        setUserType,
+        setUsername,
+        setClientData,
+        setTherapists,
+        setLoading,
+        setError,
+        logout,
+        fetchUser,
+        fetchUserJournal,
+        fetchTherapists,
+      }}
+    >
+      {children}
+    </GlobalContext.Provider>
   );
 };
 
 // Custom hook for using the context
-export const useGlobal = () => useContext(GlobalContext);
+export const useGlobal = () => {
+  const context = useContext(GlobalContext);
+  if (!context) {
+    throw new Error("useGlobal must be used within a GlobalProvider");
+  }
+  return context;
+};

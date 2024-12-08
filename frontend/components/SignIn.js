@@ -55,10 +55,10 @@ export default function SignInSide() {
         event.preventDefault();
         clearSessionData(); // Ensure no residual session data
         const data = new FormData(event.currentTarget);
-        const email = data.get('email');
+        const username = data.get('username');
         const password = data.get('password');
 
-        if (!email || !password) {
+        if (!username || !password) {
             setAlertMessage('Please fill in all required fields.');
             setOpenAlert(true);
             return;
@@ -76,7 +76,7 @@ export default function SignInSide() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username: email, password }),
+                body: JSON.stringify({ username: username, password }),
                 credentials: 'include',
             });
 
@@ -87,7 +87,7 @@ export default function SignInSide() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username: email, password }),
+                    body: JSON.stringify({ username: username, password }),
                     credentials: 'include',
                 });
             }
@@ -187,10 +187,10 @@ export default function SignInSide() {
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="username"
+                            label="Username"
+                            name="username"
+                            autoComplete="username"
                             autoFocus
                         />
                         <TextField
@@ -242,7 +242,7 @@ export default function SignInSide() {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 >
                     <Alert onClose={handleClose} severity="error">
-                        Login failed. Please check your email and password and try again.
+                        Login failed. Please check your username and password and try again.
                     </Alert>
                 </Snackbar>
             </Grid>
