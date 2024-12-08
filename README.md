@@ -69,7 +69,7 @@ Author:
 ```
 .
 ├── backend
-│   ├── src/main/java/com/mindmate
+│   ├── src/main/java/edu/neu/csye6200
 │   ├── src/main/resources
 │   └── pom.xml
 └── frontend
