@@ -110,7 +110,7 @@ function BookingPage() {
                     <Typography variant="h4" sx={{ flexGrow: 9 }}>
                         MindMate
                     </Typography>
-                    <Button color="inherit">Home</Button>
+                    <Button color="inherit" href="/Dashboard">Home</Button>
                     <Button color="inherit" href="/Chat">Chat</Button>
                     <Button href="/PatientProfile" color="inherit">Profile</Button>
                     <Button color="inherit">Settings</Button>
@@ -129,7 +129,7 @@ function BookingPage() {
                         variant="h3"
                         align="center"
                         gutterBottom
-                        style={{ fontWeight: "bold", color: "#1a237e", marginTop:'100px' }}
+                        style={{ fontWeight: "bold", color: "black", marginTop:'100px' }}
                     >
                         Welcome to Your Path to Wellness
                     </Typography>
@@ -137,13 +137,28 @@ function BookingPage() {
                         variant="h6"
                         align="center"
                         gutterBottom
-                        style={{ color: "#5c6bc0", marginBottom: "20px" }}
+                        style={{ color: "black", marginBottom: "20px" }}
                     >
                         Discover the support and guidance you deserve with our professional therapy services.
                         Whether you're seeking help for personal growth, emotional challenges, or simply need someone to talk to, we’re here to listen and empower you.
                     </Typography>
-                </Container>
+                     <Box display="flex" justifyContent="center" mb={4}>
+                        <img
+                            src="/inperson.webp"
+                            alt="MindMate Journal"
+                            style={{
+                                width: '70%',
+                                margin: '10px',
+                                maxWidth: '1200px',
+                                height: 'auto',
+                                borderRadius: '12px',
+                                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+                            }}
+                        />
+                    </Box>
 
+                </Container>
+                    
                 {/* Therapists Section */}
                 <Container>
                     <Typography
@@ -151,18 +166,9 @@ function BookingPage() {
                         align="center"
                         gutterBottom
                         style={{ fontWeight: "bold", color: "#1a237e" }}
+                        marginBottom="50px"
                     >
                         Therapists Who Will Help You Grow
-                    </Typography>
-                    <Typography
-                        variant="body1"
-                        align="center"
-                        style={{
-                            color: "#3949ab",
-                            marginBottom: "30px",
-                        }}
-                    >
-                        We vet every therapist so you can start from a place of trust.
                     </Typography>
 
                     <Grid container spacing={4}>
@@ -184,7 +190,7 @@ function BookingPage() {
                     alt={therapist.name}
                     style={{
                         width: "100%",
-                        height: "200px",
+                        height: "300px",
                         objectFit: "cover",
                         borderRadius: "15px 15px 0 0",
                         marginBottom: "15px",
