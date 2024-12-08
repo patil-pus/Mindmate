@@ -141,7 +141,7 @@ const Chat = () => {
         <div className="chat-box h-full flex flex-col md:flex-row border border-gray-300 rounded-lg shadow-lg overflow-hidden">
           {/* Back Link */}
           <Link
-            href={userType == "client" ? "Dashboard" : "TherapistDashboard"}
+            href={userType == "client" ? "/Dashboard" : "/TherapistDashboard"}
             className="absolute top-4 left-4 p-[11px] flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition cursor-pointer font-semibold text-lg"
           >
             <ArrowLeft /> Back to {name}'s Dashboard
