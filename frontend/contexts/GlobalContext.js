@@ -9,6 +9,7 @@ const initialState = {
   loading: false,
   error: null,
   username: null,
+  name: null
 };
 
 // Reducer function
@@ -16,6 +17,8 @@ const globalReducer = (state, action) => {
   switch (action.type) {
     case "SET_USER":
       return { ...state, user: action.payload };
+    case "SET_NAME":
+      return { ...state, name: action.payload };
     case "SET_USER_TYPE":
       return { ...state, userType: action.payload };
     case "SET_USERNAME":
@@ -51,6 +54,7 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
 
   const setUser = (user) => dispatch({ type: "SET_USER", payload: user });
+  const setName = (name) => dispatch({ type: "SET_NAME", payload: name });
   const setUserType = (userType) => dispatch({ type: "SET_USER_TYPE", payload: userType });
   const setUsername = (username) => dispatch({ type: "SET_USERNAME", payload: username });
   const setClientData = (clientData) => dispatch({ type: "SET_CLIENT_DATA", payload: clientData });
@@ -121,6 +125,9 @@ export const GlobalProvider = ({ children }) => {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   };
+
+  // Other fetch functions (fetchUser, fetchName, fetchTherapists) would remain as before
+  // Make sure to add similar checks for them if you expect non-JSON or empty responses.
 
   const fetchUser = async () => {
     const clientId = sessionStorage.getItem("clientId");
@@ -226,55 +233,11 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  const fetchUsername = async () => {
-    const clientId = sessionStorage.getItem("clientId");
-    const therapistId = sessionStorage.getItem("therapistId");
-    console.log("Fetching username. clientId:", clientId, "therapistId:", therapistId);
-
-    try {
-      let url = null;
-      if (clientId) {
-        url = `http://localhost:8080/api/clients/${clientId}`;
-      } else if (therapistId) {
-        url = `http://localhost:8080/api/therapists/${therapistId}`;
-      }
-
-      if (!url) {
-        console.warn("No clientId or therapistId found for fetchUsername.");
-        return;
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Failed to fetch username:", errorText);
-        return;
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await response.text();
-        console.warn("Username response not JSON:", text);
-        return;
-      }
-
-      const resData = await response.json();
-      console.log("Fetched username data:", resData);
-      if (resData && resData.name) {
-        setUsername(resData.name);
-      } else {
-        console.warn("No name field in response data");
-        setUsername(null);
-      }
-    } catch (error) {
-      setError("Error fetching username");
-      console.error("Error fetching username:", error);
-    }
+  const fetchName = async () => {
+    const userType = sessionStorage.getItem("userType")
+    const name = sessionStorage.getItem("name")
+    setName(name)
+    
   };
 
   useEffect(() => {
@@ -285,7 +248,7 @@ export const GlobalProvider = ({ children }) => {
     if (clientId || therapistId) {
       fetchUser()
           .then((user) => {
-            if (user || therapistId) return fetchUsername();
+            if (user || therapistId) return fetchName();
           })
           .then(() => fetchTherapists())
           .then((therapists) => {
@@ -304,6 +267,7 @@ export const GlobalProvider = ({ children }) => {
           value={{
             ...state,
             setUser,
+            setName,
             setUserType,
             setUsername,
             setClientData,

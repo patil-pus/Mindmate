@@ -90,13 +90,17 @@ export default function SignInSide() {
             if (response.ok) {
                 const resData = await response.json();
                 const { client, therapist } = resData;
+                console.log('client and thrapit dta',client, therapist);
+                
 
                 if (client) {
                     sessionStorage.setItem('clientId', client.id);
+                    sessionStorage.setItem('name', client.name)
                     sessionStorage.setItem('userType', 'client');
                     router.push('/Dashboard'); // Redirect to client dashboard
                 } else if (therapist) {
                     sessionStorage.setItem('therapistId', therapist.id);
+                    sessionStorage.setItem('name', therapist.name)
                     sessionStorage.setItem('userType', 'therapist');
                     router.push('/TherapistDashboard'); // Redirect to therapist dashboard
                 } else {
