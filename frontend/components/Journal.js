@@ -8,20 +8,26 @@ import {
     TextField,
     Button,
     Select,
+    Badge,
     MenuItem,
     FormControl,
     InputLabel,
     Box,
     Grid,
+    IconButton,
     Card,
     CardContent,
     CircularProgress,
+    AppBar,
+    Toolbar,
     Avatar,
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
 import { useGlobal } from '../contexts/GlobalContext'; // Import Global Context
 import axios from 'axios';
+import { motion } from 'framer-motion';
+import NotificationsIcon from "@mui/icons-material/Notifications";
 axios.defaults.withCredentials = true;
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -106,12 +112,44 @@ const Journal = () => {
 
     return (
         <div style={{ backgroundColor: 'white', padding: '2rem' }}>
+                <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
+                <Toolbar>
+                     <motion.img
+                        src={'/logo.png'}
+                        alt="MindMate Logo"
+                        style={{
+                        width: 90,
+                        height: 80,
+                        marginBottom: 20,
+                        marginTop: 20,
+                        margin:20,
+                        borderRadius: '50%',
+                        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.4)',
+                        padding: 10,
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        }}
+                    />
+                    <Typography variant="h4" sx={{ flexGrow: 9 }}>
+                        MindMate
+                    </Typography>
+                    <Button color="inherit" href="/Dashboard">  Home</Button>
+                    <Button color="inherit" href="/Chat">Chat</Button>
+                    <Button href="/PatientProfile" color="inherit">Profile</Button>
+                    <Button color="inherit">Settings</Button>
+                    <Button href="/LogoutPage" color="inherit">Logout</Button>
+                    <IconButton color="inherit">
+                        <Badge color="secondary" variant="dot">
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
             <Typography
                 variant="h2"
                 component="h1"
                 gutterBottom
                 align="center"
-                sx={{ fontWeight: 'bold', color: '#1976d2' }}
+                sx={{ fontWeight: 'bold', color: '#1976d2', margin:'150px' }}
             >
                 MindMate Journal
             </Typography>
@@ -125,6 +163,7 @@ const Journal = () => {
                             alt="MindMate Journal"
                             style={{
                                 width: '90%',
+                                margin: '-150px',
                                 maxWidth: '1200px',
                                 height: 'auto',
                                 borderRadius: '12px',
