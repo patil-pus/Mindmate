@@ -9,6 +9,7 @@ const initialState = {
   loading: false,
   error: null,
   username: null,
+  name: null
 };
 
 // Reducer function
@@ -16,6 +17,8 @@ const globalReducer = (state, action) => {
   switch (action.type) {
     case "SET_USER":
       return { ...state, user: action.payload };
+    case "SET_NAME":
+      return { ...state, name: action.payload };
     case "SET_USER_TYPE":
       return { ...state, userType: action.payload };
     case "SET_USERNAME":
@@ -51,6 +54,7 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
 
   const setUser = (user) => dispatch({ type: "SET_USER", payload: user });
+  const setName = (name) => dispatch({ type: "SET_NAME", payload: name });
   const setUserType = (userType) => dispatch({ type: "SET_USER_TYPE", payload: userType });
   const setUsername = (username) => dispatch({ type: "SET_USERNAME", payload: username });
   const setClientData = (clientData) => dispatch({ type: "SET_CLIENT_DATA", payload: clientData });
@@ -121,6 +125,9 @@ export const GlobalProvider = ({ children }) => {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   };
+
+  // Other fetch functions (fetchUser, fetchUsername, fetchTherapists) would remain as before
+  // Make sure to add similar checks for them if you expect non-JSON or empty responses.
 
   const fetchUser = async () => {
     const clientId = sessionStorage.getItem("clientId");
@@ -229,13 +236,17 @@ export const GlobalProvider = ({ children }) => {
   const fetchUsername = async () => {
     const clientId = sessionStorage.getItem("clientId");
     const therapistId = sessionStorage.getItem("therapistId");
+    const userType = sessionStorage.getItem("userType")
+    const name = sessionStorage.getItem("name")
+    console.log("name anme",name);
+    setName(name)
     console.log("Fetching username. clientId:", clientId, "therapistId:", therapistId);
 
     try {
       let url = null;
-      if (clientId) {
+      if (userType == "client") {
         url = `http://localhost:8080/api/clients/${clientId}`;
-      } else if (therapistId) {
+      } else {
         url = `http://localhost:8080/api/therapists/${therapistId}`;
       }
 
@@ -304,6 +315,7 @@ export const GlobalProvider = ({ children }) => {
           value={{
             ...state,
             setUser,
+            setName,
             setUserType,
             setUsername,
             setClientData,
