@@ -1,8 +1,14 @@
 import React from "react";
+<<<<<<< HEAD
 import { AppBar, Toolbar, Box,Grid,Paper,Divider, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar, Link } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { motion } from 'framer-motion';
+=======
+import { useRouter } from "next/router";
+import { Box, Typography, Avatar, Paper, Button, Grid, Divider } from "@mui/material";
+>>>>>>> 999dee70bfa060387897f07deb334251d8e03622
 import { styled } from "@mui/system";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGlobal } from "../contexts/GlobalContext";
 
 const ProfileContainer = styled(Box)({
@@ -40,10 +46,18 @@ const AppointmentItem = styled(Box)({
     padding: "10px 0",
 });
 
+const BackButton = styled(Button)({
+    alignSelf: "flex-start",
+    marginBottom: "20px",
+    color: "#1976D2",
+    fontWeight: "bold",
+});
+
 const PatientProfile = () => {
+    const router = useRouter();
     const { user, userType } = useGlobal();
 
-    if (!user || userType !== 'client') {
+    if (!user || userType !== "client") {
         console.log("No client");
         return <Typography variant="h6">Loading client profile...</Typography>;
     }
@@ -52,6 +66,7 @@ const PatientProfile = () => {
 
     return (
         <ProfileContainer>
+<<<<<<< HEAD
              <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
                 <Toolbar>
                      <motion.img
@@ -84,6 +99,16 @@ const PatientProfile = () => {
                     </IconButton>
                 </Toolbar>
             </AppBar>
+=======
+            {/* Back Button */}
+            <BackButton
+                startIcon={<ArrowBackIcon />}
+                onClick={() => router.push("/Dashboard")}
+            >
+                Back to Home
+            </BackButton>
+
+>>>>>>> 999dee70bfa060387897f07deb334251d8e03622
             {/* Profile Header */}
             <ProfileCard>
                 <Avatar
