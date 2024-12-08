@@ -31,8 +31,8 @@ const ProfileContainer = styled(Box)(({ theme }) => ({
 const ProfileCard = styled(Card)(({ theme }) => ({
     padding: theme.spacing(4),
     borderRadius: "20px",
-    backgroundColor: "#000000", // Black inner panel
-    color: "#ffffff", // White text for contrast
+    backgroundColor: "#D4D4D8", // Black inner panel
+    color: "#000000", // White text for contrast
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
 }));
 
@@ -110,26 +110,26 @@ const DoctorProfile = () => {
                 <ProfileContainer>
                     <ProfileCard>
                         <StyledAvatar
-                            src={doctor.image_url || "/default-avatar.png"} // Use a default image if `image_url` is NULL
+                            src={doctor.image_url || "/R.png"} // Use a default image if `image_url` is NULL
                             alt={doctor.name}
                         />
-                        <Typography variant="h4" sx={{ mt: 3, fontWeight: "bold", color: "#FFA726" }}>
+                        <Typography variant="h4" sx={{ mt: 3, fontWeight: "bold", color: "#000000" }}>
                             {doctor.name}
                         </Typography>
                         <Chip
                             label={doctor.specialization || "Specialization not specified"}
                             sx={{
                                 mt: 2,
-                                color: "#000000", // Black text for chip
+                                color: "#E6FAFE", // Black text for chip
                                 backgroundColor: "#FFA726", // Orange chip background
                                 fontWeight: "bold",
                             }}
                         />
                         <Divider sx={{ my: 3, backgroundColor: "#ffffff" }} />
-                        <Typography variant="body1" sx={{ fontSize: "16px", color: "#ffffff", mb: 1 }}>
+                        <Typography variant="body1" sx={{ fontSize: "16px", color: "#000000", mb: 1 }}>
                             <strong>Language:</strong> {doctor.language || "Not specified"}
                         </Typography>
-                        <Typography variant="body1" sx={{ fontSize: "16px", color: "#ffffff", mb: 1 }}>
+                        <Typography variant="body1" sx={{ fontSize: "16px", color: "#000000", mb: 1 }}>
                             <strong>Location:</strong> {doctor.location || "Not specified"}
                         </Typography>
                         <Divider sx={{ my: 3, backgroundColor: "#ffffff" }} />

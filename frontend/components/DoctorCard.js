@@ -96,7 +96,7 @@ const DoctorCard = () => {
                   icon="D"
                   title={`${therapist.name}`}
                   description={`Specialization: ${therapist.specialization} - Language: ${therapist.language}`}
-                  image={therapist.imageUrl}
+                  image={therapist.imageUrl || "/R.png"}
                   buttonText="Learn More"
                   onClick={() => handleLearnMore(therapist.id)}
               />
