@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/clients/register", "/api/clients/login", "/api/therapists/register", "/api/therapists/login").permitAll()
                 // Authenticated Endpoints
                 .antMatchers(HttpMethod.GET, "/api/clients/**", "/api/therapists/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/api/therapists/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/therapists/**").permitAll()
                 // All other requests require authentication
                 .anyRequest().authenticated()
                 .and()

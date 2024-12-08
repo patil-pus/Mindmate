@@ -47,8 +47,13 @@ export default function SignInSide() {
         setOpenAlert(false);
     };
 
+    const clearSessionData = () => {
+        sessionStorage.clear(); // Clear all session data
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        clearSessionData(); // Ensure no residual session data
         const data = new FormData(event.currentTarget);
         const email = data.get('email');
         const password = data.get('password');
@@ -72,7 +77,7 @@ export default function SignInSide() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username: email, password }),
-                credentials: 'include', // Include cookies
+                credentials: 'include',
             });
 
             if (!response.ok) {
@@ -83,25 +88,25 @@ export default function SignInSide() {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ username: email, password }),
-                    credentials: 'include', // Include cookies
+                    credentials: 'include',
                 });
             }
 
             if (response.ok) {
                 const resData = await response.json();
                 const { client, therapist } = resData;
-                console.log('client and thrapit dta',client, therapist);
-                
 
                 if (client) {
                     sessionStorage.setItem('clientId', client.id);
-                    sessionStorage.setItem('name', client.name)
+                    sessionStorage.setItem('name', client.name);
                     sessionStorage.setItem('userType', 'client');
                     router.push('/Dashboard'); // Redirect to client dashboard
                 } else if (therapist) {
                     sessionStorage.setItem('therapistId', therapist.id);
-                    sessionStorage.setItem('name', therapist.name)
+                    sessionStorage.setItem('name', therapist.name);
                     sessionStorage.setItem('userType', 'therapist');
+                    console.log(therapist);
+                    console.log(therapist.id);
                     router.push('/TherapistDashboard'); // Redirect to therapist dashboard
                 } else {
                     setAlertMessage('Unexpected error: User role not found.');

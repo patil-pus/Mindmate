@@ -68,6 +68,7 @@ const ProfileCard = styled(Paper)({
 
 const TherapistDashboard = () => {
     const { user, error } = useGlobal();
+    console.log(user);
     const [userType, setUserType] = useState(null);
     const patients = useAnimatedNumber(1032);
     const consultations = useAnimatedNumber(207);
@@ -75,6 +76,7 @@ const TherapistDashboard = () => {
     useEffect(() => {
         if (typeof window !== "undefined") {
             const storedUserType = sessionStorage.getItem("userType");
+            console.log(storedUserType);
             setUserType(storedUserType);
             console.log("User Type:", storedUserType);
             console.log("user",user)

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 // import UserContext from "../contexts/UserContext";
 import { useGlobal } from "../contexts/GlobalContext";
@@ -39,7 +39,7 @@ const ContentContainer = styled(Box)({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    padding: "120px 20px 40px", 
+    padding: "120px 20px 40px",
     minHeight: "100vh",
 
 });
@@ -88,7 +88,7 @@ const HeaderText = styled(Typography)({
     textAlign: "center",
     marginTop: "20px",
     '@media (min-width:600px)': {
-        fontSize: "2.5rem", 
+        fontSize: "2.5rem",
     },
 });
 
@@ -120,11 +120,11 @@ const MessageBox = styled(Box)({
 const Dashboard = () => {
   const router = useRouter();
   const { user, clientData, therapists,loading , error } = useGlobal();
-  const isInitialLoad = useRef(true);
+  // const { user } = useContext(UserContext);
+    //console.log(user);
   const [dashboard, setDashboard] = useState(null);
-   const [isLoading, setIsLoading] = useState(true); 
+   const [isLoading, setIsLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [dashboardUser, setdashboardUser] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const [filteredTherapists, setFilteredTherapists] = useState([]);
   const [loadSpinner, setLoadSpinner] = useState(false);
@@ -147,31 +147,13 @@ const Dashboard = () => {
       therapist.language.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredTherapists(results);
-    setLoadSpinner(false); 
+    setLoadSpinner(false);
     console.log("filtered therapists",results);
   },1000);
     }
- useEffect(() => {
-    if (!isInitialLoad.current) {
-      const storedUser = sessionStorage.getItem("user");
-      if (storedUser) {
-        setdashboardUser(JSON.parse(storedUser));
-        console.log("User set from sessionStorage after navigation.");
-      } else {
-        console.log("No user found in sessionStorage. Redirecting to SignIn.");
-        router.push("/SignIn");
-      }
-    }
-  }, [router]);
 
-
-  useEffect(() => {
-    if (isInitialLoad.current) {
-      isInitialLoad.current = false; 
-      return;
-    }
+    useEffect(() => {
     if (!loading && !user) {
-      console.log("No user found. Redirecting to SignIn.");
       router.push("/SignIn");
     }
   }, [loading, user, router]);
