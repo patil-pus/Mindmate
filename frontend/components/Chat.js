@@ -12,7 +12,7 @@ const Chat = () => {
   const [privateChats, setPrivateChats] = useState(new Map());
   const [publicChats, setPublicChats] = useState([]);
   const [tab, setTab] = useState("CHATROOM");
-  const {  name } = useGlobal();
+  const { userType, name } = useGlobal();
 
 
   const [userData, setUserData] = useState({
@@ -155,7 +155,7 @@ useEffect(() => {
     {userData.connected ? (
       <div className="chat-box h-full flex flex-col md:flex-row border border-gray-300 rounded-lg shadow-lg overflow-hidden">
         {/* Back Link */}
-        <Link href="Dashboard" className="absolute top-4 left-4 p-[11px] flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition cursor-pointer font-semibold text-lg">
+        <Link href={userType == 'client' ? "Dashboard":"TherapistDashboard"} className="absolute top-4 left-4 p-[11px] flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition cursor-pointer font-semibold text-lg">
           <ArrowLeft /> Back to {name}'s Dashboard
         </Link>
         
@@ -236,13 +236,14 @@ useEffect(() => {
       </div>
     ) : (
       <div className="register max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg text-center">
-        <Link href="Dashboard" className="block mb-6">
-          <ArrowLeft className="text-gray-500 hover:text-gray-800 transition cursor-pointer" />
+        <Link href={userType == 'client' ? "Dashboard":"TherapistDashboard"} className="flex mb-6">
+          <ArrowLeft className="text-gray-500 hover:text-gray-800 transition cursor-pointer" /> Back to Dashboard
         </Link>
-        <h2 className="text-xl font-semibold mb-4">Connect to Chat</h2>
+        <h2 className="text-xl font-semibold mb-4">Logged in as</h2>
         <input
           id="user-name"
           placeholder="Enter your name"
+          disabled
           name="userName"
           value={name}
           className="w-full p-3 rounded bg-gray-100 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"

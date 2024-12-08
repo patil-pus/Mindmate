@@ -126,7 +126,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Other fetch functions (fetchUser, fetchUsername, fetchTherapists) would remain as before
+  // Other fetch functions (fetchUser, fetchName, fetchTherapists) would remain as before
   // Make sure to add similar checks for them if you expect non-JSON or empty responses.
 
   const fetchUser = async () => {
@@ -233,59 +233,11 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  const fetchUsername = async () => {
-    const clientId = sessionStorage.getItem("clientId");
-    const therapistId = sessionStorage.getItem("therapistId");
+  const fetchName = async () => {
     const userType = sessionStorage.getItem("userType")
     const name = sessionStorage.getItem("name")
-    console.log("name anme",name);
     setName(name)
-    console.log("Fetching username. clientId:", clientId, "therapistId:", therapistId);
-
-    try {
-      let url = null;
-      if (userType == "client") {
-        url = `http://localhost:8080/api/clients/${clientId}`;
-      } else {
-        url = `http://localhost:8080/api/therapists/${therapistId}`;
-      }
-
-      if (!url) {
-        console.warn("No clientId or therapistId found for fetchUsername.");
-        return;
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Failed to fetch username:", errorText);
-        return;
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await response.text();
-        console.warn("Username response not JSON:", text);
-        return;
-      }
-
-      const resData = await response.json();
-      console.log("Fetched username data:", resData);
-      if (resData && resData.name) {
-        setUsername(resData.name);
-      } else {
-        console.warn("No name field in response data");
-        setUsername(null);
-      }
-    } catch (error) {
-      setError("Error fetching username");
-      console.error("Error fetching username:", error);
-    }
+    
   };
 
   useEffect(() => {
@@ -296,7 +248,7 @@ export const GlobalProvider = ({ children }) => {
     if (clientId || therapistId) {
       fetchUser()
           .then((user) => {
-            if (user || therapistId) return fetchUsername();
+            if (user || therapistId) return fetchName();
           })
           .then(() => fetchTherapists())
           .then((therapists) => {
