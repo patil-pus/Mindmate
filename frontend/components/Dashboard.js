@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 // import UserContext from "../contexts/UserContext";
 import { useGlobal } from "../contexts/GlobalContext";
@@ -120,10 +120,11 @@ const MessageBox = styled(Box)({
 const Dashboard = () => {
   const router = useRouter();
   const { user, clientData, therapists,loading , error } = useGlobal();
-  // const { user } = useContext(UserContext);
+  const isInitialLoad = useRef(true);
   const [dashboard, setDashboard] = useState(null);
    const [isLoading, setIsLoading] = useState(true); 
   const [query, setQuery] = useState("");
+  const [dashboardUser, setdashboardUser] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const [filteredTherapists, setFilteredTherapists] = useState([]);
   const [loadSpinner, setLoadSpinner] = useState(false);
@@ -150,9 +151,27 @@ const Dashboard = () => {
     console.log("filtered therapists",results);
   },1000);
     }
+ useEffect(() => {
+    if (!isInitialLoad.current) {
+      const storedUser = sessionStorage.getItem("user");
+      if (storedUser) {
+        setdashboardUser(JSON.parse(storedUser));
+        console.log("User set from sessionStorage after navigation.");
+      } else {
+        console.log("No user found in sessionStorage. Redirecting to SignIn.");
+        router.push("/SignIn");
+      }
+    }
+  }, [router]);
 
-    useEffect(() => {
+
+  useEffect(() => {
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false; 
+      return;
+    }
     if (!loading && !user) {
+      console.log("No user found. Redirecting to SignIn.");
       router.push("/SignIn");
     }
   }, [loading, user, router]);
