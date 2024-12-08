@@ -9,10 +9,11 @@ import { useGlobal } from "../contexts/GlobalContext";
 let stompClient = null;
 
 const Chat = () => {
+  const { userType, name } = useGlobal();
+
   const [privateChats, setPrivateChats] = useState(new Map());
   const [publicChats, setPublicChats] = useState([]);
   const [tab, setTab] = useState("CHATROOM");
-  const { userType, name } = useGlobal();
 
 
   const [userData, setUserData] = useState({
@@ -155,7 +156,9 @@ useEffect(() => {
     {userData.connected ? (
       <div className="chat-box h-full flex flex-col md:flex-row border border-gray-300 rounded-lg shadow-lg overflow-hidden">
         {/* Back Link */}
-        <Link href={userType == 'client' ? "Dashboard":"TherapistDashboard"} className="absolute top-4 left-4 p-[11px] flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition cursor-pointer font-semibold text-lg">
+        {console.log("hfjgsbuyreuvytgreuguewh",userType)
+        }
+        <Link href={userType == 'client' ? "Dashboard" : "TherapistDashboard"} className="absolute top-4 left-4 p-[11px] flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition cursor-pointer font-semibold text-lg">
           <ArrowLeft /> Back to {name}'s Dashboard
         </Link>
         

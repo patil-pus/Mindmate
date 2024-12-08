@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-// import UserContext from "../contexts/UserContext";
 import { useGlobal } from "../contexts/GlobalContext";
 import { AppBar, Toolbar, Box,CircularProgress, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar, Link } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
@@ -39,7 +38,7 @@ const ContentContainer = styled(Box)({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    padding: "120px 20px 40px",
+    padding: "120px 20px 40px", 
     minHeight: "100vh",
 
 });
@@ -88,7 +87,7 @@ const HeaderText = styled(Typography)({
     textAlign: "center",
     marginTop: "20px",
     '@media (min-width:600px)': {
-        fontSize: "2.5rem",
+        fontSize: "2.5rem", 
     },
 });
 
@@ -120,10 +119,8 @@ const MessageBox = styled(Box)({
 const Dashboard = () => {
   const router = useRouter();
   const { user, clientData, therapists,loading , error } = useGlobal();
-  // const { user } = useContext(UserContext);
-    //console.log(user);
   const [dashboard, setDashboard] = useState(null);
-   const [isLoading, setIsLoading] = useState(true);
+   const [isLoading, setIsLoading] = useState(true); 
   const [query, setQuery] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const [filteredTherapists, setFilteredTherapists] = useState([]);
@@ -147,7 +144,7 @@ const Dashboard = () => {
       therapist.language.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredTherapists(results);
-    setLoadSpinner(false);
+    setLoadSpinner(false); 
     console.log("filtered therapists",results);
   },1000);
     }
@@ -211,7 +208,7 @@ const Dashboard = () => {
                         MindMate
                     </Typography>
                     <Button color="inherit">Home</Button>
-                    <Button color="inherit" href="/Chat">Chat</Button>
+                    <Button color="inherit" onClick={() => router.push("/Chat")}>Chat</Button>
                     <Button href="/PatientProfile" color="inherit">Profile</Button>
                     <Button color="inherit">Settings</Button>
                     <Button href="/LogoutPage" color="inherit">Logout</Button>
@@ -265,8 +262,7 @@ const Dashboard = () => {
                 title="Always-there Support"
                 description="Unpack what’s on your mind with Ebb, our empathetic AI companion, talk it out!"
                 image="/chat.jpg"
-                href="/Chat"
-                buttonText={<Link href="/Chat" style={{ textDecoration: 'none', color: 'inherit' }}>"Chat Now"</Link>}
+                buttonText="Chat with Ebb"
             />
               <FeatureCard
                   icon="J"
