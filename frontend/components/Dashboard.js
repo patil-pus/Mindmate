@@ -265,7 +265,8 @@ const Dashboard = () => {
                 title="Always-there Support"
                 description="Unpack what’s on your mind with Ebb, our empathetic AI companion, talk it out!"
                 image="/chat.jpg"
-                buttonText="Chat with Ebb"
+                href="/Chat"
+                buttonText={<Link href="/Chat" style={{ textDecoration: 'none', color: 'inherit' }}>"Chat Now"</Link>}
             />
               <FeatureCard
                   icon="J"

@@ -1,6 +1,8 @@
 import React from "react";
+import { AppBar, Toolbar, Box,Grid,Paper,Divider, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar, Link } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { motion } from 'framer-motion';
 import { useRouter } from "next/router";
-import { Box, Typography, Avatar, Paper, Button, Grid, Divider } from "@mui/material";
 import { styled } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGlobal } from "../contexts/GlobalContext";
@@ -22,6 +24,7 @@ const ProfileCard = styled(Paper)({
     borderRadius: "12px",
     width: "100%",
     maxWidth: "400px",
+    marginTop: "200px",
 });
 
 const SectionCard = styled(Paper)({
@@ -59,6 +62,40 @@ const PatientProfile = () => {
 
     return (
         <ProfileContainer>
+
+             <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
+                <Toolbar>
+                     <motion.img
+                        src={'/logo.png'}
+                        alt="MindMate Logo"
+                        style={{
+                        width: 90,
+                        height: 80,
+                        marginBottom: 20,
+                        marginTop: 20,
+                        margin:20,
+                        borderRadius: '50%',
+                        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.4)',
+                        padding: 10,
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        }}
+                    />
+                    <Typography variant="h4" sx={{ flexGrow: 9 }}>
+                        MindMate
+                    </Typography>
+                    <Button color="inherit" href="/Dashboard">Home</Button>
+                    <Button color="inherit" href="/Chat">Chat</Button>
+                    <Button href="/PatientProfile" color="inherit">Profile</Button>
+                    <Button color="inherit">Settings</Button>
+                    <Button href="/LogoutPage" color="inherit">Logout</Button>
+                    <IconButton color="inherit">
+                        <Badge color="secondary" variant="dot">
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+
             {/* Back Button */}
             <BackButton
                 startIcon={<ArrowBackIcon />}
@@ -66,6 +103,7 @@ const PatientProfile = () => {
             >
                 Back to Home
             </BackButton>
+
 
             {/* Profile Header */}
             <ProfileCard>
@@ -76,6 +114,7 @@ const PatientProfile = () => {
                         height: 320,
                         margin: "auto",
                         bgcolor: "#1976D2",
+                        
                     }}
                 >
                     {clientData?.name?.charAt(0)}
