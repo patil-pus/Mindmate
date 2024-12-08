@@ -4,6 +4,7 @@ import edu.neu.csye6200.Config.JwtUtil;
 import edu.neu.csye6200.Models.Client;
 import edu.neu.csye6200.Models.Therapist;
 import edu.neu.csye6200.Services.TherapistService;
+import edu.neu.csye6200.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -77,7 +78,7 @@ public class TherapistController {
         }
 
         final UserDetails userDetails = therapistService.loadUserByUsername(therapist.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails.getUsername()+"::"+ UserType.THERAPIST.toString());
 
         Therapist authenticatedTherapist = therapistService.getTherapistByUserName(therapist.getUsername());
         Integer therapistId = authenticatedTherapist.getId();

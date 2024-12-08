@@ -4,6 +4,7 @@ import edu.neu.csye6200.Config.JwtUtil;
 import edu.neu.csye6200.Models.Client;
 import edu.neu.csye6200.Models.JournalEntry;
 import edu.neu.csye6200.Services.ClientService;
+import edu.neu.csye6200.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -75,7 +76,7 @@ public class ClientController {
         }
 
         final UserDetails userDetails = clientService.loadUserByUsername(client.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails.getUsername()+"::"+ UserType.CLIENT.toString());
 
         Client getAuthenticatedClient = clientService.getClientByUserName(client.getUsername());
         Integer clientId = getAuthenticatedClient.getId();

@@ -62,7 +62,17 @@ public class JwtUtil {
                 .compact();
     }
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
+        final String username =extractUsernameFromToken( extractUsername(token) );
+
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+    public String extractUsernameFromToken(String user){
+        if(user.isEmpty() || user.isBlank()) return null;
+        return user.split("::")[0];
+    }
+
+    public String extractRoleFromToken(String user){
+        if(user.isEmpty() || user.isBlank()) return null;
+        return user.split("::")[1];
     }
 }

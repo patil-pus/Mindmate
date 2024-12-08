@@ -91,6 +91,7 @@ public class ClientService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Find the client by username (assumed to be email or similar identifier)
         Optional<Client> clientOpt = clientDAO.findByUsername(username);
+
         if (!clientOpt.isPresent()) {
             throw new UsernameNotFoundException("Client not found with username: " + username);
         }

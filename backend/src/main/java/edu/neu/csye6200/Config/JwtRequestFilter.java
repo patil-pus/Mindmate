@@ -1,6 +1,8 @@
 package edu.neu.csye6200.Config;
 
 import edu.neu.csye6200.Services.ClientService;
+import edu.neu.csye6200.Services.TherapistService;
+import edu.neu.csye6200.enums.UserType;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private TherapistService therapistService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -71,7 +76,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         // If username is valid and security context is not yet authenticated
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.clientService.loadUserByUsername(username);
+
+            // extracting name and role type from format sh:client
+            String extractedUsername= jwtUtil.extractUsernameFromToken(username);
+            String extractedUserType=jwtUtil.extractRoleFromToken(username);;
+            UserDetails userDetails ;
+            // check if the role type
+            if(UserType.THERAPIST.toString().equals(extractedUserType)){
+                userDetails=this.therapistService.loadUserByUsername(extractedUsername);
+            }else{
+                userDetails = this.clientService.loadUserByUsername(extractedUsername);
+                //(UserType.CLIENT.toString().equals(extractedUserType))
+            }
+
+
 
             // Validate the JWT token against the user details
             if (jwtUtil.validateToken(jwt, userDetails)) {
