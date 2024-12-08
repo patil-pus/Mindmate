@@ -122,9 +122,6 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Other fetch functions (fetchUser, fetchUsername, fetchTherapists) would remain as before
-  // Make sure to add similar checks for them if you expect non-JSON or empty responses.
-
   const fetchUser = async () => {
     const clientId = sessionStorage.getItem("clientId");
     const therapistId = sessionStorage.getItem("therapistId");

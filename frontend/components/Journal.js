@@ -15,6 +15,7 @@ import {
     Grid,
     Card,
     CardContent,
+    CircularProgress,
     Avatar,
 } from '@mui/material';
 
@@ -91,7 +92,16 @@ const Journal = () => {
     };
 
     if (!clientData || clientData.length === 0) {
-        return <Typography>No journal entries found.</Typography>;
+        return   <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "200px",
+                }}
+            >
+                <CircularProgress />
+            </Box>
     }
 
     return (

@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Avatar, Grid, Paper, Button } from "@mui/material";
+import {
+    Box,
+    Typography,
+    Avatar,
+    Grid,
+    Paper,
+    Button,
+    AppBar,
+    Toolbar,
+    IconButton,
+    Badge,
+} from "@mui/material";
 import { styled } from "@mui/system";
-import { AppBar, Toolbar, IconButton, Badge } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import MessageIcon from "@mui/icons-material/Message";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -57,9 +67,19 @@ const ProfileCard = styled(Paper)({
 });
 
 const TherapistDashboard = () => {
-    const { user, userType, error } = useGlobal(); // Access logged-in user and userType
+    const { user, error } = useGlobal();
+    const [userType, setUserType] = useState(null);
     const patients = useAnimatedNumber(1032);
     const consultations = useAnimatedNumber(207);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedUserType = sessionStorage.getItem("userType");
+            setUserType(storedUserType);
+            console.log("User Type:", storedUserType);
+            console.log("user",user)
+        }
+    }, []);
 
     if (error) {
         return (
@@ -71,7 +91,7 @@ const TherapistDashboard = () => {
         );
     }
 
-    if (!user || userType !== "therapist") {
+    if (!user) {
         return (
             <Box sx={{ textAlign: "center", padding: "20px" }}>
                 <Typography variant="h6">Loading therapist data...</Typography>
@@ -81,6 +101,7 @@ const TherapistDashboard = () => {
 
     return (
         <Box display="flex" flexDirection="column" height="100vh">
+            {/* AppBar */}
             <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
                 <Toolbar>
                     <Typography variant="h4" sx={{ flexGrow: 1 }}>
@@ -109,8 +130,10 @@ const TherapistDashboard = () => {
                 </Toolbar>
             </AppBar>
 
+            {/* Main Content */}
             <MainContent sx={{ mt: 10 }}>
                 <Grid container spacing={3}>
+                    {/* Welcome Card */}
                     <Grid item xs={12} md={8}>
                         <WelcomeCard>
                             <Typography variant="h5" fontWeight="bold">
@@ -119,12 +142,19 @@ const TherapistDashboard = () => {
                             <Typography variant="subtitle1" color="textSecondary">
                                 Have a great day at work!
                             </Typography>
+                            <Typography variant="h6" sx={{ mt: 2 }}>
+                                Patients Today: {patients}
+                            </Typography>
+                            <Typography variant="h6" sx={{ mt: 1 }}>
+                                Consultations Completed: {consultations}
+                            </Typography>
                             <Button variant="contained" color="primary" sx={{ marginTop: "10px" }}>
                                 Add Patient
                             </Button>
                         </WelcomeCard>
                     </Grid>
 
+                    {/* Profile Card */}
                     <Grid item xs={12} md={4}>
                         <ProfileCard>
                             <Avatar

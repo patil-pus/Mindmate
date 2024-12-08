@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Avatar, Paper, Button, Grid } from "@mui/material";
+import { Box, Typography, Avatar, Paper, Button, Grid, Divider } from "@mui/material";
 import { styled } from "@mui/system";
 import { useGlobal } from "../contexts/GlobalContext";
 
@@ -13,7 +13,7 @@ const ProfileContainer = styled(Box)({
 });
 
 const ProfileCard = styled(Paper)({
-    padding: "20px",
+    padding: "30px",
     textAlign: "center",
     backgroundColor: "#FFFFFF",
     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
@@ -23,21 +23,26 @@ const ProfileCard = styled(Paper)({
 });
 
 const SectionCard = styled(Paper)({
-    padding: "20px",
+    padding: "30px",
     backgroundColor: "#FFFFFF",
     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
     borderRadius: "12px",
 });
 
+const AppointmentItem = styled(Box)({
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 0",
+});
+
 const PatientProfile = () => {
     const { user, userType } = useGlobal();
 
-    // If userType isn't 'client', we know we have therapist data or no user
-    console.log(user);
-    console.log(userType);
     if (!user || userType !== 'client') {
         console.log("No client");
-        return <Typography>Loading client profile...</Typography>;
+        return <Typography variant="h6">Loading client profile...</Typography>;
     }
 
     const clientData = user;
@@ -48,70 +53,144 @@ const PatientProfile = () => {
             <ProfileCard>
                 <Avatar
                     src={clientData?.imageUrl || ""}
-                    sx={{ width: 100, height: 100, margin: "auto", bgcolor: "#1976D2" }}
+                    sx={{
+                        width: 320,
+                        height: 320,
+                        margin: "auto",
+                        bgcolor: "#1976D2",
+                    }}
                 >
                     {clientData?.name?.charAt(0)}
                 </Avatar>
-                <Typography variant="h5" mt={2} fontWeight="bold">
+                <Typography
+                    variant="h4"
+                    mt={3}
+                    fontWeight="bold"
+                    sx={{ fontSize: "2rem" }}
+                >
                     {clientData?.name || "N/A"}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" mb={1}>
+                <Typography variant="body1" color="textSecondary" mb={1}>
                     Patient ID: {clientData?.id || "Unknown"}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" mb={1}>
+                <Typography variant="body1" color="textSecondary" mb={1}>
                     Profession: {clientData?.profession || "Not Specified"}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" mb={1}>
+                <Typography variant="body1" color="textSecondary" mb={1}>
                     Age: {clientData?.age || "Unknown"}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" mb={1}>
+                <Typography variant="body1" color="textSecondary" mb={1}>
                     Gender: {clientData?.sex || "Not Specified"}
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 3, padding: "10px 20px", fontSize: "1rem" }}
+                >
                     Edit Profile
                 </Button>
             </ProfileCard>
 
             {/* Additional Sections */}
-            <Box mt={4} width="100%" maxWidth="1200px">
-                <Grid container spacing={3}>
+            <Box mt={5} width="100%" maxWidth="1200px">
+                <Grid container spacing={4}>
                     {/* Appointments History */}
                     <Grid item xs={12} md={6}>
                         <SectionCard>
-                            <Typography variant="h6" fontWeight="bold" mb={2}>
+                            <Typography
+                                variant="h5"
+                                fontWeight="bold"
+                                mb={3}
+                                sx={{ fontSize: "1.5rem", color: "#1976D2" }}
+                            >
                                 Appointments History
                             </Typography>
-                            <Box>
-                                <Typography variant="body2" color="textSecondary">
-                                    - Check-up: Jan 15, 2024 - Dr. Smith
+                            <Divider />
+                            <AppointmentItem>
+                                <Typography variant="body1" sx={{ fontSize: "1rem" }}>
+                                    Check-up: Jan 15, 2024
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    - Follow-up: Jan 10, 2024 - Dr. Lee
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1rem", color: "#757575" }}
+                                >
+                                    Dr. Smith
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    - Consultation: Jan 5, 2024 - Dr. Taylor
+                            </AppointmentItem>
+                            <Divider />
+                            <AppointmentItem>
+                                <Typography variant="body1" sx={{ fontSize: "1rem" }}>
+                                    Follow-up: Jan 10, 2024
                                 </Typography>
-                            </Box>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1rem", color: "#757575" }}
+                                >
+                                    Dr. Lee
+                                </Typography>
+                            </AppointmentItem>
+                            <Divider />
+                            <AppointmentItem>
+                                <Typography variant="body1" sx={{ fontSize: "1rem" }}>
+                                    Consultation: Jan 5, 2024
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1rem", color: "#757575" }}
+                                >
+                                    Dr. Taylor
+                                </Typography>
+                            </AppointmentItem>
                         </SectionCard>
                     </Grid>
 
                     {/* Upcoming Appointments */}
                     <Grid item xs={12} md={6}>
                         <SectionCard>
-                            <Typography variant="h6" fontWeight="bold" mb={2}>
+                            <Typography
+                                variant="h5"
+                                fontWeight="bold"
+                                mb={3}
+                                sx={{ fontSize: "1.5rem", color: "#1976D2" }}
+                            >
                                 Upcoming Appointments
                             </Typography>
-                            <Box>
-                                <Typography variant="body2" color="textSecondary">
-                                    - Check-up: Feb 2, 2024 - 10:00 AM
+                            <Divider />
+                            <AppointmentItem>
+                                <Typography variant="body1" sx={{ fontSize: "1rem" }}>
+                                    Check-up: Feb 2, 2024
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    - Therapy Session: Feb 5, 2024 - 2:30 PM
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1rem", color: "#757575" }}
+                                >
+                                    10:00 AM
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    - Blood Test: Feb 10, 2024 - 9:00 AM
+                            </AppointmentItem>
+                            <Divider />
+                            <AppointmentItem>
+                                <Typography variant="body1" sx={{ fontSize: "1rem" }}>
+                                    Therapy Session: Feb 5, 2024
                                 </Typography>
-                            </Box>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1rem", color: "#757575" }}
+                                >
+                                    2:30 PM
+                                </Typography>
+                            </AppointmentItem>
+                            <Divider />
+                            <AppointmentItem>
+                                <Typography variant="body1" sx={{ fontSize: "1rem" }}>
+                                    Blood Test: Feb 10, 2024
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1rem", color: "#757575" }}
+                                >
+                                    9:00 AM
+                                </Typography>
+                            </AppointmentItem>
                         </SectionCard>
                     </Grid>
                 </Grid>
