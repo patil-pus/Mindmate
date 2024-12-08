@@ -1,12 +1,8 @@
 import React from "react";
-<<<<<<< HEAD
 import { AppBar, Toolbar, Box,Grid,Paper,Divider, Typography, Button, TextField, IconButton, Badge, Card, CardContent, Avatar, Link } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { motion } from 'framer-motion';
-=======
 import { useRouter } from "next/router";
-import { Box, Typography, Avatar, Paper, Button, Grid, Divider } from "@mui/material";
->>>>>>> 999dee70bfa060387897f07deb334251d8e03622
 import { styled } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGlobal } from "../contexts/GlobalContext";
@@ -66,7 +62,7 @@ const PatientProfile = () => {
 
     return (
         <ProfileContainer>
-<<<<<<< HEAD
+
              <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
                 <Toolbar>
                      <motion.img
@@ -99,7 +95,7 @@ const PatientProfile = () => {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-=======
+
             {/* Back Button */}
             <BackButton
                 startIcon={<ArrowBackIcon />}
@@ -108,7 +104,7 @@ const PatientProfile = () => {
                 Back to Home
             </BackButton>
 
->>>>>>> 999dee70bfa060387897f07deb334251d8e03622
+
             {/* Profile Header */}
             <ProfileCard>
                 <Avatar
