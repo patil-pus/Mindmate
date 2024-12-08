@@ -25,8 +25,8 @@ const useAnimatedNumber = (targetValue) => {
 
     useEffect(() => {
         let start = 0;
-        const duration = 1000;
-        const stepTime = Math.abs(Math.floor(duration / targetValue));
+        const duration = 1000; // Total animation duration
+        const stepTime = Math.abs(Math.floor(duration / targetValue)); // Step time
         const timer = setInterval(() => {
             start += 1;
             if (start >= targetValue) {
@@ -45,41 +45,41 @@ const MainContent = styled(Box)({
     flex: 1,
     padding: "20px",
     width: "100%",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: "#FFFFFF",
 });
 
-const WelcomeCard = styled(Paper)({
+const StyledCard = styled(Paper)({
     backgroundColor: "#FFFFFF",
     color: "#333333",
     padding: "20px",
-    borderRadius: "12px",
+    borderRadius: "16px",
+    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+});
+
+const StatBox = styled(Box)({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     textAlign: "center",
-    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-});
-
-const ProfileCard = styled(Paper)({
-    padding: "20px",
-    color: "#333333",
-    backgroundColor: "#FFFFFF",
+    background: "linear-gradient(135deg, #2196F3, #42A5F5)", // Blue gradient
     borderRadius: "12px",
-    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-    marginTop: "20px",
+    padding: "20px",
+    color: "#FFFFFF",
+    height: "150px",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
 });
 
 const TherapistDashboard = () => {
     const { user, error } = useGlobal();
-    console.log(user);
     const [userType, setUserType] = useState(null);
-    const patients = useAnimatedNumber(1032);
-    const consultations = useAnimatedNumber(207);
+    const patients = useAnimatedNumber(1032); // Animated number for Patients Today
+    const consultations = useAnimatedNumber(207); // Animated number for Consultations Completed
 
     useEffect(() => {
         if (typeof window !== "undefined") {
             const storedUserType = sessionStorage.getItem("userType");
-            console.log(storedUserType);
             setUserType(storedUserType);
-            console.log("User Type:", storedUserType);
-            console.log("user",user)
         }
     }, []);
 
@@ -106,7 +106,7 @@ const TherapistDashboard = () => {
             {/* AppBar */}
             <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
                 <Toolbar>
-                    <Typography variant="h4" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: "bold", color: "#FFF" }}>
                         MindMate
                     </Typography>
                     <Button color="inherit" href="/TherapistDashboard">
@@ -136,41 +136,82 @@ const TherapistDashboard = () => {
             <MainContent sx={{ mt: 10 }}>
                 <Grid container spacing={3}>
                     {/* Welcome Card */}
-                    <Grid item xs={12} md={8}>
-                        <WelcomeCard>
-                            <Typography variant="h5" fontWeight="bold">
+                    <Grid item xs={12}>
+                        <StyledCard>
+                            <Typography variant="h4" fontWeight="bold" textAlign="center">
                                 Welcome, Dr. {user.name || "Therapist"}
                             </Typography>
-                            <Typography variant="subtitle1" color="textSecondary">
-                                Have a great day at work!
+                            <Typography
+                                variant="subtitle1"
+                                textAlign="center"
+                                color="textSecondary"
+                                mt={1}
+                            >
+                                Have a productive day!
                             </Typography>
-                            <Typography variant="h6" sx={{ mt: 2 }}>
-                                Patients Today: {patients}
+                        </StyledCard>
+                    </Grid>
+
+                    {/* Stats */}
+                    <Grid item xs={12} md={6}>
+                        <StatBox>
+                            <Typography variant="h5" fontWeight="bold">
+                                {patients}
                             </Typography>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                Consultations Completed: {consultations}
+                            <Typography variant="subtitle1" fontWeight="bold">
+                                Patients Today
                             </Typography>
-                            <Button variant="contained" color="primary" sx={{ marginTop: "10px" }}>
-                                Add Patient
-                            </Button>
-                        </WelcomeCard>
+                        </StatBox>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <StatBox>
+                            <Typography variant="h5" fontWeight="bold">
+                                {consultations}
+                            </Typography>
+                            <Typography variant="subtitle1" fontWeight="bold">
+                                Consultations Completed
+                            </Typography>
+                        </StatBox>
                     </Grid>
 
                     {/* Profile Card */}
-                    <Grid item xs={12} md={4}>
-                        <ProfileCard>
-                            <Avatar
-                                sx={{ width: 80, height: 80, margin: "auto", bgcolor: "#1976D2" }}
-                            >
-                                {user.name?.charAt(0).toUpperCase() || "D"}
-                            </Avatar>
-                            <Typography variant="h6" align="center" mt={2}>
-                                Dr. {user.name}
-                            </Typography>
-                            <Typography variant="body2" align="center" color="textSecondary">
-                                {user.specialization || "Specialist"}
-                            </Typography>
-                        </ProfileCard>
+                    <Grid item xs={12}>
+                        <StyledCard>
+                            <Grid container spacing={2} alignItems="center">
+                                <Grid item xs={12} md={3} textAlign="center">
+                                    <Avatar
+                                        sx={{
+                                            width: 120,
+                                            height: 120,
+                                            margin: "auto",
+                                            bgcolor: "#3A3A3A",
+                                        }}
+                                        src={user.image_url}
+                                    >
+                                        {user.name?.charAt(0).toUpperCase() || "D"}
+                                    </Avatar>
+                                </Grid>
+                                <Grid item xs={12} md={9}>
+                                    <Typography variant="h5" fontWeight="bold">
+                                        Dr. {user.name}
+                                    </Typography>
+                                    <Typography variant="body1" color="textSecondary">
+                                        {user.specialization || "Specialist"}
+                                    </Typography>
+                                    <Typography variant="body2" mt={1}>
+                                        “Helping patients achieve mental clarity.”
+                                    </Typography>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{ mt: 2 }}
+                                        href="/TherapistProfile"
+                                    >
+                                        View Profile
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </StyledCard>
                     </Grid>
                 </Grid>
             </MainContent>
