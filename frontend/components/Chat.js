@@ -132,11 +132,6 @@ const Chat = () => {
     }
   };
 
-  const handleUsername = () => {
-    // const { value } = event.target;
-    // setUserData({ ...userData, username: username });
-  };
-
   const registerUser = () => {
     connect();
   };
@@ -147,8 +142,7 @@ useEffect(() => {
 
   useEffect(() => {
     setUserData({ ...userData, username: name });
-    // // console.log(username);
-    // registerUser();
+   
   }, [name]);
   return (
     <div className="w-screen h-screen p-4 text-gray-800 bg-gradient-to-br from-gray-100 to-gray-200">
