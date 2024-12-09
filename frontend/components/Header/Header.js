@@ -56,7 +56,7 @@ const Header = () => {
           color="inherit"
           onClick={() =>
             router.push(
-              userType === "client" ? "/Dashboard" : "TherapistDashboard"
+              userType === "client" ? "/Dashboard" : "/TherapistDashboard"
             )
           }
           sx={{
@@ -81,7 +81,11 @@ const Header = () => {
           Chat
         </Button>
         <Button
-          href="/PatientProfile"
+          onClick={() =>
+            router.push(
+              userType === "client" ? "/PatientProfile" : "TherapistProfile"
+            )
+          }
           color="inherit"
           sx={{
             fontSize: "1.1rem",
