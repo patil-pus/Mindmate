@@ -105,8 +105,6 @@ export default function SignInSide() {
                     sessionStorage.setItem('therapistId', therapist.id);
                     sessionStorage.setItem('name', therapist.name);
                     sessionStorage.setItem('userType', 'therapist');
-                    console.log(therapist);
-                    console.log(therapist.id);
                     router.push('/TherapistDashboard'); // Redirect to therapist dashboard
                 } else {
                     setAlertMessage('Unexpected error: User role not found.');

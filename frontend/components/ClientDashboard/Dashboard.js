@@ -9,7 +9,7 @@ import {
   TextField,
   Link,
 } from "@mui/material";
-import { styled, keyframes } from "@mui/system";
+import { styled } from "@mui/system";
 import ExpertSection from "./ExpertSection";
 import FeatureCard from "./FeatureCard";
 import DoctorCard from "./DoctorCard";
@@ -125,10 +125,6 @@ const Dashboard = () => {
     const hideNotification = setTimeout(() => setShowNotification(false), 5000);
     return () => clearTimeout(hideNotification);
   }, [isLoading]);
-
-  console.log("user data", user);
-  console.log("clinet data", clientData);
-  console.log("therapists", therapists);
 
   if (isLoading) {
     return (

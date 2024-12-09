@@ -34,7 +34,6 @@ const Chat = () => {
 
   const onConnected = () => {
     setUserData({ ...userData, connected: true, username: name });
-    // console.log('inside on conn',userData);
     stompClient.subscribe("/chatroom/public", onMessageReceived);
     stompClient.subscribe(
       "/user/" + userData.username + "/private",
@@ -55,8 +54,6 @@ const Chat = () => {
   };
 
   const onMessageReceived = (payload) => {
-    console.log("payload", payload);
-
     const payloadData = JSON.parse(payload.body);
     switch (payloadData.status) {
       case "JOIN":
