@@ -141,14 +141,14 @@ const Chat = () => {
     <div className="w-screen min-h-screen p-4 text-gray-800 bg-gradient-to-br from-gray-100 to-gray-200">
   <Header />
   {userData.connected ? (
-    <div className="chat-box flex flex-col md:flex-row border border-gray-300 rounded-3xl shadow-lg overflow-hidden mt-[140px] rounded-3xl">
+    <div className="chat-box flex flex-col md:flex-row border border-gray-300 shadow-lg overflow-hidden mt-[140px] rounded-3xl">
       {/* Member List */}
       <div className="member-list w-full md:w-1/4 bg-gradient-to-tl pt-[45px] from-gray-900 to-gray-700 text-white p-6 overflow-hidden">
         <h2 className="text-xl font-semibold mb-4">Chats</h2>
         <ul className="space-y-2">
           <li
             onClick={() => setTab("CHATROOM")}
-            className={`cursor-pointer p-3 rounded-lg hover:bg-gray-600 transition  flex gap-x-2 ${
+            className={`cursor-pointer p-3 rounded-xl hover:bg-gray-600 transition  flex gap-x-2 ${
               tab === "CHATROOM" ? "bg-gray-600 font-semibold" : ""
             }`}
           >
@@ -159,7 +159,7 @@ const Chat = () => {
             <li
               key={index}
               onClick={() => setTab(name)}
-              className={`cursor-pointer p-3 rounded-lg hover:bg-gray-600 transition flex gap-x-2 ${
+              className={`cursor-pointer p-3 hover:bg-gray-600 transition flex gap-x-2 rounded-xl ${
                 tab === name ? "bg-gray-600 font-semibold" : ""
               }`}
             >
@@ -184,7 +184,7 @@ const Chat = () => {
                 }`}
               >
                 {chat.senderName !== userData.username && (
-                  <div className="p-2 bg-gray-300 rounded-full text-sm shadow mr-3 flex justify-center items-center">
+                  <div className="p-2 bg-gray-300 rounded-full text-sm shadow mr-3 flex justify-center items-center min-w-14">
                     {chat.senderName}
                   </div>
                 )}
