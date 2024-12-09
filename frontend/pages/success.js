@@ -1,4 +1,4 @@
-import Success from '../components/Success'; 
+import Success from '../components/AppointmentBooking/Success'; 
 
 export default function SuccessPage() { 
   return <Success />; 

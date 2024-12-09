@@ -1,4 +1,4 @@
-import InPersonSession from '../components/InPersonSession'; 
+import InPersonSession from '../components/AppointmentBooking/InPersonSession'; 
 
 export default function InPersonSessionPage() { 
   return <InPersonSession />; 
