@@ -181,6 +181,31 @@ export const GlobalProvider = ({ children }) => {
         } else {
           setError("Received invalid or null user data");
         }
+      } else {
+        const res = await fetch(
+          `http://localhost:8080/api/therapists/${therapistId}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("Failed to fetch therapist user data:", errorText);
+          setError("Failed to fetch therapist user data");
+          return null;
+        }
+
+        const user = await res.json();
+        console.log("Fetched therapist user data:", user);
+        if (user && user.id) {
+          setUser(user);
+          setUserType("therapist");
+          return user;
+        } else {
+          setError("Received invalid or null user data");
+        }
       }
       return null;
     } catch (error) {
