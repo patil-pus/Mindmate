@@ -1,5 +1,5 @@
 package edu.neu.csye6200.Models;
-import edu.neu.csye6200.Models.Status;
+import edu.neu.csye6200.enums.Status;
 import lombok.*;
 import java.util.Date;
 @NoArgsConstructor

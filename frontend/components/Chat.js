@@ -141,7 +141,7 @@ const Chat = () => {
     <div className="w-screen min-h-screen p-4 text-gray-800 bg-gradient-to-br from-gray-100 to-gray-200">
   <Header />
   {userData.connected ? (
-    <div className="chat-box flex flex-col md:flex-row border border-gray-300 rounded-lg shadow-lg overflow-hidden mt-[140px]">
+    <div className="chat-box flex flex-col md:flex-row border border-gray-300 rounded-3xl shadow-lg overflow-hidden mt-[140px] rounded-3xl">
       {/* Member List */}
       <div className="member-list w-full md:w-1/4 bg-gradient-to-tl pt-[45px] from-gray-900 to-gray-700 text-white p-6 overflow-hidden">
         <h2 className="text-xl font-semibold mb-4">Chats</h2>
