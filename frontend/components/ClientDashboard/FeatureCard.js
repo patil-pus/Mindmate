@@ -76,7 +76,7 @@ const FeatureCard = ({
       alt={title}
       sx={{
         marginTop: "10px",
-        height: "200px",
+        height: "300px",
         width: "100%",
         borderRadius: "15px",
         objectFit: "cover",
