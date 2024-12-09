@@ -178,7 +178,7 @@ const Chat = () => {
 
           {/* Chat Content */}
           <div className="chat-content flex-1 p-6 bg-gradient-to-br from-white to-gray-100">
-            <ul className="space-y-4 h-[85vh] flex flex-col-reverse overflow-y-auto">
+            <ul className="space-y-4 h-[85vh] flex flex-col justify-end overflow-y-auto">
               {(tab === "CHATROOM" ? publicChats : privateChats.get(tab)).map(
                 (chat, index) => (
                   <li
