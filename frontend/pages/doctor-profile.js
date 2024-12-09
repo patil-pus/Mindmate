@@ -139,7 +139,7 @@ const DoctorProfile = () => {
                 <ProfileContainer>
                     <ProfileCard>
                         <StyledAvatar
-                            src={doctor.image_url || "/R.png"} // Use a default image if `image_url` is NULL
+                            src={doctor.imageUrl || "/R.png"} 
                             alt={doctor.name}
                         />
                         <Typography variant="h4" sx={{ mt: 3, fontWeight: "bold", color: "#000000" }}>
