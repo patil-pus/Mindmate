@@ -140,6 +140,7 @@ const Chat = () => {
         <div className="chat-box flex flex-col md:flex-row border border-gray-300 shadow-lg overflow-hidden mt-[140px] rounded-3xl">
           {/* Member List */}
           <div className="member-list w-full md:w-1/4 bg-gradient-to-tl pt-[45px] from-gray-900 to-gray-700 text-white p-6 overflow-hidden">
+            <h2 className="text-xl font-semibold mb-4">Logged in as {name}</h2>
             <h2 className="text-xl font-semibold mb-4">Chats</h2>
             <ul className="space-y-2">
               <li
