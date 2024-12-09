@@ -24,7 +24,7 @@ import { motion } from 'framer-motion';
 import { LocalizationProvider, DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { useGlobal } from "../contexts/GlobalContext"; 
+import { useGlobal } from "../../contexts/GlobalContext"; 
 import { useRouter } from 'next/router';
 
 function BookingPage() {
