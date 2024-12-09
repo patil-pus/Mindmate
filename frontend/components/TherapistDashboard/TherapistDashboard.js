@@ -20,6 +20,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useGlobal } from "../../contexts/GlobalContext";
 import { useRouter } from "next/router";
+import Header from "../Header/Header";
 const useAnimatedNumber = (targetValue) => {
   const [value, setValue] = useState(0);
 
@@ -100,46 +101,13 @@ const TherapistDashboard = () => {
 
   return (
     <Box display="flex" flexDirection="column" height="100vh">
-      {/* AppBar */}
-      <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
-        <Toolbar>
-          <Typography
-            variant="h5"
-            sx={{ flexGrow: 1, fontWeight: "bold", color: "#FFF" }}
-          >
-            MindMate
-          </Typography>
-          <Button color="inherit" href="/TherapistDashboard">
-            <HomeIcon sx={{ marginRight: 1 }} /> Home
-          </Button>
-          <Button color="inherit" onClick={() => router.push("/Chat")}>
-            <MessageIcon sx={{ marginRight: 1 }} /> Chat
-          </Button>
-          <Button href="/TherapistProfile" color="inherit">
-            <AccountCircleIcon sx={{ marginRight: 1 }} /> Profile
-          </Button>
-          <Button color="inherit">
-            <SettingsIcon sx={{ marginRight: 1 }} /> Settings
-          </Button>
-          <Button href="/LogoutPage" color="inherit">
-            <ExitToAppIcon sx={{ marginRight: 1 }} /> Logout
-          </Button>
-          <IconButton color="inherit">
-            <Badge color="secondary" variant="dot">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
-      {/* Conditional Rendering */}
+     <Header/>
       {user ? (
-        <MainContent sx={{ mt: 10 }}>
+        <MainContent sx={{ mt: 15 }}>
           <Grid container spacing={3}>
-            {/* Welcome Card */}
             <Grid item xs={12}>
               <StyledCard>
-                <Typography variant="h4" fontWeight="bold" textAlign="center">
+                <Typography variant="h3" fontWeight="bold" textAlign="center" >
                   Welcome, Dr. {user.name || "Therapist"}
                 </Typography>
                 <Typography
@@ -156,7 +124,7 @@ const TherapistDashboard = () => {
             {/* Stats */}
             <Grid item xs={12} md={6}>
               <StatBox>
-                <Typography variant="h5" fontWeight="bold">
+                <Typography variant="h3" fontWeight="bold">
                   {patients}
                 </Typography>
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -166,7 +134,7 @@ const TherapistDashboard = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <StatBox>
-                <Typography variant="h5" fontWeight="bold">
+                <Typography variant="h3" fontWeight="bold">
                   {consultations}
                 </Typography>
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -182,18 +150,18 @@ const TherapistDashboard = () => {
                   <Grid item xs={12} md={3} textAlign="center">
                     <Avatar
                       sx={{
-                        width: 120,
-                        height: 120,
+                        width: 300,
+                        height: 300,
                         margin: "auto",
                         bgcolor: "#3A3A3A",
                       }}
-                      src={user.image_url}
+                      src={user.imageUrl}
                     >
                       {user.name?.charAt(0).toUpperCase() || "D"}
                     </Avatar>
                   </Grid>
                   <Grid item xs={12} md={9}>
-                    <Typography variant="h5" fontWeight="bold">
+                    <Typography variant="h3" fontWeight="bold">
                       Dr. {user.name}
                     </Typography>
                     <Typography variant="body1" color="textSecondary">
