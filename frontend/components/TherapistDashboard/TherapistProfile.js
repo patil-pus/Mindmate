@@ -34,7 +34,7 @@ const TherapistProfile = () => {
         specialization: "",
         location: "",
         insurance: "",
-        image_url: "",
+        imageUrl: "",
     });
 
     // Load therapist data from global context once therapists are loaded
@@ -50,7 +50,7 @@ const TherapistProfile = () => {
                     specialization: currentTherapist.specialization || "",
                     location: currentTherapist.location || "",
                     insurance: currentTherapist.insurance || "",
-                    image_url: currentTherapist.image_url || "",
+                    imageUrl: currentTherapist.imageUrl || "",
                 });
             } else {
                 console.error("Therapist with the specified ID not found in global context.");
@@ -87,7 +87,7 @@ const TherapistProfile = () => {
                     specialization: updatedTherapist.specialization || "",
                     location: updatedTherapist.location || "",
                     insurance: updatedTherapist.insurance || "",
-                    image_url: updatedTherapist.image_url || "",
+                    imageUrl: updatedTherapist.imageUrl || "",
                 });
 
                 alert("Profile updated successfully!");
@@ -135,9 +135,9 @@ const TherapistProfile = () => {
                                 margin: "auto",
                                 bgcolor: "#1976D2",
                             }}
-                            src={profileData.image_url}
+                            src={profileData.imageUrl}
                         >
-                            {!profileData.image_url && "T"}
+                            {!profileData.imageUrl && "T"}
                         </Avatar>
                     </motion.div>
                     <Typography variant="h5" mt={2} fontWeight="bold">
@@ -163,8 +163,8 @@ const TherapistProfile = () => {
                                 <TextField
                                     label="Profile Image URL"
                                     fullWidth
-                                    value={profileData.image_url}
-                                    name="image_url"
+                                    value={profileData.imageUrl}
+                                    name="imageUrl"
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                 />
