@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useGlobal } from "../../contexts/GlobalContext";
 import {
@@ -14,12 +14,6 @@ import ExpertSection from "./ExpertSection";
 import FeatureCard from "./FeatureCard";
 import DoctorCard from "./DoctorCard";
 import Header from "../Header/Header";
-
-const fadeInOutAnimation = keyframes`
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.9; }
-    100% { transform: scale(1); opacity: 1; }
-`;
 
 const ScrollContainer = styled(Box)({
   display: "flex",
@@ -45,43 +39,6 @@ const ContentContainer = styled(Box)({
   minHeight: "100vh",
 });
 
-const LoadingScreen = styled(Box)({
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: "#1e2a45", // Slightly softer dark blue
-  zIndex: 10,
-  // animation: `${fadeInOutAnimation} 1.5s ease-in-out infinite`, // Adjusted duration for smoother looping
-  textAlign: "center",
-  flexDirection: "column",
-});
-const DotAnimation = styled(Box)({
-  display: "flex",
-  marginTop: "15px",
-  "& div": {
-    width: "10px",
-    height: "10px",
-    margin: "0 5px",
-    backgroundColor: "#FFA726",
-    borderRadius: "50%",
-    animation: `${fadeInOutAnimation} 1.5s ease-in-out infinite`,
-    "&:nth-of-type(1)": {
-      animationDelay: "0s",
-    },
-    "&:nth-of-type(2)": {
-      animationDelay: "0.3s",
-    },
-    "&:nth-of-type(3)": {
-      animationDelay: "0.6s",
-    },
-  },
-});
-
 const HeaderText = styled(Typography)({
   fontSize: "2.5rem",
   fontWeight: "bold",
@@ -105,7 +62,7 @@ const NotificationContainer = styled(Box)({
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
   zIndex: 10000,
   "@media (max-width:600px)": {
-    width: "90%", // Full width on small screens
+    width: "90%", 
     right: "5%",
     top: "60px",
   },
@@ -153,8 +110,6 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    console.log("___________", user, loading);
-
     if (!loading && !user) {
       router.push("/SignIn");
     }
@@ -177,12 +132,19 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <LoadingScreen>
-        <Typography variant="h2" sx={{ color: "#FFFFFF", fontWeight: "bold" }}>
-          Welcome to MindMate
-        </Typography>
-        <CircularProgress color="secondary" sx={{ mt: 2 }} />
-      </LoadingScreen>
+      <div className="flex w-screen flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-teal-400 text-white">
+      <h1 className="text-8xl font-bold font-sans mb-4 animate-fade-in">MindMate</h1>
+      
+      <div className="flex items-center justify-center">
+        {/* Animated Dots */}
+        <div className="dot bg-white w-4 h-4 rounded-full mx-1 animate-bounce delay-0"></div>
+        <div className="dot bg-white w-4 h-4 rounded-full mx-1 animate-bounce delay-150"></div>
+        <div className="dot bg-white w-4 h-4 rounded-full mx-1 animate-bounce delay-300"></div>
+      </div>
+      <footer className="absolute bottom-4 text-sm opacity-75">
+        &copy; 2024 MindMate. All rights reserved.
+      </footer>
+    </div>
     );
   }
 
@@ -258,7 +220,12 @@ const Dashboard = () => {
               title="Always-there Support"
               description="Unpack what’s on your mind with Ebb, our empathetic AI companion, talk it out!"
               image="/chat.jpg"
-              buttonText="Chat with Ebb"
+              buttonText={<Link
+                href="/ComingSoon"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                Chat with Ebb
+              </Link>}
             />
             <FeatureCard
               icon="J"
@@ -395,7 +362,7 @@ const Dashboard = () => {
         }}
       >
         <Typography variant="body2">
-          © 2023 MindMate. All Rights Reserved.
+          © 2024 MindMate. All Rights Reserved.
         </Typography>
       </Box>
     </Box>
