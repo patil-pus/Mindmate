@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Card, CardContent, CardMedia, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
+import Header from "../components/Header/Header";
 
 const exercises = [
   {
@@ -62,7 +63,8 @@ const MentalHealthExercises = () => {
   };
 
   return (
-    <Box sx={{ backgroundColor: "#f9f9f9", minHeight: "100vh", padding: "20px" }}>
+    <Box sx={{ backgroundColor: "#f9f9f9", minHeight: "100vh", padding: "140px" }}>
+      <Header/>
       <Typography variant="h3" sx={{ textAlign: "center", mb: 4, fontWeight: "bold", color: "#333" }}>
         Mental Health Exercises
       </Typography>

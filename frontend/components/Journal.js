@@ -44,7 +44,7 @@ const MoodAvatar = styled(Avatar)(({ theme }) => ({
 
 const Journal = () => {
     const { user, clientData, setUser } = useGlobal(); // Get clientData and global state update function
-
+    
     const [mood, setMood] = useState('');
     const [content, setContent] = useState('');
 
@@ -76,16 +76,19 @@ const Journal = () => {
                     ...user,
                     journals: [...(clientData || []), newJournal],
                 });
-
+                
+                
                 // Reset form fields
                 setMood('');
                 setContent('');
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error adding journal entry:', error);
         }
     };
-
+  
+    
     const getMoodColor = (mood) => {
         const moodColors = {
             Happy: '#4CAF50',
@@ -97,21 +100,21 @@ const Journal = () => {
         return moodColors[mood] || '#757575';
     };
 
-    if (!clientData || clientData.length === 0) {
-        return   <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "200px",
-                }}
-            >
-                <CircularProgress />
-            </Box>
-    }
+    // if (!clientData || clientData.length === 0) {
+    //     return   <Box
+    //             sx={{
+    //                 display: "flex",
+    //                 justifyContent: "center",
+    //                 alignItems: "center",
+    //                 minHeight: "200px",
+    //             }}
+    //         >
+    //             <CircularProgress />
+    //         </Box>
+    // }
 
     return (
-        <div style={{ backgroundColor: 'white', padding: '2rem' }}>
+        <div style={{ backgroundColor: 'white', padding: '2rem' }} >
                 <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
                 <Toolbar>
                      <motion.img
@@ -232,7 +235,8 @@ const Journal = () => {
                     </Paper>
                 </Grid>
 
-                {/* Previous Entries */}
+                
+                { clientData && 
                 <Grid item xs={12}>
                     <Paper elevation={3} sx={{ p: 4, borderRadius: 4 }}>
                         <Typography
@@ -246,7 +250,7 @@ const Journal = () => {
                             Previous Entries
                         </Typography>
                         <Grid container spacing={4}>
-                            {clientData.map((entry) => (
+                            {clientData?.map((entry) => (
                                 <Grid item xs={12} sm={6} md={4} key={entry.id}>
                                     <StyledCard>
                                         <CardContent>
@@ -268,7 +272,7 @@ const Journal = () => {
                             ))}
                         </Grid>
                     </Paper>
-                </Grid>
+                </Grid>}
             </Grid>
         </div>
     );

@@ -3,6 +3,7 @@ import { Box, Typography, Avatar, Paper, Button, Grid, TextField } from "@mui/ma
 import { styled } from "@mui/system";
 import { motion } from "framer-motion";
 import { useGlobal } from "../contexts/GlobalContext";
+import Header from "./Header/Header";
 
 const ProfileContainer = styled(Box)({
     display: "flex",
@@ -10,7 +11,7 @@ const ProfileContainer = styled(Box)({
     alignItems: "center",
     backgroundColor: "#F9FAFB",
     minHeight: "100vh",
-    padding: "40px 20px",
+    padding: "180px 20px",
 });
 
 const ProfileCard = styled(Paper)({
@@ -112,6 +113,7 @@ const TherapistProfile = () => {
 
     return (
         <ProfileContainer>
+            <Header/>
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
