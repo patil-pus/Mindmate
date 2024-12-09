@@ -2,7 +2,7 @@
 ### **MindMate - README**
 
 ---
-(VIDEO LINK)[https://northeastern-my.sharepoint.com/:v:/g/personal/jayadevaprakash_s_northeastern_edu/EZy1GXkJZRtDoiy-MRSU2fgBoulsWFbIdWmZlMhu3u9b-A?e=ojDCiP&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D]
+VIDEO LINK - https://northeastern-my.sharepoint.com/:v:/g/personal/jayadevaprakash_s_northeastern_edu/EZy1GXkJZRtDoiy-MRSU2fgBoulsWFbIdWmZlMhu3u9b-A?e=ojDCiP&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
 
 #### **Overview**
 
