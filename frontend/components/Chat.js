@@ -134,6 +134,7 @@ const Chat = () => {
 
   useEffect(() => {
     setUserData({ ...userData, username: name });
+
   }, [name]);
   return (
     <div className="w-screen h-screen p-4 text-gray-800 bg-gradient-to-br from-gray-100 to-gray-200">
