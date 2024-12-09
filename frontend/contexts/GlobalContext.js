@@ -67,6 +67,8 @@ export const GlobalProvider = ({ children }) => {
 
   const logout = () => {
     sessionStorage.removeItem("clientId");
+    sessionStorage.removeItem("name");
+    sessionStorage.removeItem("userType");
     sessionStorage.removeItem("therapistId");
     dispatch({ type: "LOGOUT" });
   };
