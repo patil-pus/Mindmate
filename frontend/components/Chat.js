@@ -5,6 +5,7 @@ import SockJS from "sockjs-client";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useGlobal } from "../contexts/GlobalContext";
+import Header from "./Header/Header";
 
 let stompClient = null;
 
@@ -137,122 +138,109 @@ const Chat = () => {
 
   }, [name]);
   return (
-    <div className="w-screen h-screen p-4 text-gray-800 bg-gradient-to-br from-gray-100 to-gray-200">
-      {userData.connected ? (
-        <div className="chat-box h-full flex flex-col md:flex-row border border-gray-300 rounded-lg shadow-lg overflow-hidden">
-          {/* Back Link */}
-          <Link
-            href={userType == "client" ? "/Dashboard" : "/TherapistDashboard"}
-            className="absolute top-4 left-4 p-[11px] flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition cursor-pointer font-semibold text-lg"
+    <div className="w-screen min-h-screen p-4 text-gray-800 bg-gradient-to-br from-gray-100 to-gray-200">
+  <Header />
+  {userData.connected ? (
+    <div className="chat-box flex flex-col md:flex-row border border-gray-300 rounded-lg shadow-lg overflow-hidden mt-[140px]">
+      {/* Member List */}
+      <div className="member-list w-full md:w-1/4 bg-gradient-to-tl pt-[45px] from-gray-900 to-gray-700 text-white p-6 overflow-hidden">
+        <h2 className="text-xl font-semibold mb-4">Chats</h2>
+        <ul className="space-y-2">
+          <li
+            onClick={() => setTab("CHATROOM")}
+            className={`cursor-pointer p-3 rounded-lg hover:bg-gray-600 transition  flex gap-x-2 ${
+              tab === "CHATROOM" ? "bg-gray-600 font-semibold" : ""
+            }`}
           >
-            <ArrowLeft /> Back to {name}'s Dashboard
-          </Link>
+            <MessageCircle />
+            Forum
+          </li>
+          {[...privateChats.keys()].map((name, index) => (
+            <li
+              key={index}
+              onClick={() => setTab(name)}
+              className={`cursor-pointer p-3 rounded-lg hover:bg-gray-600 transition flex gap-x-2 ${
+                tab === name ? "bg-gray-600 font-semibold" : ""
+              }`}
+            >
+              <MessageCircle />
+              {name}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-          {/* Member List */}
-          <div className="member-list w-full md:w-1/4 bg-gradient-to-tl pt-[45px] from-gray-900 to-gray-700 text-white p-6">
-            <h2 className="text-xl font-semibold mb-4">Chats</h2>
-            <ul className="space-y-2">
+      {/* Chat Content */}
+      <div className="chat-content flex-1 p-6 bg-gradient-to-br from-white to-gray-100">
+        <ul className="space-y-4 flex flex-col justify-end overflow-y-auto h-[calc(100vh-200px)] md:h-[calc(100vh-300px)]">
+          {(tab === "CHATROOM" ? publicChats : privateChats.get(tab)).map(
+            (chat, index) => (
               <li
-                onClick={() => setTab("CHATROOM")}
-                className={`cursor-pointer p-3 rounded-lg hover:bg-gray-600 transition  flex gap-x-2 ${
-                  tab === "CHATROOM" ? "bg-gray-600 font-semibold" : ""
+                key={index}
+                className={`flex ${
+                  chat.senderName === userData.username
+                    ? "justify-end"
+                    : "justify-start"
                 }`}
               >
-                <MessageCircle />
-                Forum
-              </li>
-              {[...privateChats.keys()].map((name, index) => (
-                <li
-                  key={index}
-                  onClick={() => setTab(name)}
-                  className={`cursor-pointer p-3 rounded-lg hover:bg-gray-600 transition flex gap-x-2 ${
-                    tab === name ? "bg-gray-600 font-semibold" : ""
-                  }`}
+                {chat.senderName !== userData.username && (
+                  <div className="p-2 bg-gray-300 rounded-full text-sm shadow mr-3 flex justify-center items-center">
+                    {chat.senderName}
+                  </div>
+                )}
+                <div
+                  className={`p-4 rounded-3xl shadow-md ${
+                    chat.senderName === userData.username
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-800"
+                  } max-w-xs break-words`}
                 >
-                  <MessageCircle />
-                  {name}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Chat Content */}
-          <div className="chat-content flex-1 p-6 bg-gradient-to-br from-white to-gray-100">
-            <ul className="space-y-4 h-[85vh] flex flex-col justify-end overflow-y-auto">
-              {(tab === "CHATROOM" ? publicChats : privateChats.get(tab)).map(
-                (chat, index) => (
-                  <li
-                    key={index}
-                    className={`flex ${
-                      chat.senderName === userData.username
-                        ? "justify-end"
-                        : "justify-start"
-                    }`}
-                  >
-                    {chat.senderName !== userData.username && (
-                      <div className="p-2 bg-gray-300 rounded-full text-sm shadow mr-3 flex justify-center items-center">
-                        {chat.senderName}
-                      </div>
-                    )}
-                    <div
-                      className={`p-4 rounded-3xl shadow-md ${
-                        chat.senderName === userData.username
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-800"
-                      } max-w-xs break-words`}
-                    >
-                      {chat.message}
-                    </div>
-                  </li>
-                )
-              )}
-            </ul>
-            <div className="mt-6 flex items-center">
-              <input
-                type="text"
-                className="flex-1 p-3 rounded-l-full bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter the message"
-                value={userData.message}
-                onChange={handleMessage}
-              />
-              <button
-                type="button"
-                className="bg-blue-500 text-white px-6 py-3 rounded-r-full hover:bg-blue-600 transition"
-                onClick={tab === "CHATROOM" ? sendValue : sendPrivateValue}
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="register max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg text-center">
-          <Link
-            href={userType == "client" ? "Dashboard" : "TherapistDashboard"}
-            className="flex mb-6"
-          >
-            <ArrowLeft className="text-gray-500 hover:text-gray-800 transition cursor-pointer" />{" "}
-            Back to Dashboard
-          </Link>
-          <h2 className="text-xl font-semibold mb-4">Logged in as</h2>
+                  {chat.message}
+                </div>
+              </li>
+            )
+          )}
+        </ul>
+        <div className="mt-6 flex items-center">
           <input
-            id="user-name"
-            placeholder="Enter your name"
-            disabled
-            name="userName"
-            value={name}
-            className="w-full p-3 rounded bg-gray-100 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+            type="text"
+            className="flex-1 p-3 rounded-l-full bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter the message"
+            value={userData.message}
+            onChange={handleMessage}
           />
           <button
             type="button"
-            onClick={registerUser}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+            className="bg-blue-500 text-white px-6 py-3 rounded-r-full hover:bg-blue-600 transition"
+            onClick={tab === "CHATROOM" ? sendValue : sendPrivateValue}
           >
-            Connect
+            Send
           </button>
         </div>
-      )}
+      </div>
     </div>
+  ) : (
+    <div className="register max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg text-center mt-[140px]">
+      <h2 className="text-xl font-semibold mb-4">Logged in as</h2>
+      <input
+        id="user-name"
+        placeholder="Enter your name"
+        disabled
+        name="userName"
+        value={name}
+        className="w-full p-3 rounded bg-gray-100 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+      />
+      <button
+        type="button"
+        onClick={registerUser}
+        className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+      >
+        Connect
+      </button>
+    </div>
+  )}
+</div>
+
   );
 };
 
