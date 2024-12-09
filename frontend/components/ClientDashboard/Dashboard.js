@@ -103,7 +103,7 @@ const NotificationContainer = styled(Box)({
   borderRadius: "8px",
   padding: "15px",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-  zIndex: 10,
+  zIndex: 10000,
   "@media (max-width:600px)": {
     width: "90%", // Full width on small screens
     right: "5%",
